@@ -1,0 +1,16 @@
+[Unit]
+Description=IPFS Tika daemon
+Requires=ipfs.service
+After=ipfs.service
+
+[Service]
+ExecStart=/usr/bin/java -Xmx{{ ipfs_tika_heap_max }} -jar /usr/local/libexec/{{ ipfs_tika_jar }}
+User=ipfs-tika
+Group=ipfs-tika
+MemoryAccounting=yes
+MemoryLimit=4096M
+Nice=10
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

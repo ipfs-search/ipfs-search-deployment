@@ -1,0 +1,15 @@
+---
+- include: python2.yml
+- hosts: all
+  become: true
+  roles:
+    - { name: common, tags: ['common'] }
+    - { name: cgconfig, tags: ['cgconfig']}
+    - { name: elasticsearch, tags: ['elasticsearch'], es_heap_size: 512M}
+    - { name: rabbitmq, tags: ['rabbitmq'] }
+    - { name: ipfs, tags: ['ipfs'], ipfs_memlimit: 256M}
+    - { name: ipfs-tika, tags: ['ipfs-tika'] }
+    - { name: crawler, tags: ['crawler'] }
+    - { name: snifloop, tags: ['snifloop']}
+    - { name: nginx, tags: ['nginx']}
+    - { name: api, tags: ['api']}

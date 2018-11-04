@@ -1,0 +1,26 @@
+---
+- block:
+  - name: Locally install global dependencies
+    local_action: command npm -g install gulp
+  - name: Locally install local dependencies
+    local_action: command npm install
+    args:
+      chdir: ../frontend
+  - name: Locally build frontend
+    local_action: command gulp build
+    args:
+      chdir: ../frontend
+  become: false
+- name: Create destination folder for search api
+  file: path=/usr/local/libexec/ipfs-search-frontend state=directory
+- name: Sync frontend
+  synchronize: src=../../../frontend/app/ dest=/usr/local/libexec/ipfs-search-frontend/ times=yes partial=yes archive=no recursive=yes
+- name: Install nginx configuration
+  template: src=nginx-frontend.conf dest=/etc/nginx/sites-available/frontend.conf
+  notify: restart nginx
+- name: Enable nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/frontend.conf
+    src: /etc/nginx/sites-available/frontend.conf
+    state: link
+  notify: restart nginx
