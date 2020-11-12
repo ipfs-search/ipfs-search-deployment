@@ -4,9 +4,9 @@ Requires=elasticsearch.service
 After=elasticsearch.service
 
 [Service]
-WorkingDirectory={{ api_install_path }}/search
+WorkingDirectory={{ api_install_path }}/server
 ExecStart=/usr/bin/npm start
-Restart=on-failure
+Restart=always
 User=ipfs-search
 Group=ipfs-search
 Environment=NODE_ENV=production
