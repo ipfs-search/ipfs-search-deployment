@@ -1,6 +1,6 @@
 ipfs:
   api_url: localhost:5001  # IPFS API endpoint, also IPFS_API_URL in env
-  timeout: 6m  # Timeout for IPFS gateway HTTPS requests
+  timeout: 120s  # Timeout for IPFS gateway HTTPS requests
 elasticsearch:
   url: http://localhost:9200  # Also ELASTICSEARCH_URL in env
 amqp:
@@ -19,4 +19,4 @@ sniffer:
   logger_timeout: 10s
 extractor:
   url: http://localhost:8231  # ipfs-tika endpoint URL, also TIKA_URL in env
-  timeout: 5m  # ipfs-tika request timeout
+  timeout: 30s  # ipfs-tika request timeout
