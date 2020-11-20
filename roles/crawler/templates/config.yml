@@ -19,4 +19,4 @@ sniffer:
   logger_timeout: 10s
 extractor:
   url: http://localhost:8231  # ipfs-tika endpoint URL, also TIKA_URL in env
-  timeout: 30s  # ipfs-tika request timeout
+  timeout: 5m  # ipfs-tika request timeout
