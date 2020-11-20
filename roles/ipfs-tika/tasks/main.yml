@@ -2,7 +2,7 @@
 - name: Create libexec directory
   file: path={{ ipfs_tika_path }} state=directory owner=root group=root mode=755
 - name: Download ipfs-tika
-  get_url: url={{ ipfs_tika_mirror}}{{ ipfs_tika_jar }} dest={{ ipfs_tika_path }}/{{ ipfs_tika_jar }} owner=root group=root checksum="sha1:{{ ipfs_tika_sha1 }}"
+  get_url: url={{ ipfs_tika_mirror}}{{ ipfs_tika_jar }} dest={{ ipfs_tika_path }}/{{ ipfs_tika_jar }} owner=root group=root checksum="sha256:{{ ipfs_tika_sha256 }}"
   notify: restart ipfs-tika
   register: download
 - include_role:
