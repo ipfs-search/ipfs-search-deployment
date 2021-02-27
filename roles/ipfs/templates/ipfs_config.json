@@ -121,7 +121,9 @@
     "NoDNSLink": false,
     "NoFetch": false,
     "PathPrefixes": [],
-    "PublicGateways": null,
+    "PublicGateways": {
+      "localhost": null
+    },
     "RootRedirect": "",
     "Writable": false
   },
