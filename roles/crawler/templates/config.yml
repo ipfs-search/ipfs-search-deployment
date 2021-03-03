@@ -1,22 +1,46 @@
 ipfs:
-  api_url: localhost:5001  # IPFS API endpoint, also IPFS_API_URL in env
-  timeout: 120s  # Timeout for IPFS gateway HTTPS requests
+  api_url: http://localhost:5001
+  gateway_url: http://localhost:8080
+  partial_size: 256KB
 elasticsearch:
-  url: http://localhost:9200  # Also ELASTICSEARCH_URL in env
+  url: http://localhost:9200
 amqp:
-  url: amqp://guest:guest@localhost:5672/  # Also AMQP_URL in env
+  url: amqp://guest:guest@localhost:5672/
+  max_reconnect: 100
+  reconnect_time: 2s
+tika:
+  url: http://localhost:8231
+  timeout: 5m
+  max_file_size: 4GB
+instrumentation:
+  sampling_ratio: 0.01
+  jaeger_endpoint: http://localhost:14268/api/traces
 crawler:
-  retry_wait: 2s  # wait time between retries of failed requests
-  hash_wait: 100ms  # Time between launching workers
-  file_wait: 100ms
-  partial_size: 256KB  # Size for partial items - this is the default chunker block size
-  hash_workers: 360
-  file_workers: 30
-  metadata_max_size: 4GB  # Don't attempt to get metadata for files over this size
+  direntry_buffer_size: 8192
+  min_update_age: 2m
+  stat_timeout: 2m
+  direntry_timeout: 2m
+  max_dirsize: 32768
 sniffer:
-  lastseen_expiration: 60m
-  lastseen_prunelen: 16383
-  logger_timeout: 10s
-extractor:
-  url: http://localhost:8231  # ipfs-tika endpoint URL, also TIKA_URL in env
-  timeout: 5m  # ipfs-tika request timeout
+  lastseen_expiration: 1h
+  lastseen_prunelen: 32768
+  logger_timeout: 1m
+  buffer_size: 512
+indexes:
+  files:
+    name: ipfs_files
+  directories:
+    name: ipfs_directories
+  invalids:
+    name: ipfs_invalids
+queues:
+  files:
+    name: files
+  directories:
+    name: directories
+  hashes:
+    name: hashes
+workers:
+  hash_workers: 70
+  file_workers: 70
+  directory_workers: 70
