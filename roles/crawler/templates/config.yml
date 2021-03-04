@@ -41,6 +41,6 @@ queues:
   hashes:
     name: hashes
 workers:
-  hash_workers: 70
-  file_workers: 70
-  directory_workers: 70
+  hash_workers: 150
+  file_workers: 50
+  directory_workers: 5
