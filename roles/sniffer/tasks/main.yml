@@ -11,6 +11,7 @@
     git:
       dest: "{{ sniffer_build }}"
       repo: https://github.com/ipfs-search/ipfs-sniffer.git
+      version: "{{ sniffer_version }}"
     register: source
   - block:
     - name: go get
@@ -26,7 +27,7 @@
         src: "{{ sniffer_build }}/ipfs-sniffer"
         dest: "{{ sniffer_binary }}"
         remote_src: True
-        mode: 755
+        mode: 775
       become: true
       notify: restart sniffer
     - include_role:
