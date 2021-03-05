@@ -1,6 +1,6 @@
 ---
-- name: Annotating {{ action }} in InfluxDB/Chronograf
-  uri:
+- name: "Annotating {{ action }} in InfluxDB/Chronograf"
+  local_action: ansible.builtin.uri
     url: "{{ influxdb_url }}/write?db=chronograf"
     method: POST
     body: "annotations,host={{ host }},role={{ role }},id={{ uuid }},action={{ action }}{% if version %},version={{ version }}{% endif %} modified_time_ns={{ time_ns }}i,start_time={{ time_ns }}i,text={{ text | tojson }},deleted=false {{ time_ns }}"
