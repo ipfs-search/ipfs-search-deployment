@@ -14,7 +14,7 @@
     - { name: rabbitmq, tags: ['rabbitmq'] }
     - { name: sniffer, tags: ['sniffer'] }
     - { name: ipfs, tags: ['ipfs'] }
-    - { name: ipfs-tika, tags: ['ipfs-tika'] }
+    - { name: tika-extractor, tags: ['tika-extractor'] }
     - { name: crawler, tags: ['crawler'] }
     - { name: nginx, tags: ['nginx']}
     - { name: api, tags: ['api']}

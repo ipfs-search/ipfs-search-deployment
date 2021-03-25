@@ -1,0 +1,10 @@
+---
+- name: Add OpenJDK PPA
+  apt_repository:
+    repo: ppa:openjdk-r/ppa
+    state: present
+    update_cache: yes
+- name: Install OpenJDK
+  apt:
+    name: openjdk-11-jre-headless
+    state: latest

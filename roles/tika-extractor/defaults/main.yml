@@ -1,0 +1,6 @@
+---
+tika_extractor_path: /usr/local/libexec
+tika_extractor_jar: tika-extractor-1.0-runner.jar
+tika_extractor_sha256: de43ab142aa8224d281800e709d6aa982633e6193a9815d734ed76fd71da7165
+tika_extractor_mirror: https://github.com/ipfs-search/tika-extractor/releases/download/v1.0/
+tika_extractor_heap_max: 3072m

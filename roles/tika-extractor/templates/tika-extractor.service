@@ -1,0 +1,14 @@
+[Unit]
+Description=Tika Extractor daemon
+
+[Service]
+ExecStart=/usr/bin/java -Xmx{{ tika_extractor_heap_max }} -jar /usr/local/libexec/{{ tika_extractor_jar }}
+User=tika-extractor
+Group=tika-extractor
+MemoryAccounting=yes
+MemoryLimit=4096M
+Nice=10
+Restart=always
+
+[Install]
+WantedBy=default.target

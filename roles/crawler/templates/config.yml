@@ -9,7 +9,7 @@ amqp:
   max_reconnect: 100
   reconnect_time: 2s
 tika:
-  url: http://localhost:8231
+  url: http://localhost:8081
   timeout: 5m
   max_file_size: 4GB
 instrumentation:

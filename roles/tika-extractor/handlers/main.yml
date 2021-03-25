@@ -1,0 +1,2 @@
+- name: restart tika-extractor
+  systemd: daemon_reload=yes state=restarted name=tika-extractor
