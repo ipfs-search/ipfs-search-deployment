@@ -6,6 +6,7 @@
     - ipfs_memlimit: 12G
     - crawler_memlimit: 4G
     - golang_version: 1.14.4
+    - sniffer_heads: 6
   roles:
     - { name: golang, tags: ['golang']}
     - { name: disable-eth-offloading, tags: ['disable-eth-offloading']}
