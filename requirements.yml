@@ -3,3 +3,6 @@
   src: adamruzicka.wireguard
 - name: golang
   src: gantsign.golang
+- name: elasticsearch
+  src: elastic.elasticsearch
+  version: v7.12.0

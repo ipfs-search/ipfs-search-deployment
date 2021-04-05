@@ -1,0 +1,35 @@
+---
+- hosts: index
+  become: true
+  vars:
+    - golang_version: 1.14.4
+  roles:
+    - { name: cgconfig, tags: ['cgconfig']}
+    - role: elasticsearch
+      tags: ['elasticsearch']
+      vars:
+        es_version: 7.8.11
+        oss_version: true
+        es_heap_size: 16g
+        es_log_dir: "/var/log/elasticsearch"
+        es_data_dirs:
+          - "/var/lib/elasticsearch"
+        es_plugins:
+          - plugin: repository-s3
+        es_config:
+          discovery.type: single-node
+          repositories.url.allowed_urls: ["http://localhost:8080/*"]
+          network.host: ["_local_", "_site_"]
+    - role: ipfs
+      tags: ['ipfs']
+      ipfs_memlimit: 12G
+    - { name: tika-extractor, tags: ['tika-extractor'] }
+    - role: crawler
+      tags: ['crawler']
+      vars:
+        crawler_memlimit: 4G
+    - { name: nginx, tags: ['nginx']}
+    - { name: api, tags: ['api']}
+    - { name: storagebox, tags: ['storagebox'] }
+    - { name: snapshots, tags: ['snapshots'] }
+    - { name: ipfs-cluster, tags: ['ipfs-cluster']}
