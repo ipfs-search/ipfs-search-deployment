@@ -14,11 +14,16 @@
     name: ipfs
     groups: elasticsearch
     append: true
-- name: Link snapshot directory into IPFS root
+- name: Create mountpoint
   file:
-    state: link
+    path: "{{ snapshot_publish_path }}"
+    state: directory
+- name: Bind mount into IPFS root
+  mount:
+    opts: bind
     src: "{{ snapshot_disk_path }}"
     path: "{{ snapshot_publish_path }}"
+    state: mounted
 - block:
   - name: List IPFS keys
     command: ipfs key list
