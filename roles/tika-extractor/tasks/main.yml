@@ -24,7 +24,7 @@
     name: Delete stale temp files
     minute: "23"
     hour: "*"
-    job: "find /tmp -maxdepth 1 -user tika-extractor -cmin +60 -name '*.tmp' -delete"
+    job: "find /tmp -maxdepth 1 -user tika-extractor -cmin +23 -delete"
     state: present
     cron_file: /etc/crontab
     user: tika-extractor
