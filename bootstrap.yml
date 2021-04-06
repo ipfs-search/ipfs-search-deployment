@@ -49,8 +49,19 @@
     notify:
       - restart sshd
 
+  - name: Full (unsafe) upgrade of packages
+    apt:
+      update_cache: yes
+      upgrade: full
+      autoremove: yes
+      autoclean: yes
+    notify:
+      - reboot
+
   handlers:
   - name: restart sshd
     service:
       name=sshd
       state=restarted
+  - name: reboot
+    reboot:
