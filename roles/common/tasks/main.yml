@@ -18,6 +18,7 @@
       - screen
       - tree
       - git
+      - software-properties-common # Includes add-apt-repository
     state: present
 - name: Configure journald
   copy: dest=/etc/systemd/journald.conf src=journald.conf owner=root group=root mode=644

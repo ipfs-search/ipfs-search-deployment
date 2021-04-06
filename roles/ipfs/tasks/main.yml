@@ -12,6 +12,7 @@
     repo: https://github.com/ipfs/go-ipfs.git
     version: "{{ ipfs_version }}"
   register: source
+  become: false
 - block:
   - block:
     - name: clean go-ipfs
