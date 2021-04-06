@@ -3,6 +3,12 @@
   become: true
   vars:
     - golang_version: 1.14.4
+  pre_tasks:
+    - name: Install jmespath (local Ansible dependency)
+      local_action: pip
+      args:
+        name: jmespath
+      become: no
   roles:
     - { name: cgconfig, tags: ['cgconfig']}
     - role: elasticsearch
