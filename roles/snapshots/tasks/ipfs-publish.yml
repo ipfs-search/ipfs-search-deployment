@@ -24,6 +24,7 @@
     src: "{{ snapshot_disk_path }}"
     path: "{{ snapshot_publish_path }}"
     state: mounted
+    fstype: none
 - block:
   - name: List IPFS keys
     command: ipfs key list
@@ -39,8 +40,8 @@
   cron:
     name: "IPFS publish snapshot"
     cron_file: /etc/crontab
-    minute: 16
-    hour: 5
+    minute: "16"
+    hour: "5"
     backup: yes
     user: ipfs
     job: "/usr/local/bin/ipfs-search-snapshot-publish.sh"

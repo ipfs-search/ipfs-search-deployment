@@ -63,8 +63,8 @@
   cron:
     name: "Elasticsearch S3 snapshot"
     cron_file: /etc/crontab
-    minute: 16
-    hour: 3
+    minute: "16"
+    hour: "3"
     backup: yes
     user: nobody
     job: "/usr/local/bin/ipfs-search-snapshot-s3.sh"

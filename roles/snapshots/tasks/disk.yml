@@ -40,8 +40,8 @@
   cron:
     name: "Elasticsearch disk snapshot"
     cron_file: /etc/crontab
-    minute: 16
-    hour: 4
+    minute: "16"
+    hour: "4"
     backup: yes
     user: nobody
     job: "/usr/local/bin/ipfs-search-snapshot-disk.sh"
