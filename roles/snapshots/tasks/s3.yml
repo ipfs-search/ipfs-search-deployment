@@ -59,12 +59,13 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_s3_name }}"
-- name: Elasticsearch S3 daily snapshot cronjob
-  cron:
-    name: "Elasticsearch S3 snapshot"
-    cron_file: /etc/crontab
-    minute: "16"
-    hour: "3"
-    backup: yes
-    user: nobody
-    job: "/usr/local/bin/ipfs-search-snapshot-s3.sh"
+# TODO: Only do this on single host
+# - name: Elasticsearch S3 daily snapshot cronjob
+#   cron:
+#     name: "Elasticsearch S3 snapshot"
+#     cron_file: /etc/crontab
+#     minute: "16"
+#     hour: "3"
+#     backup: yes
+#     user: nobody
+#     job: "/usr/local/bin/ipfs-search-snapshot-s3.sh"

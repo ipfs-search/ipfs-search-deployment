@@ -36,12 +36,13 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_disk_name }}"
-- name: Elasticsearch daily disk snapshot cronjob
-  cron:
-    name: "Elasticsearch disk snapshot"
-    cron_file: /etc/crontab
-    minute: "16"
-    hour: "4"
-    backup: yes
-    user: nobody
-    job: "/usr/local/bin/ipfs-search-snapshot-disk.sh"
+# TODO: Only do this on single host
+# - name: Elasticsearch daily disk snapshot cronjob
+#   cron:
+#     name: "Elasticsearch disk snapshot"
+#     cron_file: /etc/crontab
+#     minute: "16"
+#     hour: "4"
+#     backup: yes
+#     user: nobody
+#     job: "/usr/local/bin/ipfs-search-snapshot-disk.sh"

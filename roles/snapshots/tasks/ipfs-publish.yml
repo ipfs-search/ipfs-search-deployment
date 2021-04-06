@@ -36,12 +36,13 @@
     IPFS_PATH: "{{ ipfs_path }}"
   become: true
   become_user: "{{ ipfs_user }}"
-- name: Daily IPFS publish cronjob
-  cron:
-    name: "IPFS publish snapshot"
-    cron_file: /etc/crontab
-    minute: "16"
-    hour: "5"
-    backup: yes
-    user: ipfs
-    job: "/usr/local/bin/ipfs-search-snapshot-publish.sh"
+# TODO: Only do this on single host
+# - name: Daily IPFS publish cronjob
+#   cron:
+#     name: "IPFS publish snapshot"
+#     cron_file: /etc/crontab
+#     minute: "16"
+#     hour: "5"
+#     backup: yes
+#     user: ipfs
+#     job: "/usr/local/bin/ipfs-search-snapshot-publish.sh"
