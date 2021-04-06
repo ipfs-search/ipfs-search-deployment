@@ -1,8 +1,8 @@
 # Ansible deployment
-Requires one, or two, Ubuntu 16.04 (virtual) machine(s) with root access and a local install of [Ansible 2.6](https://docs.ansible.com/ansible/2.6/installation_guide/intro_installation.html).
+Requires one, or two, Ubuntu 16.04 (virtual) machine(s) with root access and a local install of [Ansible 2.8](https://docs.ansible.com/ansible/2.8/installation_guide/intro_installation.html).
 
 ## Inventory
-The default Ansible configuration we're using, `ansible.cfg` in the current directory, configures the [inventory](https://docs.ansible.com/ansible/2.6/user_guide/intro_inventory.html) in `inventory.yml` in the current directory.
+The default Ansible configuration we're using, `ansible.cfg` in the current directory, configures the [inventory](https://docs.ansible.com/ansible/2.8/user_guide/intro_inventory.html) in `inventory.yml` in the current directory.
 
 In order to use Ansible deployment, `backend` and `frontend` host groups need to be configured here. An example is provided in [`inventory_example.yml`](inventory_example.yml).
 
