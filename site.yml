@@ -2,6 +2,12 @@
 # Common configuration for all hosts
 - hosts: all
   become: true
+  pre_tasks:
+    - name: Install jmespath (local Ansible dependency for Elasticsearch)
+      local_action: pip
+      args:
+        name: jmespath
+      become: no
   vars:
     - hostname: "{{ inventory_hostname }}"
   roles:
