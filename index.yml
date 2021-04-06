@@ -8,7 +8,7 @@
     - role: elasticsearch
       tags: ['elasticsearch']
       vars:
-        es_version: 7.8.11
+        es_version: 7.10.2
         oss_version: true
         es_heap_size: 16g
         es_log_dir: "/var/log/elasticsearch"
