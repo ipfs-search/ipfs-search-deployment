@@ -1,26 +1,32 @@
-backend:
-  hosts:
-    backend_host:
-      ansible_host: <fqdn_host_name>
+all:
+  vars:
+    # Change the value below to false for production!
+    certbot_test: false
 
-      # The values below are only relevant for monitoring through InfluxDB over a Wireguard tunnel
-      wireguard_wg0_peers:
-        <backend_host>:
-          public_key: <pubkey>
-          allowed_ips: <ip>
-          endpoint: <fqdn_host_name>:51820
+    # The values below are only relevant for monitoring through InfluxDB over a Wireguard tunnel
+    wireguard_wg0_peers:
+      <backend_host>:
+        public_key: <pubkey>
+        allowed_ips: <ip>
+        endpoint: <fqdn_host_name>:51820
 
-      wireguard_wg0_interface:
-        address: <ip>
-        private_key: !vault |
-                <encrypted_value>
-        listen_port: 51820
+    influxdb_url: http://<wg_influxdb_url>:8086
 
-      influxdb_url: http://<wg_influxdb_url>:8086
+  children:
+    index:
+      hosts:
+        <index_host1>:
+          ansible_host: <fqdn_host_name>
 
-frontend:
-  hosts:
-    frontend_host:
-      ansible_host: <fqdn_host_name>
-      # Change the value below to false for production!
-      certbot_test: false
+          # This is only relevant for monitoring through InfluxDB over a Wireguard tunnel
+          wireguard_wg0_interface:
+            address: <ip>
+            private_key: !vault |
+                    <encrypted_value>
+            listen_port: 51820
+
+    frontend:
+      hosts:
+        <frontend_host1>:
+          ansible_host: <fqdn_host_name>
+
