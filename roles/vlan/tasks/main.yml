@@ -1,0 +1,13 @@
+---
+- name: Install vlan package
+  apt:
+    pkg: vlan
+- name: Configure interfaces file
+  template:
+    src: vlan
+    dest: /etc/network/interfaces.d/{{ vlan_iface }}.{{ vlan_id }}
+  notify: restart networking
+- name: Ensure vlan interface started
+  systemd:
+    name: "ifup@{{ vlan_iface}}.{{ vlan_id }}"
+    state: started

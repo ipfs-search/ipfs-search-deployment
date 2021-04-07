@@ -4,13 +4,6 @@
   vars:
     - golang_version: 1.14.4
   roles:
-    - { name: cgconfig, tags: ['cgconfig']}
-    - role: adamruzicka.wireguard
-      tags: ['wireguard']
-      vars:
-        wireguard_networks:
-          - wg0
-    - { name: telegraf, tags: ['telegraf']}
     - role: elasticsearch
       tags: ['elasticsearch']
       vars:

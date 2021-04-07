@@ -13,7 +13,16 @@
   roles:
     - { name: common, tags: ['common'] }
     - { name: hostname, tags: ['hostname']}
-- name: Backend
-  import_playbook: backend.yml
-- name: Frontend
-  import_playbook: frontend.yml
+    - role: cgconfig
+      tags: ['cgconfig']
+    - role: adamruzicka.wireguard
+      tags: ['wireguard']
+      vars:
+        wireguard_networks:
+          - wg0
+    - role: telegraf
+      tags: ['telegraf']
+- hosts: dmz
+  roles:
+    - role: vlan
+      tags: ['vlan']
