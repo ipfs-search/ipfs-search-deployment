@@ -119,7 +119,7 @@
   },
   "Peering": {
     "Peers": [
-      {{ sniffer_head | to_json }}
+      {{ sniffer_heads | to_json }}
     ]
   },
   "Plugins": {

@@ -60,26 +60,35 @@
 - name: Loading secrets
   include_vars:
     file: ../../vault/secrets.yml
-- name: Ensure sniffer started
-  systemd: name=ipfs-sniffer state=started
-- name: Get sniffer head for peering
-  uri:
-    url: http://127.0.0.1:7779/heads
-    return_content: true
-  register: sniffer_heads
 - name: Increase UDP Receive Buffer Size for quic-go v0.19.x+
   sysctl:
     name: net.core.rmem_max
-    value: 2500000
+    value: "2500000"
     state: present
   notify: restart ipfs
 - name: Configure IPFS service
   template: src=ipfs.service dest=/etc/systemd/system/ipfs.service
   notify: restart ipfs
+- name: Ensure sniffer service started
+  systemd:
+    name: ipfs-sniffer
+    state: started
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['sniffer'] }}"
+- name: Get sniffer head for peering
+  uri:
+    url: http://127.0.0.1:7779/heads
+    return_content: true
+  register: sniffer_heads
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['sniffer'] }}"
+- set_fact:
+    sniffer_heads: "{% for heads in sniffer_heads.results %}{{ heads['content'].splitlines()[0] }}{% if not loop.last %},{% endif %}{% endfor %}"
+    cacheable: yes
 - name: IPFS configuration file
   template: src=ipfs_config.json dest=/var/lib/ipfs/config
   vars:
-    sniffer_head: "{{ sniffer_heads['content'].splitlines()[0] }}"
+    sniffer_heads: "{{ sniffer_heads.results | map(attribute='content') | map('splitlines') | map('first') }}"
   notify: restart ipfs
 - name: Enable IPFS service
   systemd: name=ipfs daemon_reload=yes state=started enabled=yes
