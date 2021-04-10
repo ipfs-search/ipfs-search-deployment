@@ -14,15 +14,20 @@
         es_plugins:
           - plugin: repository-s3
         es_config:
-          discovery.type: single-node
+          cluster.name: ipfs-search
+          node.name: "{{ inventory_hostname }}"
+          discovery.seed_hosts: "{% for host in groups['index'] if host != inventory_hostname %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
+          network.publish_host: "{{ vlan_ip | ipaddr('address')}}"
+          # Only during bootstrapping
+          # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
+          # cluster.initial_master_nodes: "{{ groups['index'] }}"
           repositories.url.allowed_urls: ["http://localhost:8080/*"]
           network.host: ["_local_", "_site_"]
-    - include_playbook: ipfs
+          node.data: true
+          node.master: true
+    - { name: ipfs, tags: ['ipfs'] }
     - { name: tika-extractor, tags: ['tika-extractor'] }
-    - role: crawler
-      tags: ['crawler']
-      vars:
-        crawler_memlimit: 4G
+    - { name: crawler, tags: ['crawler'] }
     - { name: nginx, tags: ['nginx']}
     - { name: api, tags: ['api']}
     - { name: storagebox, tags: ['storagebox'] }

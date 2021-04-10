@@ -1,7 +1,5 @@
 ---
 crawler_memlimit: 4G
-es_heap_size: 16g
-es_version: 7.10.2
 golang_version: 1.14.4
 ipfs_memlimit: 12G
 ipfs_version: v0.8.0
