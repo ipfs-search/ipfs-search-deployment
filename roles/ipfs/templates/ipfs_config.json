@@ -5,9 +5,9 @@
   "Addresses": {
     "API": "/ip4/127.0.0.1/tcp/5001",
     "Announce": [
-      "/ip4/{{ ipify_public_ip }}/tcp/4001",
+      "/ip4/{{ ansible_default_ipv4.address }}/tcp/4001",
       "/ip6/{{ ansible_default_ipv6.address }}/tcp/4001",
-      "/ip4/{{ ipify_public_ip }}/udp/4001/quic",
+      "/ip4/{{ ansible_default_ipv4.address }}/udp/4001/quic",
       "/ip6/{{ ansible_default_ipv6.address }}/udp/4001/quic"
     ],
     "Gateway": "/ip4/127.0.0.1/tcp/8080",
@@ -118,9 +118,7 @@
     "IPNS": "/ipns"
   },
   "Peering": {
-    "Peers": [
-      {{ sniffer_heads | to_json }}
-    ]
+    "Peers": {{ (ipfs_peers + sniffer_heads) | to_nice_json }}
   },
   "Plugins": {
     "Plugins": null

@@ -14,6 +14,9 @@
   register: source
   become: false
 - block:
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
   - block:
     - name: clean go-ipfs
       make:
@@ -54,9 +57,6 @@
     IPFS_PATH: "{{ ipfs_path }}"
   become: true
   become_user: "{{ ipfs_user }}"
-# TODO: SECURITY: This requires that we trust ipify to provide the correct public IP. We could run our own ipify server.
-- name: Get my public IP from ipify.org
-  ipify_facts:
 - name: Loading secrets
   include_vars:
     file: ../../vault/secrets.yml
@@ -75,20 +75,31 @@
     state: started
   delegate_to: "{{ item }}"
   with_items: "{{ groups['sniffer'] }}"
-- name: Get sniffer head for peering
+  run_once: True
+- name: Get sniffer heads for peering
   uri:
     url: http://127.0.0.1:7779/heads
     return_content: true
   register: sniffer_heads
   delegate_to: "{{ item }}"
   with_items: "{{ groups['sniffer'] }}"
-- set_fact:
-    sniffer_heads: "{% for heads in sniffer_heads.results %}{{ heads['content'].splitlines()[0] }}{% if not loop.last %},{% endif %}{% endfor %}"
+  when: sniffer_heads is not defined
+  run_once: True
+- name: Gather facts from other IPFS nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  with_items: "{{ groups['ipfs'] }}"
+- name: Set sniffer heads and ipfs peers
+  set_fact:
+    ipfs_peers: "[{% for host in groups['ipfs'] if host != inventory_hostname %}{\"ID\": \"{{ hostvars[host][\"ipfs_peer_id\"] }}\", \"Addrs\": [\"/ip4/{{ hostvars[host].ansible_default_ipv4.address }}/udp/4001/quic\"]}{% if not loop.last %},{% endif %}{% endfor %}]"
+    sniffer_heads: "[{% for heads in sniffer_heads.results %}{{ heads['content'].splitlines()[0] }}{% if not loop.last %},{% endif %}{% endfor %}]"
     cacheable: yes
-- name: IPFS configuration file
-  template: src=ipfs_config.json dest=/var/lib/ipfs/config
-  vars:
-    sniffer_heads: "{{ sniffer_heads.results | map(attribute='content') | map('splitlines') | map('first') }}"
+- name: Render IPFS configuration file
+  template:
+    src: ipfs_config.json
+    dest: "{{ ipfs_path }}/config"
   notify: restart ipfs
 - name: Enable IPFS service
   systemd: name=ipfs daemon_reload=yes state=started enabled=yes
@@ -101,3 +112,9 @@
     backup: "yes"
     user: "{{ ipfs_user }}"
     job: "env IPFS_PATH={{ ipfs_path }} ipfs repo gc > /dev/null"
+- name: ipfs convenience alias
+  lineinfile:
+    path: "{{ ansible_env.PWD }}/.bashrc" # Workaround https://github.com/ansible/ansible/issues/15901
+    regexp: "^alias ipfs="
+    line: "alias ipfs='sudo -u {{ ipfs_user }} IPFS_PATH={{ ipfs_path }} {{ ipfs_binary }}'"
+  become: false
