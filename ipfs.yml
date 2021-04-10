@@ -1,0 +1,8 @@
+---
+- hosts: ipfs
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - { name: ipfs, tags: ['ipfs'] }
+    # - {  name: ipfs-cluster, tags: ['ipfs-cluster']}

@@ -1,15 +1,13 @@
 ---
 - hosts: index
   become: true
-  vars:
-    - golang_version: 1.14.4
+  vars_files:
+    - common_variables.yml
   roles:
     - role: elasticsearch
       tags: ['elasticsearch']
       vars:
-        es_version: 7.10.2
         oss_version: true
-        es_heap_size: 16g
         es_log_dir: "/var/log/elasticsearch"
         es_data_dirs:
           - "/var/lib/elasticsearch"
@@ -19,9 +17,7 @@
           discovery.type: single-node
           repositories.url.allowed_urls: ["http://localhost:8080/*"]
           network.host: ["_local_", "_site_"]
-    - role: ipfs
-      tags: ['ipfs']
-      ipfs_memlimit: 12G
+    - include_playbook: ipfs
     - { name: tika-extractor, tags: ['tika-extractor'] }
     - role: crawler
       tags: ['crawler']
@@ -31,4 +27,3 @@
     - { name: api, tags: ['api']}
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
-    - { name: ipfs-cluster, tags: ['ipfs-cluster']}

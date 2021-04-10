@@ -1,23 +1,18 @@
 ---
-- hosts: backend
+- hosts: sniffer
   become: true
-  vars:
-    - es_heap_size: 16g
-    - ipfs_memlimit: 12G
-    - crawler_memlimit: 4G
-    - golang_version: 1.14.4
-    - sniffer_heads: 6
+  vars_files:
+    - common_variables.yml
   roles:
     - { name: disable-eth-offloading, tags: ['disable-eth-offloading']}
     - { name: cgconfig, tags: ['cgconfig']}
     - { name: elasticsearch, tags: ['elasticsearch']}
     - { name: rabbitmq, tags: ['rabbitmq'] }
     - { name: sniffer, tags: ['sniffer'] }
-    - { name: ipfs, tags: ['ipfs'] }
+    - include_playbook: ipfs
     - { name: tika-extractor, tags: ['tika-extractor'] }
     - { name: crawler, tags: ['crawler'] }
     - { name: nginx, tags: ['nginx']}
     - { name: api, tags: ['api']}
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
-    - { name: ipfs-cluster, tags: ['ipfs-cluster']}
