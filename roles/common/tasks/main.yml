@@ -19,9 +19,18 @@
       - tree
       - git
       - software-properties-common # Includes add-apt-repository
+      - jq
     state: present
 - name: Configure journald
   copy: dest=/etc/systemd/journald.conf src=journald.conf owner=root group=root mode=644
   notify: restart journald
 - name: Install scripts
   copy: dest=/usr/local/ src=bin owner=root group=root mode=755
+- name: Force default locale
+  # Does away by endless LC_ALL warnings
+  lineinfile:
+    path: "{{ ansible_env.PWD }}/.pam_environment" # Workaround https://github.com/ansible/ansible/issues/15901
+    regexp: "^LC_ALL="
+    line: "LC_ALL=en_US.UTF-8"
+    create: true
+  become: false
