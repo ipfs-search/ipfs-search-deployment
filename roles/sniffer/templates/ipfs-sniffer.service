@@ -5,7 +5,7 @@ After=rabbitmq-server.service
 
 [Service]
 WorkingDirectory={{ sniffer_home }}
-ExecStart={{ sniffer_binary }} -nheads={{ sniffer_heads }} -pstore hydra-peerstore -bootstrap-peers "/ip4/127.0.0.1/tcp/4001/p2p/{{ ipfs_peerid }}" -disable-prefetch
+ExecStart={{ sniffer_binary }} -nheads={{ sniffer_head_count }} -pstore hydra-peerstore -bootstrap-peers "/ip4/127.0.0.1/tcp/4001/p2p/{{ ipfs_peerid }}" -disable-prefetch
 Restart=always
 RestartSec=3
 StartLimitBurst=40
