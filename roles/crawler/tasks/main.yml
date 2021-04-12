@@ -6,13 +6,16 @@
       - libssl-dev
       - pkg-config
     state: present
+- name: clone ipfs-search
+  git:
+    dest: "{{ crawler_build }}"
+    repo: https://github.com/ipfs-search/ipfs-search.git
+    version: "{{ crawler_version }}"
+  register: source
 - block:
-  - name: clone ipfs-search
-    git:
-      dest: "{{ crawler_build }}"
-      repo: https://github.com/ipfs-search/ipfs-search.git
-      version: "{{ crawler_version }}"
-    register: source
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
   - block:
     - name: go get
       command:
@@ -37,9 +40,9 @@
         version: "{{ source.after }}"
         action: upgrade
     when: source.changed
-  environment:
-    PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
-  become: false
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
 - group: name=ipfs-crawler system=true state=present
 - user: name=ipfs-crawler comment="ipfs-crawler daemon" group=ipfs-crawler system=true state=present home=/nonexistent shell=/usr/sbin/nologin
 - name: Install crawler systemd service
@@ -47,6 +50,9 @@
   notify: restart ipfs-crawler
 - name: Ensures ipfs-search dir exists
   file: path=/etc/ipfs-crawler state=directory
+- name: Loading secrets
+  include_vars:
+    file: ../../vault/secrets.yml
 - name: Install configuration file
   template: src=config.yml dest=/etc/ipfs-crawler/config.yml
   notify:

@@ -25,7 +25,7 @@
           network.host: ["_local_", "_site_"]
           node.data: true
           node.master: true
-    - { name: ipfs, tags: ['ipfs'] }
+          reindex.remote.whitelist: 172.16.34.1:9200
     - { name: tika-extractor, tags: ['tika-extractor'] }
     - { name: crawler, tags: ['crawler'] }
     - { name: nginx, tags: ['nginx']}

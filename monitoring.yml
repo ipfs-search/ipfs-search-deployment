@@ -1,0 +1,14 @@
+---
+# Common configuration for all hosts
+- hosts: all
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - role: adamruzicka.wireguard
+      tags: ['wireguard']
+      vars:
+        wireguard_networks:
+          - wg0
+    - role: telegraf
+      tags: ['telegraf']

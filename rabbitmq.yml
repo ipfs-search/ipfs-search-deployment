@@ -1,0 +1,7 @@
+---
+- hosts: rabbitmq
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - { name: rabbitmq, tags: ['rabbitmq'] }

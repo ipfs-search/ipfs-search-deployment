@@ -7,8 +7,6 @@
     - { name: disable-eth-offloading, tags: ['disable-eth-offloading']}
     - { name: cgconfig, tags: ['cgconfig']}
     - { name: elasticsearch, tags: ['elasticsearch']}
-    - { name: rabbitmq, tags: ['rabbitmq'] }
     - { name: sniffer, tags: ['sniffer'] }
-    - { name: ipfs, tags: ['ipfs'] }
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
