@@ -9,6 +9,6 @@
     - { name: elasticsearch, tags: ['elasticsearch']}
     - { name: rabbitmq, tags: ['rabbitmq'] }
     - { name: sniffer, tags: ['sniffer'] }
-    - include_playbook: ipfs
+    - { name: ipfs, tags: ['ipfs'] }
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
