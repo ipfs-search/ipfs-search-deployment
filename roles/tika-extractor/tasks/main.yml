@@ -2,7 +2,7 @@
 - name: Create libexec directory
   file: path={{ tika_extractor_path }} state=directory owner=root group=root mode=755
 - name: Download tika-extractor
-  get_url: url={{ tika_extractor_mirror}}{{ tika_extractor_jar }} dest={{ tika_extractor_path }}/{{ tika_extractor_jar }} owner=root group=root checksum="sha256:{{ tika_extractor_sha256 }}"
+  get_url: url={{ tika_extractor_url }} dest={{ tika_extractor_path }}/{{ tika_extractor_jar }} owner=root group=root checksum="sha256:{{ tika_extractor_sha256 }}"
   notify: restart tika-extractor
   register: download
 - include_role:
