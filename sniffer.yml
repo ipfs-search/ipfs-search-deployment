@@ -10,9 +10,5 @@
     - { name: rabbitmq, tags: ['rabbitmq'] }
     - { name: sniffer, tags: ['sniffer'] }
     - include_playbook: ipfs
-    - { name: tika-extractor, tags: ['tika-extractor'] }
-    - { name: crawler, tags: ['crawler'] }
-    - { name: nginx, tags: ['nginx']}
-    - { name: api, tags: ['api']}
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
