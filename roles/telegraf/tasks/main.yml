@@ -10,8 +10,30 @@
     repo: "deb https://repos.influxdata.com/{{ ansible_distribution|lower }} {{ ansible_lsb.codename }} stable"
     filename: "telegraf"
     state: present
-- name: Install misc utils
-  apt: name=lm-sensors state=present
+- name: Install packages
+  apt:
+    pkg: telegraf
+    state: present
+- block:
+    - name: Install lm-sensors package
+      apt:
+        pkg: lm-sensors
+        state: present
+    - name: Configure sensor-modules
+      template:
+        src: sensors.conf
+        dest: /etc/modules-load.d/sensors.conf
+      register: sensors
+      when: sensor_modules is defined
+    - systemd:
+        service: systemd-modules-load
+        state: restarted
+      when: sensors.changed
+    - systemd:
+        service: lm-sensors
+        enabled: yes
+        state: started
+  when: has_sensors is defined
 - name: Install Telegraf package
   apt:
     name: telegraf
