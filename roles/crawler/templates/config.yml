@@ -28,11 +28,11 @@ sniffer:
   buffer_size: 512
 indexes:
   files:
-    name: ipfs_files
+    name: ipfs_files_v8
   directories:
-    name: ipfs_directories
+    name: ipfs_directories_v8
   invalids:
-    name: ipfs_invalids
+    name: ipfs_invalids_v8
 queues:
   files:
     name: files
