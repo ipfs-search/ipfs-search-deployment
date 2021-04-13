@@ -18,12 +18,6 @@ PrivateDevices=true
 PrivateTmp=true
 MemoryAccounting=yes
 MemoryLimit={{ crawler_memlimit }}
-# As yet unsupported security options
-#ControlGroupAttribute=memory.swappiness 1
-#PrivateUser=true
-#ReadOnlyPaths=*
-#ReadWritePaths={{ ipfs_path }}
-#MemoryMax=512M
 
 [Install]
 WantedBy=default.target
