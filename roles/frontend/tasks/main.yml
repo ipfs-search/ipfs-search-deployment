@@ -25,8 +25,16 @@
         action: upgrade
     when: source.changed
   become: false
+- name: Gather facts from backend nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  with_items: "{{ groups['index'] }}"
 - name: Install nginx configuration
-  template: src=nginx-frontend.conf dest=/etc/nginx/sites-available/frontend.conf
+  template:
+    src: nginx-frontend.conf
+    dest: /etc/nginx/sites-available/frontend.conf
   notify: restart nginx
 - name: Enable nginx configuration
   file:

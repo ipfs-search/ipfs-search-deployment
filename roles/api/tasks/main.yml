@@ -7,12 +7,12 @@
       dest: "{{ api_install_path }}"
       repo: https://github.com/ipfs-search/ipfs-search-api.git
     register: source
-    notify: restart ipfs-search
   - name: Install search API
-    command: npm install --no-package-lock
+    command: npm install --no-save
     args:
       chdir: "{{ api_install_path }}/server"
-    when: source.changed
+    # when: source.changed
+    notify: restart ipfs-search
   - include_role:
       name: annotate
     vars:
