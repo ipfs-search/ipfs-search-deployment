@@ -21,7 +21,7 @@
 - name: Setup rabbitmq admin user
   rabbitmq_user:
     user: admin
-    password: "{{ rabbitmq_admin_pass }}"
+    password: admin
     configure_priv: .*
     read_priv: .*
     write_priv: .*
