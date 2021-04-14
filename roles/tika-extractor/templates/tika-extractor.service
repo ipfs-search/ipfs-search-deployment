@@ -2,8 +2,7 @@
 Description=Tika Extractor daemon
 
 [Service]
-ExecStart=/usr/bin/java -Xmx{{ tika_extractor_heap_max }} -jar /usr/local/libexec/{{ tika_extractor_jar }} -Dquarkus.http.host=localhost
-User=tika-extractor
+ExecStart=/usr/bin/java -Xmx{{ tika_extractor_heap_max }} -jar /usr/local/libexec/{{ tika_extractor_jar }}
 Group=tika-extractor
 MemoryAccounting=yes
 MemoryLimit=4096M
