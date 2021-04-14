@@ -41,6 +41,6 @@ queues:
   hashes:
     name: hashes
 workers:
-  hash_workers: 96
-  file_workers: 96
-  directory_workers: 4
+  hash_workers: {{ crawler_hash_workers }}
+  file_workers: {{ crawler_file_workers }}
+  directory_workers: {{ crawler_directory_workers }}
