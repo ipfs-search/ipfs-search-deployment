@@ -6,7 +6,7 @@ crawler_directory_workers: 4
 golang_version: 1.14.4
 ipfs_memlimit: 12G
 ipfs_version: v0.8.0
-sniffer_head_count: 8
+sniffer_head_count: 9
 es_heap_size: 26g
 es_version: 7.10.2
 tika_extractor_version: "1.1"
