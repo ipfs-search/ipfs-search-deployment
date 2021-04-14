@@ -1,7 +1,7 @@
 ---
 crawler_memlimit: 4G
-crawler_hash_workers: 192
-crawler_file_workers: 48
+crawler_hash_workers: 256
+crawler_file_workers: 64
 crawler_directory_workers: 4
 golang_version: 1.14.4
 ipfs_memlimit: 12G
