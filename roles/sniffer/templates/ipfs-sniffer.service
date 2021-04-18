@@ -20,5 +20,7 @@ LimitNOFILE=65536
 MemoryAccounting=yes
 MemoryLimit={{ sniffer_memlimit }}
 
+Environment=SNIFFER_LASTSEEN_PRUNELEN={{ sniffer_lastseen_prunelen }}
+
 [Install]
 WantedBy=default.target
