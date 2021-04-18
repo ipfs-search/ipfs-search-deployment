@@ -1,0 +1,45 @@
+- name: Ensure badger is installed
+  stat:
+    path: "{{ badger_binary }}"
+  register: badger_stat
+- block:
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
+      public: yes
+    when: golang_install_dir is not defined
+  - block:
+    - name: Create build dir
+      file:
+        path: "{{ badger_build_dir }}"
+        state: directory
+    - name: Build badger command
+      command: "go get github.com/dgraph-io/badger/...@{{ badger_version }}"
+      args:
+        creates: "{{ badger_build_dir }}/badger"
+      environment:
+        GOBIN: "{{ badger_build_dir }}"
+        PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+        GO111MODULE: "on"
+    become: false
+  - name: Globally install badger
+    copy:
+      src: "{{ badger_build_dir }}/badger"
+      dest: "{{ badger_binary }}"
+      remote_src: True
+      mode: 755
+  when: not badger_stat.stat.exists
+- name: Install IPFS gc script
+  template:
+    src: ipfs_gc.sh
+    dest: "{{ ipfs_gc_script }}"
+    mode: 0755
+- name: Enable IPFS garbage collection
+  cron:
+    name: "ipfs collect garbage"
+    cron_file: /etc/crontab
+    minute: "23"
+    hour: "*/6"
+    backup: "yes"
+    user: "{{ ipfs_user }}"
+    job: "{{ ipfs_gc_script }} > /dev/null"

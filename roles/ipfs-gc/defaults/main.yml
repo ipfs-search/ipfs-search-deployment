@@ -1,0 +1,5 @@
+badger_version: v1.6.2
+badger_binary: "/usr/local/bin/badger"
+badger_build_dir: "/tmp/badger-build"
+ipfs_gc_script: "/usr/local/bin/ipfs_gc_script.sh"
+ipfs_dependant_services: ipfs-crawler

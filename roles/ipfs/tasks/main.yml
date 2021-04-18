@@ -18,6 +18,7 @@
     include_role:
       name: golang
       public: yes
+    when: golang_install_dir is not defined
   - block:
     - name: clean go-ipfs
       make:
@@ -104,15 +105,6 @@
   notify: restart ipfs
 - name: Enable IPFS service
   systemd: name=ipfs daemon_reload=yes state=started enabled=yes
-- name: Enable IPFS garbage collection
-  cron:
-    name: "ipfs collect garbage"
-    cron_file: /etc/crontab
-    minute: "*/9"
-    hour: "*"
-    backup: "yes"
-    user: "{{ ipfs_user }}"
-    job: "env IPFS_PATH={{ ipfs_path }} ipfs repo gc > /dev/null"
 - name: ipfs convenience alias
   lineinfile:
     path: "{{ ansible_env.PWD }}/.bashrc" # Workaround https://github.com/ansible/ansible/issues/15901
