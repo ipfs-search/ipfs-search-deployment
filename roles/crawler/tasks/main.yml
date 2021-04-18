@@ -16,6 +16,7 @@
   - name: Ensure golang's available for building
     include_role:
       name: golang
+      public: yes
   - block:
     - name: go get
       command:
