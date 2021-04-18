@@ -31,7 +31,7 @@
         src: "{{ crawler_build }}/ipfs-crawler"
         dest: "{{ crawler_binary }}"
         remote_src: True
-        mode: 755
+        mode: 0755
       become: true
       notify: restart ipfs-crawler
     - include_role:
