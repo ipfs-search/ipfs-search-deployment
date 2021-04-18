@@ -6,7 +6,6 @@
   roles:
     - { name: disable-eth-offloading, tags: ['disable-eth-offloading']}
     - { name: cgconfig, tags: ['cgconfig']}
-    - { name: elasticsearch, tags: ['elasticsearch']}
     - { name: sniffer, tags: ['sniffer'] }
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }

@@ -1,1 +1,27 @@
-elasticsearch.yml
+---
+- hosts: elasticsearch
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - role: elasticsearch
+      tags: ['elasticsearch']
+      vars:
+        oss_version: true
+        es_log_dir: "/var/log/elasticsearch"
+        es_data_dirs:
+          - "/var/lib/elasticsearch"
+        es_plugins:
+          - plugin: repository-s3
+        es_config:
+          cluster.name: ipfs-search
+          node.name: "{{ inventory_hostname }}"
+          discovery.seed_hosts: "{% for host in groups['elasticsearch'] if host != inventory_hostname %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
+          network.publish_host: "{{ vlan_ip | ipaddr('address')}}"
+          # Only during bootstrapping
+          # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
+          cluster.initial_master_nodes: "{{ groups['elasticsearch'] }}"
+          repositories.url.allowed_urls: ["http://localhost:8080/*"]
+          network.host: ["_local_", "_site_"]
+          node.data: "{{ 'index' in group_names }}"
+          node.master: true
