@@ -38,8 +38,8 @@
   cron:
     name: "ipfs collect garbage"
     cron_file: /etc/crontab
-    minute: "23"
+    minute: "48"
     hour: "*/6"
     backup: "yes"
-    user: "{{ ipfs_user }}"
+    user: "root"
     job: "{{ ipfs_gc_script }} > /dev/null"
