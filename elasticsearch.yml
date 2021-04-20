@@ -25,3 +25,5 @@
           network.host: ["_local_", "_site_"]
           node.data: "{{ 'index' in group_names }}"
           node.master: true
+    - { name: storagebox, tags: ['storagebox'] }
+    - { name: snapshots, tags: ['snapshots'] }
