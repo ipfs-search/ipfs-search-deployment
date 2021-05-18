@@ -59,7 +59,7 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_s3_name }}"
-# TODO: Only do this on single host
+# TODO: Ensure this will only ever be added on one single host and removed on others.
 # - name: Elasticsearch S3 daily snapshot cronjob
 #   cron:
 #     name: "Elasticsearch S3 snapshot"

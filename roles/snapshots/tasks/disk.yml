@@ -36,7 +36,7 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_disk_name }}"
-# TODO: Only do this on the first non-index host! - Ensure it's *not* it's removed for other hosts
+# TODO: Ensure this will only ever be added on one single host and removed on others.
 # - name: Elasticsearch daily disk snapshot cronjob
 #   cron:
 #     name: "Elasticsearch disk snapshot"
