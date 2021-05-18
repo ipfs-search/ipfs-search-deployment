@@ -21,6 +21,7 @@ MemoryAccounting=yes
 MemoryLimit={{ sniffer_memlimit }}
 
 Environment=SNIFFER_LASTSEEN_PRUNELEN={{ sniffer_lastseen_prunelen }}
+Environment=SNIFFER_LASTSEEN_EXPIRATION={{ sniffer_lastseen_expiration }}
 
 [Install]
 WantedBy=default.target
