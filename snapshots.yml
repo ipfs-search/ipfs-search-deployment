@@ -1,0 +1,9 @@
+---
+- hosts: snapshot
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - { name: ipfs-cluster, tags: ['ipfs-cluster'] }
+    - { name: storagebox, tags: ['storagebox'] }
+    - { name: snapshots, tags: ['snapshots'] }

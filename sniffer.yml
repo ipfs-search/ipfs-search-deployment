@@ -8,4 +8,3 @@
     - { name: cgconfig, tags: ['cgconfig']}
     - { name: sniffer, tags: ['sniffer'] }
     - { name: storagebox, tags: ['storagebox'] }
-    - { name: snapshots, tags: ['snapshots'] }

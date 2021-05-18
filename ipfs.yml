@@ -6,4 +6,3 @@
   roles:
     - { name: ipfs, tags: ['ipfs'] }
     - { name: ipfs-gc, tags: ['ipfs-gc'] }
-    # - {  name: ipfs-cluster, tags: ['ipfs-cluster']}
