@@ -6,3 +6,5 @@ snapshot_s3_bucket: ipfs-search-snapshots-v7
 snapshot_publish_state_path: "{{ ipfs_path }}/snapshots-publish-state"
 snapshot_publish_path: "{{ ipfs_path }}/snapshots-publish"
 snapshot_publish_keyname: "snapshot-key"
+snapshot_fleek_name: ipfs_fleek
+snapshot_fleek_bucket: dokterbob-team-bucket

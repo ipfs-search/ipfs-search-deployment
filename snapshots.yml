@@ -1,5 +1,5 @@
 ---
-- hosts: snapshot
+- hosts: elasticsearch
   become: true
   vars_files:
     - common_variables.yml
