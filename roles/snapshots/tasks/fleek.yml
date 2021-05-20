@@ -55,7 +55,9 @@
         "settings": {
           "bucket": "{{ snapshot_fleek_bucket }}",
           "client": "fleek",
-          "compress": true
+          "compress": true,
+          "chunk_size": "524288000B",
+          "path_style_access": true
         }
       }
   when: snapshot_check.status == 404
