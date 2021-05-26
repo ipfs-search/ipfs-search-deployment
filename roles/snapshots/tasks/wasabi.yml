@@ -35,11 +35,12 @@
     path: /etc/elasticsearch/elasticsearch.yml
     backup: yes
     regexp: ^s3.client.wasabi.endpoint
-    line: "s3.client.wasabi.endpoint: storageapi.wasabi.co"
+    line: "s3.client.wasabi.endpoint: s3.eu-central-1.wasabisys.com"
     state: present
+  register: es_config
 - name: Restart elasticsearch
   systemd: daemon_reload=yes state=restarted name=elasticsearch
-  when: added_access_key.changed or added_secret_key.changed
+  when: added_access_key.changed or added_secret_key.changed or es_config.changed
 - name: Wait for elasticsearch to be ready
   wait_for:
     host: 127.0.0.1
@@ -57,7 +58,6 @@
           "client": "wasabi",
           "compress": true,
           "chunk_size": "524288000B",
-          "path_style_access": true
         }
       }
   when: snapshot_check.status == 404

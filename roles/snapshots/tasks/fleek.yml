@@ -37,9 +37,10 @@
     regexp: ^s3.client.fleek.endpoint
     line: "s3.client.fleek.endpoint: storageapi.fleek.co"
     state: present
+  register: es_config
 - name: Restart elasticsearch
   systemd: daemon_reload=yes state=restarted name=elasticsearch
-  when: added_access_key.changed or added_secret_key.changed
+  when: added_access_key.changed or added_secret_key.changed or es_config.changed
 - name: Wait for elasticsearch to be ready
   wait_for:
     host: 127.0.0.1
