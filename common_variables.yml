@@ -1,7 +1,7 @@
 ---
 crawler_memlimit: 4G
-crawler_hash_workers: 48
-crawler_file_workers: 24
+crawler_hash_workers: 64
+crawler_file_workers: 36
 crawler_directory_workers: 4
 golang_version: 1.14.4
 ipfs_version: v0.8.0
@@ -12,7 +12,7 @@ ipfs_group: "ipfs"
 ipfs_memlimit: 12G
 sniffer_head_count: 32
 sniffer_memlimit: 16G
-sniffer_lastseen_prunelen: 262144
+sniffer_lastseen_prunelen: 319488
 sniffer_lastseen_expiration: 3h
 es_heap_size: 26g
 es_version: 7.10.2
