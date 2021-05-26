@@ -12,7 +12,7 @@ ipfs_group: "ipfs"
 ipfs_memlimit: 12G
 sniffer_head_count: 32
 sniffer_memlimit: 16G
-sniffer_lastseen_prunelen: 319488
+sniffer_lastseen_prunelen: 524288
 sniffer_lastseen_expiration: 3h
 es_heap_size: 26g
 es_version: 7.10.2
