@@ -11,6 +11,10 @@
   import_tasks: disk.yml
   tags:
     - snapshots-disk
+- name: Configuring wasabi snapshots
+  import_tasks: wasabi.yml
+  tags:
+    - snapshots-wasabi
 - name: Configuring IPFS publish of disk snapshots
   import_tasks: ipfs-publish.yml
   tags:

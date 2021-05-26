@@ -8,3 +8,5 @@ snapshot_publish_path: "{{ ipfs_path }}/snapshots-publish"
 snapshot_publish_keyname: "snapshot-key"
 snapshot_fleek_name: ipfs_fleek
 snapshot_fleek_bucket: dokterbob-team-bucket
+snapshot_wasabi_name: ipfs_wasabi
+snapshot_wasabi_bucket: ipfs-search-snapshots-v8
