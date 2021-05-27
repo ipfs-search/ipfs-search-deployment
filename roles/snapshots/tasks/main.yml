@@ -1,8 +1,4 @@
 ---
-- name: Configuring S3 snapshots
-  import_tasks: s3.yml
-  tags:
-    - snapshots-s3
 - name: Configuring Fleek snapshots
   import_tasks: fleek.yml
   tags:
