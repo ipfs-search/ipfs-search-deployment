@@ -69,13 +69,8 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_fleek_name }}"
-# TODO: Ensure this will only ever be added on one single host and removed on others.
-# - name: Elasticsearch Fleek daily snapshot cronjob
-#   cron:
-#     name: "Elasticsearch Fleek snapshot"
-#     cron_file: /etc/crontab
-#     minute: "16"
-#     hour: "3"
-#     backup: yes
-#     user: nobody
-#     job: "/usr/local/bin/ipfs-search-snapshot-fleek.sh"
+- import_tasks: cron.yml
+  vars:
+    snapshot_hour: "3"
+    snapshot_name: wasabi
+

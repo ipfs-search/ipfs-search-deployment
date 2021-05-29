@@ -36,15 +36,7 @@
     mode: 0755
   vars:
     - snapshot_name: "{{ snapshot_disk_name }}"
-# TODO: Ensure this will only ever be added on one single host and removed on others.
-# - name: Elasticsearch daily disk snapshot cronjob
-#   cron:
-#     name: "Elasticsearch disk snapshot"
-#     cron_file: /etc/crontab
-#     minute: "16"
-#     hour: "4"
-#     backup: yes
-#     user: nobody
-#     job: "/usr/local/bin/ipfs-search-snapshot-disk.sh"
-#  run_once: true
-# TODO: Reload crontab
+- import_tasks: cron.yml
+  vars:
+    snapshot_hour: "4"
+    snapshot_name: wasabi

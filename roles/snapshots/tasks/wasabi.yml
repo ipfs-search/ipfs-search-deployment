@@ -61,20 +61,7 @@
         }
       }
   when: snapshot_check.status == 404
-- name: Install snapshot script
-  template:
-    src: ipfs-search-snapshot.sh
-    dest: /usr/local/bin/ipfs-search-snapshot-wasabi.sh
-    mode: 0755
+- import_tasks: cron.yml
   vars:
-    - snapshot_name: "{{ snapshot_wasabi_name }}"
-# TODO: Ensure this will only ever be added on one single host and removed on others.
-# - name: Elasticsearch wasabi daily snapshot cronjob
-#   cron:
-#     name: "Elasticsearch wasabi snapshot"
-#     cron_file: /etc/crontab
-#     minute: "16"
-#     hour: "3"
-#     backup: yes
-#     user: nobody
-#     job: "/usr/local/bin/ipfs-search-snapshot-wasabi.sh"
+    snapshot_hour: "2"
+    snapshot_name: wasabi

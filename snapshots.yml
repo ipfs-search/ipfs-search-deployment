@@ -3,6 +3,8 @@
   become: true
   vars_files:
     - common_variables.yml
+  vars:
+    snapshot_cron_host: "{{ groups['elasticsearch'] | first }}"
   roles:
     - { name: ipfs-cluster, tags: ['ipfs-cluster'] }
     - { name: storagebox, tags: ['storagebox'] }
