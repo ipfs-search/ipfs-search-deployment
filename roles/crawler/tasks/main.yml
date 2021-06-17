@@ -12,6 +12,7 @@
     repo: https://github.com/ipfs-search/ipfs-search.git
     version: "{{ crawler_version }}"
   register: source
+  become: false
 - block:
   - name: Ensure golang's available for building
     include_role:
