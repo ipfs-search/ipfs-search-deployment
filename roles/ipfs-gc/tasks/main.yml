@@ -41,5 +41,5 @@
     minute: "48"
     hour: "*/6"
     backup: "yes"
-    user: "root"
+    user: "ipfs"
     job: "{{ ipfs_gc_script }} > /dev/null"
