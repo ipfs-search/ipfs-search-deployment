@@ -1,12 +1,16 @@
 ---
-- name: Configuring S3 snapshots
-  import_tasks: s3.yml
+- name: Configuring Fleek snapshots
+  import_tasks: fleek.yml
   tags:
-    - snapshots-s3
+    - snapshots-fleek
 - name: Configuring disk snapshots
   import_tasks: disk.yml
   tags:
     - snapshots-disk
+- name: Configuring wasabi snapshots
+  import_tasks: wasabi.yml
+  tags:
+    - snapshots-wasabi
 - name: Configuring IPFS publish of disk snapshots
   import_tasks: ipfs-publish.yml
   tags:
