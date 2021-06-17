@@ -18,6 +18,7 @@
   run_once: True
 - name: "Remove Elasticsearch {{ snapshot_name }} daily snapshot cronjob on other hosts"
   cron:
+    cron_file: /etc/crontab
     name: "Elasticsearch {{ snapshot_name }} snapshot"
     state: absent
   when: inventory_hostname != snapshot_cron_host
