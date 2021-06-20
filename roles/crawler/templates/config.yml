@@ -8,6 +8,7 @@ amqp:
   url: "amqp://admin:admin@{{ hostvars[groups['rabbitmq'][0]].vlan_ip | ipaddr('address') }}:5672/"
   max_reconnect: 100
   reconnect_time: 2s
+  message_ttl: {{ amqp_message_ttl }}
 tika:
   url: http://localhost:8081
   timeout: 5m

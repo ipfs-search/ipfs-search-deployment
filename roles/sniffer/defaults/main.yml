@@ -5,3 +5,4 @@ sniffer_head_count: 4
 sniffer_memlimit: 4G
 sniffer_version: master
 ipfs_peerid: QmfPZcnVAEjXABiA7StETRUKkS8FzNt968Z8HynbJR7oci
+amqp_message_ttl: 4h
