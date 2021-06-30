@@ -1,0 +1,2 @@
+firewall_iface: "{% if ansible_default_ipv4.type == 'ether' %}{{ ansible_default_ipv4.interface }}{% endif %}"
+firewall_whitelist:

@@ -1,0 +1,48 @@
+- name: Install ufw package
+  apt:
+    pkg: ufw
+    state: present
+- name: Set logging
+  ufw:
+    logging: "on"
+- name: Default allow
+  ufw:
+    rule: allow
+    direction: in
+- name: Whitelist safe IPs
+  ufw:
+    rule: allow
+    direction: in
+    interface: "{{ firewall_iface }}"
+    to_ip: "{{ item }}"
+    insert: 1 # Note: THIS DOESN"T WORK YET
+  with_items: "{{ firewall_whitelist }}"
+# ufw supports connection rate limiting, which is useful for protecting
+# against brute-force login attacks. ufw will deny connections if an IP
+# address has attempted to initiate 6 or more connections in the last
+# 30 seconds. See  http://www.debian-administration.org/articles/187
+# for details. Typical usage is:
+- name: Limit SSH connection attempts
+  ufw:
+    rule: limit
+    direction: in
+    port: ssh
+    proto: tcp
+    insert: 2
+    log: yes
+- name: Deny outgoing to private subnets to RFC1918 networks to this host
+  ufw:
+    rule: reject
+    direction: out
+    interface: "{{ firewall_iface }}"
+    to_ip: "{{ item }}"
+    log: yes
+  with_items:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 100.64.0.0/10
+    - 169.254.0.0/16
+- name: Enable firewall
+  ufw:
+    state: enabled

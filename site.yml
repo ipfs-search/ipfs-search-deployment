@@ -22,6 +22,7 @@
           - wg0
     - role: telegraf
       tags: ['telegraf']
+    - { name: firewall, tags: ['firewall']}
 - hosts: dmz
   roles:
     - role: vlan
