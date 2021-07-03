@@ -34,12 +34,12 @@
     src: ipfs_gc.sh
     dest: "{{ ipfs_gc_script }}"
     mode: 0755
-- name: Enable IPFS garbage collection
+- name: Enable IPFS garbage collection crontab
   cron:
     name: "ipfs collect garbage"
     cron_file: /etc/crontab
     minute: "48"
-    hour: "*/6"
+    hour: "*/1"
     backup: "yes"
     user: "root"
     job: "{{ ipfs_gc_script }} > /dev/null"
