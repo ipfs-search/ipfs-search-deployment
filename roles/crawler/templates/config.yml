@@ -34,6 +34,8 @@ indexes:
     name: ipfs_directories_v8
   invalids:
     name: ipfs_invalids_v8
+  partials:
+    name: ipfs_partials_v8
 queues:
   files:
     name: files
