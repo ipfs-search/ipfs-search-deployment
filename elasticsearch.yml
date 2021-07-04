@@ -23,7 +23,7 @@
           cluster.initial_master_nodes: "{{ groups['elasticsearch'] }}"
           repositories.url.allowed_urls: ["http://localhost:8080/*"]
           network.host: ["_local_", "_site_"]
-          node.data: "{{ 'index' in group_names }}"
+          node.data: true
           node.master: true
     - { name: storagebox, tags: ['storagebox'] }
     - { name: snapshots, tags: ['snapshots'] }
