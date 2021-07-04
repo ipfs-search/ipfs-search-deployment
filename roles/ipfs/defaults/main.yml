@@ -1,5 +1,5 @@
 ---
-ipfs_version: v0.8.0
+ipfs_version: v0.9.0
 ipfs_path: "/var/lib/ipfs"
 ipfs_build: "/tmp/go-ipfs"
 ipfs_binary: "/usr/local/bin/ipfs"
