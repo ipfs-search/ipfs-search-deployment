@@ -1,4 +1,4 @@
-sniffer_build: "/tmp/ipfs-sniffer"
+sniffer_build: "/usr/local/src/ipfs-sniffer"
 sniffer_binary: "/usr/local/bin/ipfs-sniffer"
 sniffer_home: "/var/lib/ipfs-sniffer"
 sniffer_head_count: 4
