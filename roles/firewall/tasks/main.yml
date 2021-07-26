@@ -7,7 +7,7 @@
     state: reset
 - name: Set logging
   ufw:
-    logging: off
+    logging: "off"
 - name: Default allow
   ufw:
     default: allow
