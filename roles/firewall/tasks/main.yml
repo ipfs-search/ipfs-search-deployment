@@ -2,21 +2,23 @@
   apt:
     pkg: ufw
     state: present
+- name: Reset firewall
+  ufw:
+    state: reset
 - name: Set logging
   ufw:
-    logging: "on"
+    logging: off
 - name: Default allow
   ufw:
-    rule: allow
-    direction: in
-- name: Whitelist safe IPs
-  ufw:
-    rule: allow
-    direction: in
-    interface: "{{ firewall_iface }}"
-    to_ip: "{{ item }}"
-    insert: 1 # Note: THIS DOESN"T WORK YET
-  with_items: "{{ firewall_whitelist }}"
+    default: allow
+# - name: Whitelist safe IPs
+#   ufw:
+#     rule: allow
+#     direction: in
+#     interface: "{{ firewall_iface }}"
+#     to_ip: "{{ item }}"
+#     insert: 1 # Note: THIS DOESN"T WORK YET
+#   with_items: "{{ firewall_whitelist }}"
 # ufw supports connection rate limiting, which is useful for protecting
 # against brute-force login attacks. ufw will deny connections if an IP
 # address has attempted to initiate 6 or more connections in the last
@@ -28,7 +30,6 @@
     direction: in
     port: ssh
     proto: tcp
-    insert: 2
     log: yes
 - name: Deny outgoing to private subnets to RFC1918 networks to this host
   ufw:
