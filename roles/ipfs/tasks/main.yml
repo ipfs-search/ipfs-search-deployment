@@ -6,6 +6,12 @@
       - libssl-dev
       - pkg-config
     state: present
+- name: build dir exists
+  file:
+    path: "{{ ipfs_build }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('env','USER') }}"
 - name: clone go-ipfs
   git:
     dest: "{{ ipfs_build }}"
