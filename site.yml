@@ -23,6 +23,7 @@
     - role: telegraf
       tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
+    - { name: jre, tags: ['jre']}
 - hosts: dmz
   become: true
   roles:
