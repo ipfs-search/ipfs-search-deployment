@@ -24,6 +24,7 @@
       tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
 - hosts: dmz
+  become: true
   roles:
     - role: vlan
       tags: ['vlan']
