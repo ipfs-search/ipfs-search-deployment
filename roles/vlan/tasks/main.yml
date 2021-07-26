@@ -1,13 +1,10 @@
 ---
-- name: Install vlan package
-  apt:
-    pkg: vlan
-- name: Configure interfaces file
-  template:
-    src: vlan
-    dest: /etc/network/interfaces.d/{{ vlan_iface }}.{{ vlan_id }}
-  notify: restart networking
-- name: Ensure vlan interface started
-  systemd:
-    name: "ifup@{{ vlan_iface}}.{{ vlan_id }}"
-    state: started
+- name: "Check for netplan"
+  command: netplan --help
+  ignore_errors: yes
+  register: netplan_exists
+- import_tasks: netplan.yml
+  when: not netplan_exists.failed
+# Ubuntu < 18.04
+- import_tasks: interfaces.yml
+  when: netplan_exists.failed

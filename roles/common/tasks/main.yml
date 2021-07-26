@@ -22,6 +22,7 @@
       - jq
       - iotop
       - traceroute
+      - man
     state: present
 - name: Configure journald
   copy: dest=/etc/systemd/journald.conf src=journald.conf owner=root group=root mode=644
