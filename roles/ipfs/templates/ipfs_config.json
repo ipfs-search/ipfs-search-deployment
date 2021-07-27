@@ -78,7 +78,8 @@
     "GraphsyncEnabled": false,
     "Libp2pStreamMounting": false,
     "P2pHttpProxy": false,
-    "StrategicProviding": false
+    "StrategicProviding": false,
+    "AcceleratedDHTClient": true
   },
   "Gateway": {
     "HTTPHeaders": {
