@@ -6,6 +6,12 @@
       - libssl-dev
       - pkg-config
     state: present
+- name: build dir exists
+  file:
+    path: "{{ sniffer_build }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('env','USER') }}"
 - name: clone ipfs-sniffer
   git:
     dest: "{{ sniffer_build }}"
