@@ -1,6 +1,6 @@
 ---
 crawler_memlimit: 4G
-crawler_hash_workers: 64
+crawler_hash_workers: 96
 crawler_file_workers: 32
 crawler_directory_workers: 4
 amqp_message_ttl: 4h
@@ -11,9 +11,9 @@ ipfs_binary: "/usr/local/bin/ipfs"
 ipfs_user: "ipfs"
 ipfs_group: "ipfs"
 ipfs_memlimit: 12G
-sniffer_head_count: 16
+sniffer_head_count: 12
 sniffer_memlimit: 16G
-sniffer_lastseen_prunelen: 1048576
+sniffer_lastseen_prunelen: 1572864
 sniffer_lastseen_expiration: 3h
 es_heap_size: 26g
 es_version: 7.10.2
