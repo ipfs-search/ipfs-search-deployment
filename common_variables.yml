@@ -13,8 +13,8 @@ ipfs_group: "ipfs"
 ipfs_memlimit: 12G
 sniffer_head_count: 12
 sniffer_memlimit: 16G
-sniffer_lastseen_prunelen: 1572864
-sniffer_lastseen_expiration: 3h
+sniffer_lastseen_prunelen: 6291456
+sniffer_lastseen_expiration: 12h
 es_heap_size: 26g
 es_version: 7.10.2
 tika_extractor_version: "1.1"
