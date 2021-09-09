@@ -16,6 +16,8 @@
         es_config:
           cluster.name: ipfs-search
           node.name: "{{ inventory_hostname }}"
+          node.attr.zone_id: "{{ zone_id }}"
+          cluster.routing.allocation.awareness.attributes: zone_id
           discovery.seed_hosts: "{% for host in groups['elasticsearch'] if host != inventory_hostname %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
           network.publish_host: "{{ vlan_ip | ipaddr('address')}}"
           # Only during bootstrapping
