@@ -1,5 +1,5 @@
 # Ansible deployment
-Requires one, or two, Ubuntu 16.04 (virtual) machine(s) with root access and a local install of [Ansible 2.8](https://docs.ansible.com/ansible/2.8/installation_guide/intro_installation.html).
+Requires one, or two, Ubuntu 20.02 (virtual) machine(s) with root access and a local install of [Ansible 2.8](https://docs.ansible.com/ansible/2.8/installation_guide/intro_installation.html).
 
 ## Inventory
 The default Ansible configuration we're using, `ansible.cfg` in the current directory, configures the [inventory](https://docs.ansible.com/ansible/2.8/user_guide/intro_inventory.html) in `inventory.yml` in the current directory.
