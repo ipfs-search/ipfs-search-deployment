@@ -1,0 +1,19 @@
+DRIVE1 /dev/sda
+DRIVE2 /dev/sdb
+
+SWRAID 1
+SWRAIDLEVEL 0
+
+HOSTNAME dijkstra.ipfs-search.com
+
+PART swap swap 16G
+PART /boot ext3 512M
+PART / ext4 all
+
+IMAGE /root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz
+
+
+installimage -n godel.ipfs-search.com -r yes -l 0 -i /root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz -g -t yes -G yes -a
+
+
+ env ANSIBLE_HOST_KEY_CHECKING=False ansible new -u root -a "/root/.oldroot/nfs/install/installimage -r yes -l 0 -i /root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz -g -t yes -G yes -a && shutdown -r now"
