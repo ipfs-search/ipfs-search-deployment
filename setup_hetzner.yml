@@ -1,5 +1,5 @@
 ---
-# ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --user root -l hellman setup_hetzner.yml
+# ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -l hellman setup_hetzner.yml
 - name: Install OS image
   hosts: all
   user: root
