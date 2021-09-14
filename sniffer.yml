@@ -1,10 +1,8 @@
 ---
+- import_playbook: rabbitmq.yml
 - hosts: sniffer
   become: true
   vars_files:
     - common_variables.yml
   roles:
-    - { name: disable-eth-offloading, tags: ['disable-eth-offloading']}
-    - { name: cgconfig, tags: ['cgconfig']}
     - { name: sniffer, tags: ['sniffer'] }
-    - { name: storagebox, tags: ['storagebox'] }
