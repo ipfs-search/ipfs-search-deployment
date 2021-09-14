@@ -1,0 +1,3 @@
+---
+influxdb2_path: /var/lib/influxdb/
+influxdb2_http_bind_address: "localhost:8086"

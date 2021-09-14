@@ -4,8 +4,6 @@
   vars_files:
     - common_variables.yml
   vars:
-    influxdb_databases:
-      - ipfs-search
-    influxdb_config:
+    influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
   roles:
-    - influxdb
+    - influxdb2
