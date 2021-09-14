@@ -8,3 +8,6 @@
 - name: elasticsearch
   src: elastic.elasticsearch
   version: v7.12.0
+- name: influxdb
+  src: opsta.influxdb
+  version: 9d288749dad4aab0c388be410cefdcd52b67ab1d

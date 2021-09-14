@@ -1,0 +1,11 @@
+---
+- hosts: aux
+  become: true
+  vars_files:
+    - common_variables.yml
+  vars:
+    influxdb_databases:
+      - ipfs-search
+    influxdb_config:
+  roles:
+    - influxdb
