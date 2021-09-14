@@ -11,7 +11,7 @@ ipfs_binary: "/usr/local/bin/ipfs"
 ipfs_user: "ipfs"
 ipfs_group: "ipfs"
 ipfs_memlimit: 12G
-sniffer_head_count: 12
+sniffer_head_count: 24
 sniffer_memlimit: 16G
 sniffer_lastseen_prunelen: 6291456
 sniffer_lastseen_expiration: 12h

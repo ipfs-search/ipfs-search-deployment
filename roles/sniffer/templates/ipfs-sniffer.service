@@ -5,7 +5,7 @@ After=rabbitmq-server.service
 
 [Service]
 WorkingDirectory={{ sniffer_home }}
-ExecStart={{ sniffer_binary }} -nheads={{ sniffer_head_count }} -bootstrap-peers "/ip4/127.0.0.1/tcp/4001/p2p/{{ ipfs_peerid }}" -disable-prefetch
+ExecStart={{ sniffer_binary }} -nheads={{ sniffer_head_count }} -bootstrap-peers "/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN,/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ,/ip6/2604:a880:1:20::203:d001/tcp/4001/p2p/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM" -disable-prefetch
 Restart=always
 RestartSec=3
 StartLimitBurst=40
