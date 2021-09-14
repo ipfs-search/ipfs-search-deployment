@@ -12,6 +12,6 @@
     state: present
 - name: Install InfluxDB configuration
   template:
-    src: config.yml
-    dest: /etc/influxdb/config.yml
+    src: config.toml
+    dest: /etc/influxdb/config.toml
   notify: restart influxdb

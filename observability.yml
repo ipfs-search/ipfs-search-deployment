@@ -6,4 +6,4 @@
   vars:
     influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
   roles:
-    - influxdb2
+    - { name: influxdb2, tags: influxdb }
