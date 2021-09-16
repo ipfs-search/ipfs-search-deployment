@@ -1,6 +1,6 @@
 ---
 crawler_memlimit: 4G
-crawler_hash_workers: 96
+crawler_hash_workers: 120
 crawler_file_workers: 32
 crawler_directory_workers: 4
 amqp_message_ttl: 4h
