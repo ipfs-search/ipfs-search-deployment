@@ -62,13 +62,6 @@
         }
       }
   when: snapshot_check.status == 404
-- name: Install snapshot script
-  template:
-    src: ipfs-search-snapshot.sh
-    dest: /usr/local/bin/ipfs-search-snapshot-fleek.sh
-    mode: 0755
-  vars:
-    - snapshot_name: "{{ snapshot_fleek_name }}"
 - import_tasks: cron.yml
   vars:
     snapshot_hour: "3"
