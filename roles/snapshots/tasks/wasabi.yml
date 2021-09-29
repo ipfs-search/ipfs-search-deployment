@@ -64,4 +64,4 @@
 - import_tasks: cron.yml
   vars:
     snapshot_hour: "2"
-    snapshot_name: wasabi
+    snapshot_name: "{{ snapshot_wasabi_name }}"

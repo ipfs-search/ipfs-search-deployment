@@ -72,5 +72,5 @@
 - import_tasks: cron.yml
   vars:
     snapshot_hour: "3"
-    snapshot_name: wasabi
+    snapshot_name: "{{ snapshot_fleek_name }}"
 
