@@ -1,0 +1,6 @@
+all:
+  hosts:
+{% for host in groups['dmz'] %}
+    {{ host }}:
+      vlan_ip: {{ hostvars[host]['vlan_ip'] }}
+{% endfor %}

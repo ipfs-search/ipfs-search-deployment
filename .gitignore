@@ -1,6 +1,6 @@
 vault/secrets.yml
 vault/passphrase.gpg
-inventory.yml
+inventory
 *.retry
 *.pyc
 *.pyo
