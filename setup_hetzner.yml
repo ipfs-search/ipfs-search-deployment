@@ -18,7 +18,11 @@
 #   import_playbook: bootstrap.yml
 # - name: Setup system
 #   import_playbook: site.yml
-- hosts: dmz
+# - hosts: dmz
+#   gather_facts: no
+#   roles:
+#     - generate_vlan_ip
+- hosts: ipfs
   gather_facts: no
   roles:
-    - generate_vlan_ip
+    - generate_ipfs_key
