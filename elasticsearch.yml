@@ -22,7 +22,6 @@
           cluster.name: ipfs-search
           node.name: "{{ inventory_hostname_short }}"
           node.attr.zone_id: "{{ zone_id }}"
-          bootstrap.memory_lock: true
           cluster.routing.allocation.awareness.attributes: zone_id
           discovery.seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
           network.publish_host: "{{ vlan_ip | ipaddr('address')}}"
