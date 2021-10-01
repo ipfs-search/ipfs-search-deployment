@@ -19,6 +19,6 @@
 # - name: Setup system
 #   import_playbook: site.yml
 - hosts: dmz
-  order: sorted
+  gather_facts: no
   roles:
-    - vlan_ips
+    - generate_vlan_ip

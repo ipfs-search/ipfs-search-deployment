@@ -1,0 +1,20 @@
+---
+- name: Count hosts with IP
+  set_fact:
+    existing_hosts: "{{ groups['dmz'] | length }}"
+  when: vlan_ip
+- block:
+  - name: Generate vlan_ip
+    set_fact:
+      vlan_ip: "{{ vlan_subnet | ansible.netcommon.next_nth_usable(groups['dmz'].index(inventory_hostname)) }}"
+  - name: Print IP's
+    debug:
+      var: vlan_ip
+  - name: Add IP's to host_vars
+    lineinfile:
+      create: true
+      path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+      regexp: '^vlan_ip'
+      line: "vlan_ip: {{ vlan_ip }}"
+    delegate_to: localhost
+  when: not vlan_ip

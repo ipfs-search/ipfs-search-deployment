@@ -8,3 +8,8 @@
 - name: elasticsearch
   src: elastic.elasticsearch
   version: v7.12.0
+- name: netcommon
+  src: ansible.netcommon
+  version: 2.4.0
+- name: hrobot
+  src: community.hrobot
