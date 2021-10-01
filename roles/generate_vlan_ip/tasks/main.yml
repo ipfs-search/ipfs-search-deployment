@@ -13,7 +13,7 @@
   - name: Add IP's to host_vars
     lineinfile:
       create: true
-      path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+      path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^vlan_ip'
       line: "vlan_ip: {{ vlan_ip }}"
     delegate_to: localhost
