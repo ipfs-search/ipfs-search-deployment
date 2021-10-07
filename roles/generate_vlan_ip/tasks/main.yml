@@ -2,7 +2,7 @@
 - name: Count hosts with IP
   set_fact:
     existing_hosts: "{{ groups['dmz'] | length }}"
-  when: vlan_ip
+  when: vlan_ip is defined
 - block:
   - name: Generate vlan_ip
     set_fact:
@@ -17,4 +17,5 @@
       regexp: '^vlan_ip'
       line: "vlan_ip: {{ vlan_ip }}"
     delegate_to: localhost
-  when: not vlan_ip
+  when: vlan_ip is undefined #"'vlan_ip' in hostvars[inventory_hostname]" # silly workaround for `is undefined` failing
+
