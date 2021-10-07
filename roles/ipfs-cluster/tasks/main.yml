@@ -63,9 +63,6 @@
     group: "{{ ipfs_cluster_group }}"
     mode: 0750
     state: directory
-- name: Loading secrets
-  include_vars:
-    file: ../../vault/secrets.yml
 - name: Creating identity.json
   template:
     src: identity.json

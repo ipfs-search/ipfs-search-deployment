@@ -52,9 +52,6 @@
   notify: restart ipfs-crawler
 - name: Ensures ipfs-search dir exists
   file: path=/etc/ipfs-crawler state=directory
-- name: Loading secrets
-  include_vars:
-    file: ../../vault/secrets.yml
 - name: Install configuration file
   template: src=config.yml dest=/etc/ipfs-crawler/config.yml
   notify:

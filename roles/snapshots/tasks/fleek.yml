@@ -8,13 +8,6 @@
   command: /usr/share/elasticsearch/bin/elasticsearch-keystore list
   register: keystore
   failed_when: keystore.rc not in [0, 65]
-- name: Loading secrets
-  include_vars:
-    file: ../../vault/secrets.yml
-  when: |
-    keystore.rc == 65 or
-    's3.client.fleek.access_key' not in keystore.stdout or
-    's3.client.fleek.secret_key' not in keystore.stdout
 - name: Create keystore
   command: /usr/share/elasticsearch/bin/elasticsearch-keystore create
   when: keystore.rc == 65
