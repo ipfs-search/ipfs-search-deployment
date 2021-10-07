@@ -12,6 +12,19 @@
   - name: Pick unique hostname
     set_fact:
       picked_hostname: "{{ available_hostnames[ansible_play_batch.index(inventory_hostname)] }}"
-  - debug:
+  - name: Print generated hostname
+    debug:
       var: picked_hostname
+  - name: Set server names through Hetzner
+    uri:
+      url: "https://robot-ws.your-server.de/server/{{ hrobot_server_number }}"
+      url_username: "{{ hetzner_user }}"
+      url_password: "{{ hetzner_password }}"
+      body_format: form-urlencoded
+      method: POST
+      body:
+        server_name: "{{ picked_hostname }}"
+    when: hrobot_server_name != picked_hostname
+  - name: Refresh inventory to ensure new hostnames exist in inventory
+    meta: refresh_inventory
   delegate_to: localhost

@@ -2,11 +2,16 @@
 - name: Count hosts with IP
   set_fact:
     existing_hosts: "{{ groups['dmz'] | length }}"
-  when: vlan_ip is defined
+  run_once: true
+  delegate_to: localhost
 - block:
   - name: Generate vlan_ip
     set_fact:
+      generated_vlan_ip: true
       vlan_ip: "{{ vlan_subnet | ansible.netcommon.next_nth_usable(groups['dmz'].index(inventory_hostname)) }}"
+  delegate_to: localhost
+  when: vlan_ip is undefined
+- block:
   - name: Print IP's
     debug:
       var: vlan_ip
@@ -16,6 +21,6 @@
       path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^vlan_ip'
       line: "vlan_ip: {{ vlan_ip }}"
-    delegate_to: localhost
-  when: vlan_ip is undefined #"'vlan_ip' in hostvars[inventory_hostname]" # silly workaround for `is undefined` failing
+  delegate_to: localhost
+  when: generated_vlan_ip is defined and generated_vlan_ip
 

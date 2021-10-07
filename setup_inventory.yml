@@ -21,7 +21,9 @@
 - hosts: nameless
   gather_facts: no
   vars_files:
-    - new_hostnames.yml
+    #
+    # `JSON.stringify(Array.from(document.querySelectorAll("#mw-content-text > div.mw-parser-output > table > tbody > tr > td:nth-child(2)")).map(e => e.innerText.split(",", 1)[0].toLowerCase() + '.ipfs-search.com'));`
+    - new_hostnames.json
   roles:
     - { name: generate_hostnames, tags: 'hostnames' }
 - hosts: dmz

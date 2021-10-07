@@ -5,47 +5,47 @@
       state: directory
       suffix: ipfs_temp
     register: ipfs_temp
-  - block:
-    - name: Generate IPFS keypair
-      command: ipfs init
-      args:
-        creates: "{{ ipfs_temp.path }}/config"
-      environment:
-        IPFS_PATH: "{{ ipfs_temp.path }}"
-    - name: Read generated ipfs_config
-      include_vars:
-        file: "{{ ipfs_temp.path }}/config"
-        name: ipfs_config
-    - name: Delete temporary directory
-      file:
-        path: "{{ ipfs_temp.path }}"
-        state: absent
-    - name: Set IPFS peer variables
-      set_fact:
-        ipfs_peer_id: "{{ ipfs_config['Identity']['PeerID'] }}"
-        ipfs_peer_key: "{{ ipfs_config['Identity']['PrivKey'] }}"
-    - name: Encrypt ipfs_peer_key
-      command: ansible-vault encrypt_string
-      args:
-        stdin: "{{ ipfs_peer_key }}"
-      register: ipfs_peer_encrypt
-    - name: Print ipfs_peer_id
-      debug:
-        var: ipfs_peer_id
-    - name: Add ipfs_peer_id to host_vars
-      lineinfile:
-        create: true
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
-        regexp: '^ipfs_peer_id'
-        line: "ipfs_peer_id: {{ ipfs_peer_id }}"
-      delegate_to: localhost
-    - name: Add ipfs_peer_key to host_vars
-      lineinfile:
-        create: true
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
-        regexp: '^ipfs_peer_key'
-        line: "ipfs_peer_key: {{ ipfs_peer_encrypt.stdout }}"
-      delegate_to: localhost
-    when: ipfs_temp.path is defined
+  - name: Generate IPFS keypair
+    command: ipfs init
+    args:
+      creates: "{{ ipfs_temp.path }}/config"
+    environment:
+      IPFS_PATH: "{{ ipfs_temp.path }}"
+  - name: Read generated ipfs_config
+    include_vars:
+      file: "{{ ipfs_temp.path }}/config"
+      name: ipfs_config
+  - name: Delete temporary directory
+    file:
+      path: "{{ ipfs_temp.path }}"
+      state: absent
+  - name: Set IPFS peer variables
+    set_fact:
+      generated_ipfs_key: true
+      ipfs_peer_id: "{{ ipfs_config['Identity']['PeerID'] }}"
+      ipfs_peer_key: "{{ ipfs_config['Identity']['PrivKey'] }}"
   delegate_to: localhost
   when: ipfs_peer_id is undefined
+- block:
+  - name: Encrypt ipfs_peer_key
+    command: ansible-vault encrypt_string
+    args:
+      stdin: "{{ ipfs_peer_key }}"
+    register: ipfs_peer_encrypted
+  - name: Print ipfs_peer_id
+    debug:
+      var: ipfs_peer_id
+  - name: Add ipfs_peer_id to host_vars
+    lineinfile:
+      create: true
+      path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
+      regexp: '^ipfs_peer_id'
+      line: "ipfs_peer_id: {{ ipfs_peer_id }}"
+  - name: Add ipfs_peer_key to host_vars
+    lineinfile:
+      create: true
+      path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
+      regexp: '^ipfs_peer_key'
+      line: "ipfs_peer_key: {{ ipfs_peer_encrypted.stdout }}"
+  delegate_to: localhost
+  when: generated_ipfs_key is defined and generated_ipfs_key
