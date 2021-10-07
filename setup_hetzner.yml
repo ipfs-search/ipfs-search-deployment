@@ -18,6 +18,12 @@
 #   import_playbook: bootstrap.yml
 # - name: Setup system
 #   import_playbook: site.yml
+- hosts: nameless
+  gather_facts: no
+  vars_files:
+    - new_hostnames.yml
+  roles:
+    - { name: generate_hostnames, tags: 'hostnames' }
 - hosts: dmz
   gather_facts: no
   roles:

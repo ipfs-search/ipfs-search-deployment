@@ -1,0 +1,17 @@
+---
+- block:
+  - name: Get available hostnames
+    set_fact:
+      available_hostnames: "{{ new_hostnames | unique | difference(groups['all']) }}"
+    run_once: True
+  - name: Assert enough hostnames available
+    assert:
+      that: available_hostnames | count() >= ansible_play_hosts | count()
+      fail_msg: "Not enough hostnames available: {{ available_hostnames | count() }} available, {{ ansible_play_hosts | count() }} required."
+    run_once: True
+  - name: Pick unique hostname
+    set_fact:
+      picked_hostname: "{{ available_hostnames[ansible_play_batch.index(inventory_hostname)] }}"
+  - debug:
+      var: picked_hostname
+  delegate_to: localhost
