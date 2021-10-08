@@ -15,11 +15,6 @@
     - { name: hostname, tags: ['hostname']}
     - role: cgconfig
       tags: ['cgconfig']
-    - role: adamruzicka.wireguard
-      tags: ['wireguard']
-      vars:
-        wireguard_networks:
-          - wg0
     - role: telegraf
       tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
