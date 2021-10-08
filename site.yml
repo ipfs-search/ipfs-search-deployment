@@ -13,6 +13,7 @@
   roles:
     - { name: common, tags: ['common'] }
     - { name: hostname, tags: ['hostname']}
+    - { name: unattended_upgrades, tags: ['upgrades']}
     - role: cgconfig
       tags: ['cgconfig']
     - role: telegraf

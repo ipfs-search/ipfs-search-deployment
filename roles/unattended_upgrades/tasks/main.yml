@@ -1,0 +1,38 @@
+---
+- name: Pre-seed debconf to enable unattended upgrades
+  debconf:
+    name: unattended-upgrades
+    question: unattended-upgrades/enable_auto_updates
+    value: true
+    vtype: boolean
+- name: Install unattended-upgrades package
+  apt:
+    name: unattended-upgrades
+    state: present
+- name: Ensure that Update-Package-Lists is enabled
+  lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    create: true
+    regexp: ^APT::Periodic::Update-Package-Lists
+    line: APT::Periodic::Update-Package-Lists "1";
+    state: present
+- name: Ensure that Unattended-Upgrade is enabled
+  lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    regexp: ^APT::Periodic::Unattended-Upgrade
+    line: APT::Periodic::Unattended-Upgrade "1";
+    state: present
+- name: Ensure unattended-upgrades service is started
+  service:
+    name: unattended-upgrades
+    state: started
+- name: Perform initial unattended-upgrades
+  command: unattended-upgrades
+  args:
+    creates: /var/log/unattended-upgrades/unattended-upgrades.log
