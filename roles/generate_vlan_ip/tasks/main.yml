@@ -8,7 +8,8 @@
   - name: Generate vlan_ip
     set_fact:
       generated_vlan_ip: true
-      vlan_ip: "{{ vlan_subnet | ansible.netcommon.next_nth_usable(groups['dmz'].index(inventory_hostname)) }}"
+      # Add subnet
+      vlan_ip: "{{ vlan_subnet | ansible.netcommon.ipaddr('net') | ansible.netcommon.ipaddr(groups['dmz'].index(inventory_hostname)) }}"
   delegate_to: localhost
   when: vlan_ip is undefined
 - block:
