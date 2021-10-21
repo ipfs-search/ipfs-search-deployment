@@ -1,0 +1,8 @@
+---
+- hosts: index
+  become: true
+  vars_files:
+    - common_variables.yml
+  roles:
+    - { name: nginx, tags: ['nginx']}
+    - { name: api, tags: ['api']}
