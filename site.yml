@@ -25,8 +25,8 @@
   roles:
     - role: vlan
       tags: ['vlan']
-- import_playbook: ipfs.yml
 - import_playbook: elasticsearch.yml
-- import_playbook: index.yml
+# - import_playbook: ipfs.yml
+# - import_playbook: index.yml
 - import_playbook: api.yml
-- import_playbook: frontend.yml
+# - import_playbook: frontend.yml

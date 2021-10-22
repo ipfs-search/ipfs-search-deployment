@@ -1,6 +1,9 @@
 ---
 - hosts: all
   user: root
+  tags:
+    - ssh_user
+
   vars:
   - remote_user: "{{ lookup('env','USER') }}"
 
@@ -47,6 +50,18 @@
     notify:
       - restart sshd
 
+  handlers:
+  - name: restart sshd
+    service:
+      name=sshd
+      state=restarted
+
+- hosts: all
+  become: true
+  tags: package_upgrade
+
+  tasks:
+
   # Workaround: https://stackoverflow.com/questions/33563425/ansible-1-9-4-failed-to-lock-apt-for-exclusive-operation/40933352
   - name: packages | ensure apt list dir exists
     file:
@@ -64,9 +79,7 @@
       - reboot
 
   handlers:
-  - name: restart sshd
-    service:
-      name=sshd
-      state=restarted
   - name: reboot
     reboot:
+      reboot_timeout: 7200
+
