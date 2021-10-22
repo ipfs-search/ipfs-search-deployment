@@ -1,36 +1,11 @@
 ---
-- name: Assure we have a containing folder with permission to clone in
-  file: path="{{ frontend_install_path }}/.." state=directory owner="{{ lookup('env','USER') }}"
-- block:
-  - name: Clone frontend
-    git:
-      repo: https://github.com/ipfs-search/ipfs-search-frontend.git
-      dest: "{{ frontend_install_path }}"
-      version: v2
-    register: source
-  - block:
-    - name: Install frontend dependencies
-      command: npm install
-      args:
-        chdir: "{{ frontend_install_path }}"
-    - name: Build frontend
-      shell: "$(npm bin)/ember build --environment production"
-      args:
-        chdir: "{{ frontend_install_path }}"
-    - include_role:
-        name: annotate
-      vars:
-        role: frontend
-        version: "{{ source.after }}"
-        action: upgrade
-    when: source.changed
-  become: false
 - name: Gather facts from backend nodes
   setup:
   delegate_to: "{{ item }}"
   delegate_facts: True
   when: hostvars[item]['ansible_default_ipv4'] is not defined
   with_items: "{{ groups['index'] }}"
+  ignore_unreachable: yes
 - name: Install nginx configuration
   template:
     src: nginx-frontend.conf
