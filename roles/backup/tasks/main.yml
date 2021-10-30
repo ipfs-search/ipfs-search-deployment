@@ -1,0 +1,8 @@
+---
+- name: Install backup script
+  template:
+    src: backupscript.sh.j2
+    dest: "{{ backup_script_location }}"
+    owner: root
+    group: root
+    mode: '0755'

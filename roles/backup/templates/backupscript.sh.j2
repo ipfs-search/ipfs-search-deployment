@@ -1,0 +1,9 @@
+#!/bin/bash -xe
+
+RSYNC="rsync"
+EXCLUDES="--exclude /dev --exclude /sys --exclude /proc --exclude /run --exclude /mnt"
+RSYNC_OPTIONS="-avv --delete --sparse --preallocate --whole-file $EXCLUDES"
+SOURCE="$1"
+DEST="$2"
+
+$RSYNC $RSYNC_OPTIONS $SOURCE $DEST

@@ -1,0 +1,2 @@
+---
+backup_script_location: /usr/local/sbin/backupscript.sh

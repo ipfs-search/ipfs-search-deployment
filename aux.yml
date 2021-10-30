@@ -16,6 +16,8 @@
     - role: telegraf
       tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
+    - { name: storagebox, tags: ['storagebox']}
+    - { name: backup, tags: ['backup']}
 - hosts: dmz
   become: true
   roles:
