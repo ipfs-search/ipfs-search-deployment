@@ -105,8 +105,8 @@
     "Writable": false
   },
   "Identity": {
-    "PeerID": "{{ ipfs_peer_id }}",
-    "PrivKey": "{{ ipfs_peer_key }}"
+    "PeerID": "{{ ipfs_peer_id | trim }}",
+    "PrivKey": "{{ ipfs_peer_key | trim }}"
   },
   "Ipns": {
     "RecordLifetime": "",

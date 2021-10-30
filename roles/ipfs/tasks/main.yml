@@ -103,7 +103,7 @@
     cacheable: yes
 - name: Render IPFS configuration file
   template:
-    src: ipfs_config.json
+    src: ipfs_config.json.j2
     dest: "{{ ipfs_path }}/config"
   notify: restart ipfs
 - name: Enable IPFS service
