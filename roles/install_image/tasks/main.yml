@@ -1,0 +1,16 @@
+---
+- name: Make sure our inventory is super fresh
+  meta: refresh_inventory
+- name: Installing system image
+  command: "/root/.oldroot/nfs/install/installimage -r yes -l {{ install_image_raid_level }} -i /root/.oldroot/nfs/install/../images/{{ install_image_filename }} -g -t yes -G yes -a"
+  environment:
+    TERM: xterm # Somehow, at least on one host, this is is necessary.
+  register: installimage
+- reboot:
+    reboot_timeout: 7200
+- name: Remove host key from local known hosts
+  known_hosts:
+    name: "{{ ansible_host }}"
+    state: absent
+  delegate_to: localhost
+  when: installimage is succeeded

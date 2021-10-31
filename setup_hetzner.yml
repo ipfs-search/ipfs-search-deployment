@@ -1,25 +1,11 @@
 # ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook setup_hetzner.yml -l new
 - name: Install OS image
-  hosts: all
+  hosts: all # TODO: Filter by machines in rescue mode
   user: root
   ignore_unreachable: yes
-  tags: installimage
-  tasks:
-    - name: Make sure our inventory is super fresh
-      meta: refresh_inventory
-    - name: Installing system image
-      command: /root/.oldroot/nfs/install/installimage -r yes -l 0 -i /root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz -g -t yes -G yes -a
-      environment:
-        TERM: xterm # Somehow, at least on one host, this is is necessary.
-      register: installimage
-    - reboot:
-        reboot_timeout: 7200
-    - name: Remove host key from known hosts
-      known_hosts:
-        name: "{{ ansible_host }}"
-        state: absent
-      delegate_to: localhost
-      when: installimage is succeeded
+  tags: install_image
+  roles:
+    - install_image
 - name: Bootstrap
   import_playbook: bootstrap.yml
 - name: Setup system
