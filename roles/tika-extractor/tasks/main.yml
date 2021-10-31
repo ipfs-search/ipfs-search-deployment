@@ -14,11 +14,11 @@
   when: download.changed
 - group: name=tika-extractor system=true state=present
 - user: name=tika-extractor comment="Tika Extractor daemon" group=tika-extractor system=true state=present home="/nonexistent" shell=/usr/sbin/nologin
-- name: systemd service
+- name: Install systemd service
   template: src=tika-extractor.service dest=/etc/systemd/system/tika-extractor.service
   notify: restart tika-extractor
-- service: name=tika-extractor enabled=yes state=started
-  notify: restart tika-extractor
+- name: Enable service
+  systemd: name=tika-extractor daemon_reload=yes state=started enabled=yes
 - name: Enable tika-extractor stale temp removal
   cron:
     name: Delete stale temp files
@@ -28,4 +28,3 @@
     state: present
     cron_file: /etc/crontab
     user: tika-extractor
-  become: true
