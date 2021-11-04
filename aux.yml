@@ -13,8 +13,6 @@
       vars:
         wireguard_networks:
           - wg0
-    - role: telegraf
-      tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
     - { name: storagebox, tags: ['storagebox']}
     - { name: backup, tags: ['backup']}
@@ -23,5 +21,6 @@
   roles:
     - role: vlan
       tags: ['vlan']
+- import_playbook: monitoring.yml
 - import_playbook: observability.yml
 

@@ -1,3 +1,4 @@
 bolt-path = "{{ influxdb2_path }}/influxd.bolt"
 engine-path = "{{ influxdb2_path }}/engine"
 http-bind-address = "{{ influxdb2_http_bind_address }}"
+log-level = "error"

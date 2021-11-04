@@ -16,8 +16,6 @@
     - { name: unattended_upgrades, tags: ['upgrades']}
     - role: cgconfig
       tags: ['cgconfig']
-    - role: telegraf
-      tags: ['telegraf']
     - { name: firewall, tags: ['firewall']}
     - { name: jre, tags: ['jre']}
 - hosts: dmz
@@ -25,6 +23,7 @@
   roles:
     - role: vlan
       tags: ['vlan']
+- import_playbook: monitoring.yml
 - import_playbook: elasticsearch.yml
 # - import_playbook: ipfs.yml
 # - import_playbook: index.yml

@@ -1,0 +1,12 @@
+---
+- name: Install package
+  apt:
+    name: rsyslog
+    state: present
+- name: Install Telegraf forwarding configuration
+  template:
+    src: 40-telegraf.conf.j2
+    dest: /etc/rsyslog.d/40-telegraf.conf
+  notify: restart rsyslog
+- name: Enable service
+  service: name=rsyslog enabled=yes state=started

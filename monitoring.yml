@@ -6,5 +6,9 @@
   vars_files:
     - common_variables.yml
   roles:
+    - role: journald
+      tags: ['journald']
+    - role: rsyslog
+      tags: ['rsyslog']
     - role: telegraf
       tags: ['telegraf']
