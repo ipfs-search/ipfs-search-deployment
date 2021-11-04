@@ -5,7 +5,7 @@ ipfs:
 elasticsearch:
   url: http://localhost:9200
 amqp:
-  url: "amqp://admin:admin@{{ hostvars[groups['rabbitmq'][0]].vlan_ip | ipaddr('address') }}:5672/"
+  url: "amqp://admin:admin@{{ rabbitmq_host }}:5672/"
   max_reconnect: 100
   reconnect_time: 2s
   message_ttl: {{ amqp_message_ttl }}
