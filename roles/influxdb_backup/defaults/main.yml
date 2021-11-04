@@ -1,0 +1,3 @@
+---
+influxdb_backup_hour: "4"
+influxdb_backup_minutes: "35"

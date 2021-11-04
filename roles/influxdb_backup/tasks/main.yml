@@ -1,0 +1,15 @@
+---
+- name: destination directory
+  file:
+    path: "{{ influxdb_backup_destination }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ influxdb_backup_user }}"
+- name: cronjob
+  cron:
+    name: "influxdb backup"
+    cron_file: /etc/crontab
+    minute: "{{ influxdb_backup_minutes }}"
+    hour: "{{ influxdb_backup_hour }}"
+    user: "{{ influxdb_backup_user }}"
+    job: "rm -rf {{ influxdb_backup_destination }}/*; influx backup -b {{ influxdb_backup_bucket }} {{ influxdb_backup_destination }} | logger -t influxdb_backup"

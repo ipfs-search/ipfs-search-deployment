@@ -14,8 +14,6 @@
         wireguard_networks:
           - wg0
     - { name: firewall, tags: ['firewall']}
-    - { name: storagebox, tags: ['storagebox']}
-    - { name: backup, tags: ['backup']}
 - hosts: dmz
   become: true
   roles:

@@ -19,3 +19,7 @@ es_version: 7.10.2
 tika_extractor_version: "1.1"
 tika_extractor_sha256: cb8237013f8e2de9d2efd23d04c2392c640476e805493a6939b89ef89ad05b6d
 tika_extractor_heap_max: 3072m
+influxdb_backup_destination: "{{ storagebox_mountpoint }}/influxdb"
+influxdb_backup_user: "{{ lookup('env','USER') }}"
+influxdb_backup_bucket: "telegraf"
+storagebox_mountpoint_group: "{{ lookup('env','USER') }}"

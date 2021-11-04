@@ -7,3 +7,5 @@
     influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
   roles:
     - { name: influxdb2, tags: influxdb }
+    - { name: storagebox, tags: ['storagebox'] }
+    - { name: influxdb_backup, tags: influxdb_backup }
