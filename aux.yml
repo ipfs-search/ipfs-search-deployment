@@ -1,24 +1,12 @@
 ---
 - hosts: aux
   become: true
-  vars:
-    - hostname: "{{ inventory_hostname }}"
   roles:
-    - { name: common, tags: ['common'] }
-    - { name: hostname, tags: ['hostname']}
-    - role: cgconfig
-      tags: ['cgconfig']
     - role: adamruzicka.wireguard
       tags: ['wireguard']
       vars:
         wireguard_networks:
           - wg0
-    - { name: firewall, tags: ['firewall']}
-- hosts: dmz
-  become: true
-  roles:
-    - role: vlan
-      tags: ['vlan']
 - import_playbook: monitoring.yml
 - import_playbook: observability.yml
 
