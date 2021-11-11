@@ -1,0 +1,5 @@
+hostname: "{{ inventory_hostname_short }}"
+domain_name: "{{ inventory_hostname.split('.').1 }}"
+fqdn: "{{ hostname }}.{{ domain_name }}"
+ipv4_address: "{{ ansible_default_ipv4.address }}"
+ipv6_address: "{{ ansible_default_ipv4.address }}"
