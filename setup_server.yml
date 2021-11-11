@@ -4,7 +4,7 @@
   vars_files:
     - vars/common.yml
   roles:
-    - { name: inventory-cloudflare-dns, tags: ['dns']}
+    - { name: cloudflare_inventory_dns, tags: ['dns']}
 - hosts: all
   become: true
   pre_tasks:
