@@ -12,9 +12,7 @@
   tags: install_image
   roles:
     - hetzner_install_image
-- name: Bootstrap
-  import_playbook: bootstrap.yml
-- name: Setup server
-  import_playbook: setup_server.yml
-- name: Install site
-  import_playbook: site.yml
+- name: Setup reverse DNS
+  hosts: all
+  roles:
+    - { name: hetzner_reverse_dns, tags: [hetzner_reverse_dns] }
