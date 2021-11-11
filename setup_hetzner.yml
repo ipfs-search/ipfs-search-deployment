@@ -1,11 +1,17 @@
 # ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook setup_hetzner.yml -l new
+# Swithc work is WIP
+# - name: Add server to switch
+#   hosts: all
+#   tags: add_to_switch
+#   roles:
+#     - hetzner_add_to_switch
 - name: Install OS image
   hosts: all # TODO: Filter by machines in rescue mode
   user: root
   ignore_unreachable: yes
   tags: install_image
   roles:
-    - install_image
+    - hetzner_install_image
 - name: Bootstrap
   import_playbook: bootstrap.yml
 - name: Setup server
