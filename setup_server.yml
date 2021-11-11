@@ -1,5 +1,11 @@
 ---
 - hosts: all
+  gather_facts: no
+  vars_files:
+    - vars/common.yml
+  roles:
+    - { name: inventory-cloudflare-dns, tags: ['dns']}
+- hosts: all
   become: true
   pre_tasks:
     - name: Install jmespath (local Ansible dependency for Elasticsearch)

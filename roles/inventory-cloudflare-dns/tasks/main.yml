@@ -1,0 +1,17 @@
+---
+- block:
+  - name: A record for host
+    cloudflare_dns:
+      zone: "{{ domain_name }}"
+      record: "{{ hostname }}"
+      type: A
+      value: "{{ ipv4_address }}"
+      api_token: "{{ cloudflare_token }}"
+  - name: AAAA record for host
+    cloudflare_dns:
+      zone: "{{ domain_name }}"
+      record: "{{ hostname }}"
+      type: AAAA
+      value: "{{ ipv6_address }}"
+      api_token: "{{ cloudflare_token }}"
+  delegate_to: localhost
