@@ -4,7 +4,7 @@
   become: true
   strategy: free
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   roles:
     - role: journald
       tags: ['journald']

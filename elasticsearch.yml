@@ -4,7 +4,7 @@
   serial: 1
   any_errors_fatal: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   roles:
     - role: elasticsearch
       tags: ['elasticsearch']

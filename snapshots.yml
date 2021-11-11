@@ -7,7 +7,7 @@
     - 20%
   any_errors_fatal: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   vars:
     snapshot_cron_host: "{{ groups['elasticsearch'] | first }}"
   roles:

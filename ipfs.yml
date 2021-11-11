@@ -2,7 +2,7 @@
 - hosts: ipfs
   become: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   roles:
     - { name: ipfs, tags: ['ipfs'] }
     - { name: ipfs-gc, tags: ['ipfs-gc'] }

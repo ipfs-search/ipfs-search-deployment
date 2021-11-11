@@ -3,6 +3,6 @@
 - hosts: sniffer
   become: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   roles:
     - { name: sniffer, tags: ['sniffer'] }

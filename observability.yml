@@ -2,7 +2,7 @@
 - hosts: aux
   become: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   vars:
     influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
   roles:

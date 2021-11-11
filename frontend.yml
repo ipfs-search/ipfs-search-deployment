@@ -2,7 +2,7 @@
 - hosts: frontend
   become: true
   vars_files:
-    - common_variables.yml
+    - vars/common.yml
   vars:
     # Note: manually disable certbot testing from the command line!
     # Example:
