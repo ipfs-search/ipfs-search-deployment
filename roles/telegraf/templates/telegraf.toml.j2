@@ -4847,8 +4847,8 @@ metric_exclude = ["federation"]
 [[inputs.prometheus]]
   ## An array of urls to scrape metrics from.
   urls = [
-    {% if 'sniffer' in group_names %}"http://127.0.0.1:9758/metrics", # ipfs-sniffer{% endif %}
-    {% if 'ipfs' in group_names %}"http://127.0.0.1:5001/debug/metrics/prometheus", # go-ipfs{% endif %}
+    {% if 'sniffer' in group_names %}"http://127.0.0.1:9758/metrics",{% endif %} {# ipfs-sniffer #}
+    {% if 'ipfs' in group_names %}"http://127.0.0.1:5001/debug/metrics/prometheus",{% endif %} {# go-ipfs #}
   ]
 #
 #   ## An array of Kubernetes services to scrape metrics from.

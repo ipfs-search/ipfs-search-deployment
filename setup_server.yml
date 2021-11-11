@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+    - name: Install jmespath (local Ansible dependency for Elasticsearch)
+      local_action: pip
+      args:
+        name: jmespath
+      become: no
+  vars_files:
+    - vars/common.yml
+  roles:
+    - { name: common, tags: ['common'] }
+    - { name: hostname, tags: ['hostname']}
+    - { name: unattended_upgrades, tags: ['upgrades']}
+    - role: cgconfig
+      tags: ['cgconfig']
+    - { name: firewall, tags: ['firewall']}
+    - { name: jre, tags: ['jre']}
+- hosts: dmz
+  become: true
+  roles:
+    - role: vlan
+      tags: ['vlan']

@@ -45,6 +45,14 @@
   register: telegraf_config
 - name: Telegraf test run
   command: telegraf --test
+  register: telegraf_test
+  ignore_errors: True
+  # Good enough when we get *any* output, due to online plugins
+  failed_when: "telegraf_test.rc == 1 and telegraf_test.stdout == ''"
+- name: Display (only) Telegraf errrors
+  fail:
+    msg: "{{ telegraf_test.stderr }}"
+  when: telegraf_test.failed
 - name: Enable telegraf service
   service: name=telegraf enabled=yes state=started
 

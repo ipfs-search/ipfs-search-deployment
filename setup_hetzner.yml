@@ -8,5 +8,7 @@
     - install_image
 - name: Bootstrap
   import_playbook: bootstrap.yml
-- name: Setup system
+- name: Setup server
+  import_playbook: setup_server.yml
+- name: Install site
   import_playbook: site.yml
