@@ -11,9 +11,9 @@ ipfs_binary: "/usr/local/bin/ipfs"
 ipfs_user: "ipfs"
 ipfs_group: "ipfs"
 ipfs_memlimit: 12G
-sniffer_head_count: 16
-sniffer_memlimit: 16G
-sniffer_lastseen_prunelen: 6291456
+sniffer_head_count: 24
+sniffer_memlimit: 24G
+sniffer_lastseen_prunelen: 10485760
 sniffer_lastseen_expiration: 12h
 es_version: 7.10.2
 tika_extractor_version: "1.1"
