@@ -1,8 +1,8 @@
 ---
-- name: Configuring Fleek snapshots
-  import_tasks: fleek.yml
-  tags:
-    - snapshots-fleek
+# - name: Configuring Fleek snapshots
+#   import_tasks: fleek.yml
+#   tags:
+#     - snapshots-fleek
 # - name: Configuring disk snapshots
 #   import_tasks: disk.yml
 #   tags:
