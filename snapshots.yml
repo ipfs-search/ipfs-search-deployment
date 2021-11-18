@@ -3,8 +3,6 @@
   become: true
   serial:
     - 1
-    - 2
-    - 20%
   any_errors_fatal: true
   vars_files:
     - vars/common.yml
