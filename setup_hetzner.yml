@@ -12,7 +12,8 @@
   tags: install_image
   roles:
     - hetzner_install_image
-- name: Setup reverse DNS
-  hosts: all
-  roles:
-    - { name: hetzner_reverse_dns, tags: [hetzner_reverse_dns] }
+# WIP
+# - name: Setup reverse DNS
+#   hosts: all
+#   roles:
+#     - { name: hetzner_reverse_dns, tags: [hetzner_reverse_dns] }
