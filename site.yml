@@ -2,6 +2,7 @@
 # Common configuration for all hosts
 - import_playbook: monitoring.yml
 - import_playbook: elasticsearch.yml
+- import_playbook: snapshots.yml
 - import_playbook: ipfs.yml
 - import_playbook: index.yml
 - import_playbook: api.yml
