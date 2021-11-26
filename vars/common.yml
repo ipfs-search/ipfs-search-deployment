@@ -5,7 +5,7 @@ crawler_file_workers: 24
 crawler_directory_workers: 4
 amqp_message_ttl: 4h
 golang_version: 1.16
-ipfs_version: v0.9.1
+ipfs_version: v0.10.0
 ipfs_path: "/var/lib/ipfs"
 ipfs_binary: "/usr/local/bin/ipfs"
 ipfs_user: "ipfs"
