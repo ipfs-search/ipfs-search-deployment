@@ -18,6 +18,7 @@
       - traceroute
       - man
       - smartmontools
+      - psmisc
     state: present
 - name: Install scripts
   copy: dest=/usr/local/ src=bin owner=root group=root mode=755
