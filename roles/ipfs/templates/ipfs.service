@@ -58,7 +58,7 @@ CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 # RestrictSUIDSGID=true
 
 # Disable swapping
-ExecStartPost=/bin/bash -c "echo 0 > /sys/fs/cgroup/memory/system.slice/ipfs.service/memory.swappiness"
+ExecStartPost=+/bin/bash -c "echo 0 > /sys/fs/cgroup/memory/system.slice/ipfs.service/memory.swappiness"
 
 [Install]
 WantedBy=default.target
