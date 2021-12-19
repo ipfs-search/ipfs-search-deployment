@@ -11,6 +11,7 @@
     dest: "{{ crawler_build }}"
     repo: https://github.com/ipfs-search/ipfs-search.git
     version: "{{ crawler_version }}"
+    force: true
   register: source
   become: false
 - block:
