@@ -7,7 +7,7 @@
     # Note: manually disable certbot testing from the command line!
     # Example:
     # ansible-playbook -e certbot_test=false frontend.yml
-    - certbot_test: true
+    # - certbot_test: true
   roles:
     - { name: nginx, tags: ['nginx']}
     - { name: frontend, tags: ['frontend']}
