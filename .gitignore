@@ -1,5 +1,4 @@
 vault/passphrase.gpg
-inventory
 *.retry
 *.pyc
 *.pyo

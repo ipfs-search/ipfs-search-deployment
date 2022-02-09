@@ -1,0 +1,3 @@
+[submodule "inventory"]
+	path = inventory
+	url = git@github.com:ipfs-search/ipfs-search-deployment-inventory.git
