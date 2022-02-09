@@ -1,4 +1,5 @@
 ---
+# aux host role; anything that's not properly distributed yet: bservability, sniffer, rabbitmq
 - hosts: aux
   become: true
   roles:
@@ -10,3 +11,4 @@
 - import_playbook: monitoring.yml
 - import_playbook: observability.yml
 - import_playbook: rabbitmq.yml
+- import_playbook: sniffer.yml
