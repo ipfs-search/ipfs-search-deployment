@@ -17,3 +17,8 @@
 #   hosts: all
 #   roles:
 #     - { name: hetzner_reverse_dns, tags: [hetzner_reverse_dns] }
+- hosts: all
+  vars_files:
+    - vars/common.yml
+  roles:
+    - { name: cloudflare_inventory_dns, tags: ['dns']}

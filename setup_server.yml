@@ -11,11 +11,6 @@
       tags: ['cgconfig']
     - { name: firewall, tags: ['firewall']}
     - { name: jre, tags: ['jre']}
-- hosts: all
-  vars_files:
-    - vars/common.yml
-  roles:
-    - { name: cloudflare_inventory_dns, tags: ['dns']}
 - hosts: dmz
   become: true
   roles:
