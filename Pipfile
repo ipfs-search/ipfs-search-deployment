@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 ansible = "<4"
+six = "*"
+netaddr = "*"
+jmespath = "*"
 
 [dev-packages]
 
