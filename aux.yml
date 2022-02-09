@@ -9,4 +9,4 @@
           - wg0
 - import_playbook: monitoring.yml
 - import_playbook: observability.yml
-
+- import_playbook: rabbitmq.yml
