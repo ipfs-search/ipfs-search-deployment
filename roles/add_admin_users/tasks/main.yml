@@ -1,0 +1,4 @@
+---
+- name: Setup admin users
+  include_tasks: add_user.yml
+  loop: "{{ admin_users | dict2items }}"

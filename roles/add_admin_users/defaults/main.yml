@@ -1,0 +1,2 @@
+---
+admin_users: "{{ {lookup('env','USER'): lookup('file', '~/.ssh/id_rsa.pub')} }}"
