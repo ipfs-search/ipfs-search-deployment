@@ -2,4 +2,4 @@
 dependencies:
   - role: nodejs
     vars:
-      node_branch: node_10.x
+      node_branch: node_16.x
