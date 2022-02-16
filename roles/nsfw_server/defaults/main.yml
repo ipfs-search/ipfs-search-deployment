@@ -1,0 +1,7 @@
+---
+nsfw_server_install_path: /usr/local/libexec/nsfw-server
+nsfw_server_repo: https://github.com/ipfs-search/nsfw-server.git
+nsfw_server_user: nsfw-server
+nsfw_server_group: nsfw-server
+nsfw_server_port: 3000
+nsfw_server_service: nsfw-server

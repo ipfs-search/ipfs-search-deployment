@@ -1,0 +1,16 @@
+[Unit]
+Description=A simple node.js server to run nsfw.js for images and return its results.
+Requires=ipfs.service
+After=ipfs.service
+
+[Service]
+WorkingDirectory={{ nsfw_server_install_path }}
+ExecStart=/usr/bin/npm start
+Restart=always
+User={{ nsfw_server_user }}
+Group={{ nsfw_server_group }}
+Environment=NODE_ENV=production
+Environment=PORT={{ nsfw_server_port }}
+
+[Install]
+WantedBy=default.target
