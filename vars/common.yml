@@ -24,3 +24,4 @@ influxdb_backup_user: "{{ lookup('env','USER') }}"
 influxdb_backup_bucket: "telegraf"
 storagebox_mountpoint_group: "{{ lookup('env','USER') }}"
 domain_name: "dwebsearch.org"
+nsfw_server_port: 3432
