@@ -11,7 +11,7 @@
     command: npm install --no-save
     args:
       chdir: "{{ api_install_path }}/server"
-    # when: source.changed
+    when: source.changed
     notify: restart ipfs-search
   - include_role:
       name: annotate
