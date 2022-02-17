@@ -1,4 +1,6 @@
 ---
-- name: Setup admin users
+- name: Add admin users
   include_tasks: add_user.yml
   loop: "{{ admin_users | dict2items }}"
+  loop_control:
+    loop_var: account

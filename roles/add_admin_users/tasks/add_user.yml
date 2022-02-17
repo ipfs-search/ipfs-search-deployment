@@ -1,18 +1,19 @@
 ---
-- name: "User '{{ item.key }}' present"
+- name: "User '{{ account.key }}' present"
   user:
-    name: "{{ item.key }}"
+    name: "{{ account.key }}"
     shell: /bin/bash
     state: present
 
-- name: "SSH public key for '{{ item.key }}'"
+- name: "SSH public key(s) for '{{ account.key }}'"
   authorized_key:
-    user: "{{ item.key }}"
-    key: "{{ item.value }}"
+    user: "{{ account.key }}"
+    key: "{{ account.value | join('\n') }}"
+    exclusive: True
 
-- name: "'{{ item.key }}' in sudoers"
+- name: "'{{ account.key }}' in sudoers"
   lineinfile:
     dest: /etc/sudoers
-    regexp: "^{{ item.key }}"
-    line: "{{ item.key }} ALL=(ALL:ALL) NOPASSWD: ALL"
+    regexp: "^{{ account.key }}"
+    line: "{{ account.key }} ALL=(ALL:ALL) NOPASSWD: ALL"
     state: present
