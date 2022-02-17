@@ -26,6 +26,8 @@ $ ansible-galaxy install -r requirements.yml
 ## Secrets / vault
 In addition to the inventory, a succesful deployment requires several secrets to be configured in the inventory. By default, the vault password is [encrypted with GPG](https://medium.com/@towo/wrapping-ansible-vault-with-gpg-b107b0e7a5e8) for increased security and to reduce password typing. To randomly generate and encrypt a password file, run `vault/create_passphrase.sh`.
 
+Please also refer to the [key management instructions](KEY_MANAGEMENT.md) regarding the use of GPG and Yubikeys/smartcards for secret management and SSH access.
+
 ## Bootstrappeing
 The `bootstrap` playbook will make sure `sudo` and `Ansible` are available on the machine, assuming initial SSH root access. It creates a remote SSH user with pubkey authentication and sudo rights on the server(s) and completely disables password login.
 
