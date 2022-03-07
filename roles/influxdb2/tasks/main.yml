@@ -8,7 +8,9 @@
     state: present
 - name: Install InfluxDB
   apt:
-    pkg: influxdb2
+    pkg:
+      - influxdb2
+      - influxdb2-cli
     state: present
 - name: Install InfluxDB configuration
   template:
