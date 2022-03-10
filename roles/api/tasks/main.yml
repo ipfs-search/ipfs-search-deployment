@@ -6,6 +6,8 @@
     git:
       dest: "{{ api_install_path }}"
       repo: https://github.com/ipfs-search/ipfs-search-api.git
+      version: "{{ api_version }}"
+      force: true
     register: source
   - name: Install search API
     command: npm install --no-save
