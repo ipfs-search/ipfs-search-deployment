@@ -1,0 +1,128 @@
+-
+  name: Grafana and Loki Setup
+  hosts: babbage
+  become: yes
+  vars:
+    pwd_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+  tasks:
+
+    - name: Update apt repo and cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+#    - name: Upgrade all packages on servers
+#      apt:
+#        upgrade: dist
+#        force_apt_get: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - gnupg2
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add the Grafana GPG key and APT repository
+      shell: |
+        curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+        add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+      args:
+        warn: no
+
+    - name: Install the grafana package
+      apt:
+        name: grafana
+        state: present
+        update_cache: yes
+
+    - name: Systemd setup
+      systemd:
+        name: grafana-server
+        enabled: yes
+        state: started
+
+    - name: Sleep for 10 seconds let grafana init
+      wait_for:
+        timeout: 10
+
+    - set_fact:
+        grafana_pass: "{{ pwd_alias }}"
+
+    - name: print generated password
+      vars:
+        msg: |
+             Grafana generated password is:
+             >> {{ grafana_pass }} <<
+      debug:
+        msg: "{{ msg.split('\n') }}"
+
+    - name: Change default password for grafana admin
+      command: "grafana-cli admin reset-admin-password {{ grafana_pass }}"
+      become: yes
+    #   register: out
+    # - debug: var=out.stdout_lines
+
+    - name: Systemd setup
+      systemd:
+        name: grafana-server
+        state: restarted
+
+    - name: Install Loki needed packages
+      apt:
+        name: unzip
+        state: present
+        update_cache: yes
+
+    - name: Create conf directory
+      file:
+        state: directory
+        path: /etc/loki
+
+    - name: Create data directory
+      file:
+        state: directory
+        path: /data/loki
+
+    - name: Install Grafana Loki
+      shell: |
+        cd /opt
+        curl https://api.github.com/repos/grafana/loki/releases/latest | grep -E "browser_download_url" | grep loki-linux-amd64 | cut -d '"' -f 4 | wget -qi -
+        unzip loki-linux-amd64.zip
+        mv loki-linux-amd64 /usr/local/bin/loki
+      args:
+        warn: no
+
+    - name: Create systemd unit
+      template:
+        src: ./templates/loki.service
+        dest: /etc/systemd/system/loki.service
+
+    - name: Create Loki config file
+      template:
+        src: ./templates/config.yaml
+        dest: /etc/loki/config.yaml
+
+    - name: Setup rights
+      shell: |
+        useradd --no-create-home --shell /bin/false loki
+        chown -R loki:loki /etc/loki
+        chown -R loki:loki /data/loki
+
+    - name: Systemd setup for loki
+      systemd:
+        daemon_reload: yes
+        name: loki
+        enabled: yes
+        state: started
+
+    - name: Setup DataSource for loki
+      community.grafana.grafana_datasource:
+        name: Loki
+        grafana_url: http://localhost:3000
+        grafana_user: admin
+        grafana_password: "{{ grafana_pass }}"
+        ds_type: loki
+        ds_url: http://localhost:3100
