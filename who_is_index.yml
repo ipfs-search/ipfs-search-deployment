@@ -1,0 +1,7 @@
+- hosts: index
+  gather_facts: no
+  tasks:
+    - debug: msg="I'm in the limited selection group!"
+#  gather_facts: yes
+#  tasks:
+#    - debug: var=hostvars[inventory_hostname]['ansible_env'].SSH_CONNECTION.split(' ')[2]

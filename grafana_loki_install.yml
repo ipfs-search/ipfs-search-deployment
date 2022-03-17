@@ -2,8 +2,8 @@
   name: Grafana and Loki Setup
   hosts: babbage
   become: yes
-  vars:
-    pwd_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+  vars_files:
+    - inventory/host_vars/babbage.yml
   tasks:
 
     - name: Update apt repo and cache
@@ -48,19 +48,27 @@
       wait_for:
         timeout: 10
 
-    - set_fact:
-        grafana_pass: "{{ pwd_alias }}"
+    - name: make grafana listening on DMZ/localhost
+      lineinfile: 
+        path: /etc/grafana/grafana.ini 
+        regexp: '^(.*)http_addr =(.*)$' 
+        line: 'http_addr = 127.0.0.1' 
+        backrefs: yes
+        # ^
+        # |
+        # gotta add address as ansible variable, discovered based on interface
+        # UPD: only one address is allowed
 
-    - name: print generated password
+    - name: print vaulted grafana password
       vars:
         msg: |
-             Grafana generated password is:
-             >> {{ grafana_pass }} <<
+             Grafana vaulted password is:
+             >> {{ grafana_password }} <<
       debug:
         msg: "{{ msg.split('\n') }}"
 
     - name: Change default password for grafana admin
-      command: "grafana-cli admin reset-admin-password {{ grafana_pass }}"
+      command: "grafana-cli admin reset-admin-password {{ grafana_password }}"
       become: yes
     #   register: out
     # - debug: var=out.stdout_lines
@@ -97,12 +105,12 @@
 
     - name: Create systemd unit
       template:
-        src: ./templates/loki.service
+        src: ./templates/loki/loki.service
         dest: /etc/systemd/system/loki.service
 
     - name: Create Loki config file
       template:
-        src: ./templates/config.yaml
+        src: ./templates/loki/config.yaml
         dest: /etc/loki/config.yaml
 
     - name: Setup rights
@@ -123,6 +131,6 @@
         name: Loki
         grafana_url: http://localhost:3000
         grafana_user: admin
-        grafana_password: "{{ grafana_pass }}"
+        grafana_password: "{{ grafana_password }}"
         ds_type: loki
         ds_url: http://localhost:3100
