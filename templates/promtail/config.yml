@@ -6,16 +6,20 @@ positions:
   filename: /data/promtail/positions.yaml
 
 clients:
-  - url: <client_url>
-
+  - url: http://172.16.34.1:3100/loki/api/v1/push
+# hardcoded, gotta replace by var in ansible playbook and lineinfile
+ 
 scrape_configs:
-- job_name: system
-  static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: varlogs
-      __path__: /var/log/*log
+
+#- job_name: system
+#  static_configs:
+#  - targets:
+#      - localhost
+#    labels:
+#      job: varlogs
+#      __path__: /var/log/*log
+
+# no logs needed
 
 - job_name: journal
   journal:

@@ -16,6 +16,13 @@ common:
     kvstore:
       store: inmemory
 
+limits_config:
+  ingestion_rate_mb: 32
+  ingestion_burst_size_mb: 64
+  max_concurrent_tail_requests: 100
+  max_cache_freshness_per_query: 10m
+  max_streams_per_user: 100
+
 schema_config:
   configs:
     - from: 2020-10-24
@@ -25,16 +32,3 @@ schema_config:
       index:
         prefix: index_
         period: 24h
-
-scrape_configs:
-  - job_name: journal
-    journal:
-      json: false
-      max_age: 12h
-      path: /var/log/journal
-      labels:
-        job: systemd-journal
-    relabel_configs:
-      - source_labels: ['__journal__systemd_unit']
-        target_label: 'unit'
-
