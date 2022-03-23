@@ -4,5 +4,5 @@ sniffer_home: "/var/lib/ipfs-sniffer"
 sniffer_head_count: 4
 sniffer_memlimit: 4G
 sniffer_version: master
-ipfs_peerid: QmfPZcnVAEjXABiA7StETRUKkS8FzNt968Z8HynbJR7oci
+sniffer_bootstrap_peers: /dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN,/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ,/ip6/2604:a880:1:20::203:d001/tcp/4001/p2p/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM
 amqp_message_ttl: 4h
