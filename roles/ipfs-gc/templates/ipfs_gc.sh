@@ -20,12 +20,12 @@ echo "Stopping IPFS"
 systemctl stop ipfs
 
 echo "Flattening repo"
-sudo -u $IPFS_USER bash -c "ulimit -Sn 65536; $BADGER flatten --dir {{ ipfs_path }}/badgerds > /dev/null"
+sudo -u $IPFS_USER /usr/bin/prlimit --nofile=65536 --rss={{ ipfs_gc_memlimit }} $BADGER flatten --dir {{ ipfs_path }}/badgerds > /dev/null
 
 echo "Starting IPFS"
 systemctl start ipfs
 
-echo "Starting dependant services"
+echo "Starting dependent services"
 systemctl list-dependencies --reverse --plain ipfs | sed -n "s/^  \(\S*\)\.service$/\1/p" | xargs systemctl start
 
 echo "Repo stat:"
@@ -43,6 +43,8 @@ $IPFS repo stat -H
 sleep 5
 echo "Synching disk buffers"
 sync
-sleep 5
-echo "Trimming filesystems"
-fstrim -a
+
+# Disable trimming too often.
+# sleep 5
+# echo "Trimming filesystems"
+# fstrim -a
