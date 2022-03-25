@@ -1,0 +1,109 @@
+---
+# tasks file for loki
+
+- name: Update apt repo and cache on all Ubuntu box
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Install required packages
+  apt:
+    name: "{{ install_packages }}"
+    state: present
+  tags:
+    - install_packages
+
+- name: Create loki user
+  user:
+    name: loki
+    create_home: false
+
+- name: Create conf directory
+  file:
+    state: directory
+    path: /etc/loki
+    mode: '0755'
+    group: loki
+    owner: loki
+    recurse: yes
+
+- name: Create data directory
+  file:
+    state: directory
+    path: /data/loki
+    mode: '0755'
+    group: loki
+    owner: loki
+    recurse: yes
+
+- name: Download file with check (sha256)
+  get_url:
+    url: https://github.com/grafana/loki/releases/download/{{ release_tag }}/loki-linux-amd64.zip
+    dest: /opt
+    checksum: sha256:{{ sha256 }}
+
+- name: Unarchive loki
+  unarchive:
+    src: /opt/loki-linux-amd64.zip
+    dest: /usr/local/bin
+    remote_src: yes
+    owner: loki
+    group: loki
+
+- name: Create systemd unit
+  copy:
+    src: loki.service
+    dest: /etc/systemd/system/loki.service
+    mode: 0644
+
+- name: Create loki config file
+  copy:
+    src: config.yaml
+    dest: /etc/loki/config.yaml
+    mode: 0644
+
+- name: Setup loki user file permission
+  file:
+    path: /usr/local/bin/loki 
+    # loki-linux-amd64?
+    owner: loki
+    group: loki
+
+- name: Setup loki user permission
+  file:
+    path: /etc/loki
+    owner: loki
+    group: loki
+    recurse: yes
+
+- name: Setup loki data permission
+  file:
+    path: /data/loki
+    owner: loki
+    group: loki
+    recurse: yes
+
+- name: make loki listening on DMZ/localhost
+  lineinfile:
+    path: /etc/loki/config.yaml
+    regexp: '^(.*)http_listen_address =(.*)$'
+    line: 'http_listen_address = {{ vlan_ip[:-3] }}'
+    backrefs: yes
+
+- name: Systemd setup for loki
+  systemd:
+    daemon_reload: yes
+    name: loki
+    enabled: yes
+    state: started
+
+
+- name: Setup Datasource for loki
+  community.grafana.grafana_datasource:
+    name: Loki
+    grafana_url: http://localhost:3000
+    grafana_user: admin
+    grafana_password: "{{ grafana_password }}"
+    ds_type: loki
+    ds_url: http://localhost:3100

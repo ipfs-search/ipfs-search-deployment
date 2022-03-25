@@ -1,0 +1,9 @@
+---
+# vars file for loki
+install_packages:
+  - unzip
+
+release_tag: v2.4.2
+# latest so far
+
+sha256: 98c354d786c5b562506812c1d19676f519874d3b89b49c35bd9d1f05d18ed951

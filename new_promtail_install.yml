@@ -1,0 +1,8 @@
+- name: install promtail
+  # hosts: aux
+  hosts: allen
+  gather_facts: yes
+  become: yes
+  roles:
+    - name: promtail installation
+      role: promtail

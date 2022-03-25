@@ -1,0 +1,7 @@
+- name: install grafana
+  hosts: babbage
+  gather_facts: yes
+  become: yes
+  roles:
+    - name: grafana installation
+      role: grafana
