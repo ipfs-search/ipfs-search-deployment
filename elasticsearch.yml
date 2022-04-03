@@ -5,6 +5,15 @@
   any_errors_fatal: true
   vars_files:
     - vars/common.yml
+
+  pre_tasks:
+    - name: Ensure ES cluster health is green
+      uri: url=http://localhost:9200/_cluster/health method=GET
+      register: response
+      until: "response.json.status == 'green'"
+      retries: 100
+      delay: 10
+
   roles:
     - role: elasticsearch
       tags: ['elasticsearch']
