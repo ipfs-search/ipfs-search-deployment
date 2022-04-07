@@ -38,6 +38,9 @@
           "endpoint": "{{ snapshot_endpoint }}",
           "region": "{{ snapshot_region }}",
           "compress": true,
+          "read_timeout": "2m",
+          "max_retries": 5,
+          "max_snapshot_bytes_per_sec": "10mb"
         }
       }
   run_once: true
