@@ -104,21 +104,6 @@
   # Skip logs
   namedrop = ["syslog*"]
 
-[[outputs.influxdb_v2]]
-  # Write logs to a different bucket
-  namepass = ["syslog*"]
-
-  urls = ["{{ influxdb_url }}"]
-
-  ## Token for authentication.
-  token = "{{ influxdb_token }}"
-
-  ## Organization is the name of the organization you wish to write to; must exist.
-  organization = "ipfs-search"
-
-  ## Destination bucket to write into.
-  bucket = "logs"
-
 # # Configuration for Amon Server to send metrics to.
 # [[outputs.amon]]
 #   ## Amon Server Key
