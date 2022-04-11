@@ -11,7 +11,9 @@
     pkg:
       - influxdb2
       - influxdb2-cli
-    state: present
+    state: latest
+    update_cache: yes
+  notify: restart influxdb
 - name: Install InfluxDB configuration
   template:
     src: config.toml

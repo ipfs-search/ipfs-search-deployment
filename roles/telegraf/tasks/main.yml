@@ -13,7 +13,8 @@
 - name: Install packages
   apt:
     pkg: telegraf
-    state: present
+    state: latest
+    update_cache: true
 - block:
     - name: Install lm-sensors package
       apt:
