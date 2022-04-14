@@ -19,3 +19,14 @@
     src: config.toml
     dest: /etc/influxdb/config.toml
   notify: restart influxdb
+- name: Directory for drop-in service override
+  file:
+    path: /etc/systemd/system/influxd.service.d
+    state: directory
+    owner: root
+    group: root
+- name: Configure service drop-in override
+  template: src=memlimit.conf dest=/etc/systemd/system/influxd.service.d/memlimit.conf
+  notify: restart influxdb
+- name: Enable service
+  systemd: name=influxdb daemon_reload=yes state=started enabled=yes
