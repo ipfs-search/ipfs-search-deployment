@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Wrap ansible-playbook and pip
+pipenv run ansible-playbook $@
