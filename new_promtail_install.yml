@@ -1,6 +1,6 @@
 - name: install promtail
   # hosts: aux
-  hosts: allen
+  hosts: all,!poppycorn
   gather_facts: yes
   become: yes
   roles:
