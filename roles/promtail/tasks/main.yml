@@ -51,9 +51,24 @@
     dest: /etc/promtail/config.yml
     mode: 0644
 
+- name: Add host label to config file
+  lineinfile:
+    path: /etc/promtail/config.yml
+    regexp: '^(.*)#<custom label>(.*)$'
+    line: '      inventory_hostname: {{ inventory_hostname }}'
+    # can add anything here
+    backrefs: yes
+    notify: Restart promtail
+
 - name: Systemd setup for promtail
   systemd:
     daemon_reload: yes
     name: promtail
     enabled: yes
     state: started
+
+handlers:
+  - name: Restart promtail
+    service:
+      name: promtail
+      state: restarted

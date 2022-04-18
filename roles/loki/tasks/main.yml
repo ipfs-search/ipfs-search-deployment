@@ -107,3 +107,13 @@
     grafana_password: "{{ grafana_password }}"
     ds_type: loki
     ds_url: http://localhost:3100
+
+
+#- name: Setup Datasource for influxDB
+#  community.grafana.grafana_datasource:
+#    name: influxDB
+#    grafana_url: http://localhost:3000
+#    grafana_user: admin
+#    grafana_password: "{{ grafana_password }}"
+#    ds_type: influxdb
+#    ds_url: http://localhost:8086
