@@ -58,7 +58,7 @@
     line: '      inventory_hostname: {{ inventory_hostname }}'
     # can add anything here
     backrefs: yes
-    notify: Restart promtail
+  notify: Restart promtail
 
 - name: Systemd setup for promtail
   systemd:
@@ -67,8 +67,3 @@
     enabled: yes
     state: started
 
-handlers:
-  - name: Restart promtail
-    service:
-      name: promtail
-      state: restarted
