@@ -1,4 +1,5 @@
 ---
+# TODO: Check for pre-existing IP's and pick next *available* one. Don't assume proper order of hosts!
 - name: Get host index
   set_fact:
     host_index: "{{ groups['dmz'].index(inventory_hostname) }}"
