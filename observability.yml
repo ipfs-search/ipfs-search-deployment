@@ -1,5 +1,5 @@
 ---
-- hosts: aux
+- hosts: stats
   become: true
   vars_files:
     - vars/common.yml
@@ -8,4 +8,4 @@
   roles:
     - { name: influxdb2, tags: influxdb }
     - { name: storagebox, tags: ['storagebox'] }
-    - { name: influxdb_backup, tags: influxdb_backup }
+    # - { name: influxdb_backup, tags: influxdb_backup }
