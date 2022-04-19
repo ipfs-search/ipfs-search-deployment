@@ -1,4 +1,18 @@
 ---
+# ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook setup_hetzner.yml -l new
+# Swithc work is WIP
+# - name: Add server to switch
+#   hosts: all
+#   tags: add_to_switch
+#   roles:
+#     - hetzner_add_to_switch
+- name: Install OS image
+  hosts: all # TODO: Filter by machines in rescue mode
+  user: root
+  ignore_unreachable: yes
+  tags: install_image
+  roles:
+    - hetzner_install_image
 - hosts: nameless
   gather_facts: no
   vars_files:
@@ -14,3 +28,13 @@
   gather_facts: no
   roles:
     - { name: generate_ipfs_key, tags: 'ipfs' }
+# WIP
+# - name: Setup reverse DNS
+#   hosts: all
+#   roles:
+#     - { name: hetzner_reverse_dns, tags: [hetzner_reverse_dns] }
+- hosts: all
+  vars_files:
+    - vars/common.yml
+  roles:
+    - { name: cloudflare_inventory_dns, tags: ['dns']}
