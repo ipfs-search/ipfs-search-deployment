@@ -2,3 +2,10 @@ bolt-path = "{{ influxdb2_path }}/influxd.bolt"
 engine-path = "{{ influxdb2_path }}/engine"
 http-bind-address = "{{ influxdb2_http_bind_address }}"
 log-level = "error"
+
+# query-concurrency = "10" # Default
+# query-initial-memory-bytes = "10485760" # 10 MB initial for queries
+# query-memory-bytes = "536870912" # 512 MB max for queries
+# query-max-memory-bytes = "query-concurrency x query-memory-bytes" # Max 10 GB total
+
+query-max-memory-bytes = "25769803776" # 24 GB
