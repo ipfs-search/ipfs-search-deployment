@@ -1,7 +1,7 @@
 ---
-- name: Count hosts with IP
+- name: Get host index
   set_fact:
-    existing_hosts: "{{ groups['dmz'] | length }}"
+    host_index: "{{ groups['dmz'].index(inventory_hostname) }}"
   run_once: true
   delegate_to: localhost
 - block:
@@ -9,7 +9,7 @@
     set_fact:
       generated_vlan_ip: true
       # Add subnet
-      vlan_ip: "{{ vlan_subnet | ansible.netcommon.ipaddr('net') | ansible.netcommon.ipaddr(groups['dmz'].index(inventory_hostname)) }}"
+      vlan_ip: "{{ vlan_subnet | ansible.netcommon.ipaddr(host_index) }}"
   delegate_to: localhost
   when: vlan_ip is undefined
 - block:
