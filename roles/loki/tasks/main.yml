@@ -31,7 +31,7 @@
 - name: Create data directory
   file:
     state: directory
-    path: /data/loki
+    path: "{{ data_path }}"
     mode: '0755'
     group: loki
     owner: loki
@@ -57,9 +57,9 @@
     dest: /etc/systemd/system/loki.service
     mode: 0644
 
-- name: Create loki config file
-  copy:
-    src: config.yaml
+- name: Create loki config file using Jinja2
+  template:
+    src: files/config.j2
     dest: /etc/loki/config.yaml
     mode: 0644
 
@@ -79,7 +79,7 @@
 
 - name: Setup loki data permission
   file:
-    path: /data/loki
+    path: "{{ data_path }}"
     owner: loki
     group: loki
     recurse: yes
@@ -106,7 +106,7 @@
     grafana_user: admin
     grafana_password: "{{ grafana_password }}"
     ds_type: loki
-    ds_url: http://localhost:3100
+    ds_url: http://172.16.34.1:3100
 
 
 #- name: Setup Datasource for influxDB

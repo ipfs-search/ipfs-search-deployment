@@ -5,3 +5,6 @@
   roles:
     - name: loki installation
       role: loki
+      vars:
+        data_path: /var/lib/loki 
+        # be careful there!
