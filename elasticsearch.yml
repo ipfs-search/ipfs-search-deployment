@@ -31,7 +31,7 @@
           # Disable zone awareness, for now.
           # cluster.routing.allocation.awareness.attributes: zone_id
           discovery.seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
-          network.publish_host: "{{ vlan_ip | ipaddr('address')}}"
+          network.publish_host: "{{ vlan_ip | ipaddr('address') }}"
           # Only during bootstrapping
           # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
           # cluster.initial_master_nodes: "{{ groups['master'] }}"
