@@ -56,7 +56,7 @@
   lineinfile:
     path: /etc/grafana/grafana.ini
     regexp: '^(.*)http_addr =(.*)$'
-    line: 'http_addr = {{ vlan_ip[:-3] }}'
+    line: 'http_addr = {{ monitoring_host_internal_addr }}'
     # we don't need subnet mask here
     backrefs: yes
     # line: 'http_addr = {{ ansible_eno1.4000.ipv4.address }}'

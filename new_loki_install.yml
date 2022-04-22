@@ -1,10 +1,10 @@
 - name: install loki
-  hosts: babbage
+  hosts: caminer
   gather_facts: yes
   become: yes
   roles:
     - name: loki installation
       role: loki
       vars:
-        data_path: /var/lib/loki 
-        # be careful there!
+        # loki_data_path: /var/lib/loki 
+        ## be careful there!

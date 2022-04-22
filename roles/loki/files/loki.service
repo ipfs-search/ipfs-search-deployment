@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=loki
 Group=loki
-ExecStart=/usr/local/bin/loki -config.file /etc/loki/config.yaml
+ExecStart=/usr/local/bin/loki-linux-amd64 -config.file /etc/loki/config.yaml
 
 [Install]
 WantedBy=multi-user.target

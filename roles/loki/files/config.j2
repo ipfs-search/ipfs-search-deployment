@@ -1,12 +1,12 @@
 auth_enabled: false
 
 server:
-  http_listen_address: 172.16.34.1
+  http_listen_address: {{ monitoring_host_internal_addr }}
   http_listen_port: 3100
   grpc_listen_port: 9096
 
 compactor:
-  working_directory: {{ data_path }}/retention
+  working_directory: {{ loki_data_path }}/retention
   shared_store: filesystem
   compaction_interval: 10m
   retention_enabled: true
@@ -14,11 +14,11 @@ compactor:
   retention_delete_worker_count: 20
 
 common:
-  path_prefix: {{ data_path }}
+  path_prefix: {{ loki_data_path }}
   storage:
     filesystem:
-      chunks_directory: {{ data_path }}/chunks
-      rules_directory: {{ data_path }}/rules
+      chunks_directory: {{ loki_data_path }}/chunks
+      rules_directory: {{ loki_data_path }}/rules
   replication_factor: 1
   ring:
     instance_addr: 127.0.0.1

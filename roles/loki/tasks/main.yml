@@ -31,7 +31,7 @@
 - name: Create data directory
   file:
     state: directory
-    path: "{{ data_path }}"
+    path: "{{ loki_data_path }}"
     mode: '0755'
     group: loki
     owner: loki
@@ -65,8 +65,7 @@
 
 - name: Setup loki user file permission
   file:
-    path: /usr/local/bin/loki 
-    # loki-linux-amd64?
+    path: /usr/local/bin/loki-linux-amd64 
     owner: loki
     group: loki
 
@@ -79,7 +78,7 @@
 
 - name: Setup loki data permission
   file:
-    path: "{{ data_path }}"
+    path: "{{ loki_data_path }}"
     owner: loki
     group: loki
     recurse: yes
@@ -88,7 +87,7 @@
   lineinfile:
     path: /etc/loki/config.yaml
     regexp: '^(.*)http_listen_address =(.*)$'
-    line: 'http_listen_address = {{ vlan_ip[:-3] }}'
+    line: 'http_listen_address = {{ monitoring_host_internal_addr }}'
     backrefs: yes
 
 - name: Systemd setup for loki
@@ -102,18 +101,18 @@
 - name: Setup Datasource for loki
   community.grafana.grafana_datasource:
     name: Loki
-    grafana_url: http://localhost:3000
+    grafana_url: "http://{{ monitoring_host_internal_addr }}:3000"
     grafana_user: admin
     grafana_password: "{{ grafana_password }}"
     ds_type: loki
-    ds_url: http://172.16.34.1:3100
+    ds_url: "http://{{ monitoring_host_internal_addr }}:3100"
 
 
 #- name: Setup Datasource for influxDB
 #  community.grafana.grafana_datasource:
 #    name: influxDB
-#    grafana_url: http://localhost:3000
+#    grafana_url: "http://{{ monitoring_host_internal_addr }}:3000"
 #    grafana_user: admin
 #    grafana_password: "{{ grafana_password }}"
 #    ds_type: influxdb
-#    ds_url: http://localhost:8086
+#    ds_url: "http://{{ monitoring_host_internal_addr }}:8086"

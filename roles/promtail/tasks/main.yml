@@ -35,7 +35,7 @@
 - name: Create data directory
   file:
     state: directory
-    path: /data/promtail
+    path: /var/lib/promtail
     mode: '0755'
     recurse: yes
 
@@ -45,9 +45,9 @@
     dest: /etc/systemd/system/promtail.service
     mode: 0644
 
-- name: Create promtail config file
-  copy:
-    src: config.yml
+- name: Create promtail config file using Jinja2
+  template:
+    src: files/config.j2
     dest: /etc/promtail/config.yml
     mode: 0644
 
