@@ -1,0 +1,69 @@
+---
+# tasks file for promtail
+- name: Update apt repo and cache on all Ubuntu box
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Install needed package
+  apt:
+    name: "{{ install_packages }}"
+    state: present
+  tags:
+    - install_packages
+
+- name: Download file with check (sha256)
+  get_url:
+    url: https://github.com/grafana/loki/releases/download/{{ release_tag }}/promtail-linux-amd64.zip
+    dest: /opt
+    checksum: sha256:{{ sha256 }}
+
+- name: Unarchive promtail
+  unarchive:
+    src: /opt/promtail-linux-amd64.zip
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Create conf directory
+  file:
+    state: directory
+    path: /etc/promtail
+    mode: '0755'
+    recurse: yes
+
+- name: Create data directory
+  file:
+    state: directory
+    path: /var/lib/promtail
+    mode: '0755'
+    recurse: yes
+
+- name: Create systemd unit
+  copy:
+    src: promtail.service
+    dest: /etc/systemd/system/promtail.service
+    mode: 0644
+
+- name: Create promtail config file using Jinja2
+  template:
+    src: files/config.j2
+    dest: /etc/promtail/config.yml
+    mode: 0644
+
+- name: Add host label to config file
+  lineinfile:
+    path: /etc/promtail/config.yml
+    regexp: '^(.*)#<custom label>(.*)$'
+    line: '      inventory_hostname: {{ inventory_hostname }}'
+    # can add anything here
+    backrefs: yes
+  notify: Restart promtail
+
+- name: Systemd setup for promtail
+  systemd:
+    daemon_reload: yes
+    name: promtail
+    enabled: yes
+    state: started
+
