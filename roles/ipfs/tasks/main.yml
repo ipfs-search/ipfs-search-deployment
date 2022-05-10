@@ -96,9 +96,10 @@
   delegate_facts: True
   when: hostvars[item]['ansible_default_ipv4'] is not defined
   with_items: "{{ groups['ipfs'] }}"
+  ignore_unreachable: yes
 - name: Set sniffer heads and ipfs peers
   set_fact:
-    ipfs_peers: "[{% for host in groups['ipfs'] if host != inventory_hostname and 'ipfs_peer_id' in hostvars[host] %}{\"ID\": \"{{ hostvars[host][\"ipfs_peer_id\"] }}\", \"Addrs\": [\"/ip4/{{ hostvars[host].ansible_default_ipv4.address }}/udp/4001/quic\"]}{% if not loop.last %},{% endif %}{% endfor %}]"
+    ipfs_peers: "[{% for host in groups['ipfs'] if host != inventory_hostname and 'ipfs_peer_id' in hostvars[host] and 'ansible_default_ipv4' in hostvars[host] %}{\"ID\": \"{{ hostvars[host][\"ipfs_peer_id\"] }}\", \"Addrs\": [\"/ip4/{{ hostvars[host].ansible_default_ipv4.address }}/udp/4001/quic\"]}{% if not loop.last %},{% endif %}{% endfor %}]"
     sniffer_heads: "[{% for heads in sniffer_heads.results if 'content' in heads %}{{ heads['content'].splitlines()[0] }}{% if not loop.last %},{% endif %}{% endfor %}]"
     cacheable: yes
 - name: Render IPFS configuration file
