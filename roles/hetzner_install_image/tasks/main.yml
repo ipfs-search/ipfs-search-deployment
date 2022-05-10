@@ -8,9 +8,9 @@
   register: installimage
 - reboot:
     reboot_timeout: 7200
-- name: Remove host key from local known hosts
-  known_hosts:
-    name: "{{ ansible_host }}"
-    state: absent
-  delegate_to: localhost
+- name: Setup SSH host keys
+  include_role:
+    name: update_ssh_hostkeys
+    apply:
+      delegate_to: localhost
   when: installimage is succeeded
