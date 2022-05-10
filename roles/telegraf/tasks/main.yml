@@ -15,6 +15,7 @@
     pkg: telegraf
     state: latest
     update_cache: true
+  notify: restart telegraf
 - block:
     - name: Install lm-sensors package
       apt:
@@ -35,11 +36,6 @@
         enabled: yes
         state: started
   when: has_sensors is defined
-- name: Install Telegraf package
-  apt:
-    name: telegraf
-    state: present
-  notify: restart telegraf
 - name: Telegraf configuration
   template: src=telegraf.toml.j2 dest=/etc/telegraf/telegraf.conf
   notify: restart telegraf
