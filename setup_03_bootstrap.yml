@@ -1,10 +1,12 @@
 ---
 - hosts: all
+  user: root
   tags:
     - admin_users
   roles:
     - add_admin_users
 - hosts: all
+  become: true
   tags:
     - ssh_security
   tasks:
