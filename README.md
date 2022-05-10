@@ -66,10 +66,11 @@ ansible-playbook setup_inventory.yml
 In order to (re)install a machine, first make sure the machine is running in the [rescue system](https://docs.hetzner.com/robot/dedicated-server/troubleshooting/hetzner-rescue-system/). Then, run:
 
 ```sh
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root setup_hetzner.yml -l $HOSTNAME
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root bootstrap.yml -l $HOSTNAME
-ansible-playbook setup_server.yml -l $HOSTNAME
-ansible-playbook site.yml
+ansible-playbook setup_01_inventory.yml -l $HOSTNAME
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook setup_02_hetzner.yml -l $HOSTNAME
+ansible-playbook setup_03_bootstrap.yml -l $HOSTNAME
+ansible-playbook setup_04_server.yml -l $HOSTNAME
+ansible-playbook site -l $HOSTNAME
 ```
 
 ## License
