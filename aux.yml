@@ -1,13 +1,5 @@
 ---
-# aux host role; anything that's not properly distributed yet: bservability, sniffer, rabbitmq
-- hosts: aux
-  become: true
-  roles:
-    - role: adamruzicka.wireguard
-      tags: ['wireguard']
-      vars:
-        wireguard_networks:
-          - wg0
+# aux host role; anything that's not properly distributed yet: sniffer, rabbitmq
 - import_playbook: monitoring.yml
 - import_playbook: rabbitmq.yml
 - import_playbook: sniffer.yml
