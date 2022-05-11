@@ -1,8 +1,11 @@
 ---
-# Common configuration for all hosts
-- import_playbook: monitoring.yml
-- import_playbook: elasticsearch.yml
-- import_playbook: ipfs.yml
-- import_playbook: index.yml
+# This includes all playbooks for all hosts.
 - import_playbook: api.yml
+- import_playbook: aux.yml
+- import_playbook: elasticsearch.yml
 - import_playbook: frontend.yml
+- import_playbook: index.yml
+- import_playbook: ipfs.yml
+- import_playbook: monitoring.yml
+- import_playbook: observability.yml
+
