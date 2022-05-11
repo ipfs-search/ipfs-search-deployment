@@ -6,6 +6,7 @@
     git:
       dest: "{{ nsfw_server_install_path }}"
       repo: "{{ nsfw_server_repo }}"
+      version: "{{ nsfw_server_version }}"
     register: source
   - name: Install search API
     command: npm install --production --no-save
