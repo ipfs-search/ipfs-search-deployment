@@ -11,8 +11,8 @@
       uri: url=http://localhost:9200/_cluster/health method=GET
       register: response
       until: "response.json.status == 'green'"
-      retries: 100
-      delay: 10
+      retries: 1000
+      delay: 2
 
   roles:
     - role: elasticsearch
