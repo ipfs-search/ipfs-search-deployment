@@ -6,6 +6,7 @@
   vars_files:
     - vars/common.yml
 
+  # NOTE: Comment out for clean installs!
   pre_tasks:
     - name: Ensure ES cluster health is green
       uri: url=http://localhost:9200/_cluster/health method=GET
