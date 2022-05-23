@@ -14,3 +14,15 @@
     apply:
       delegate_to: localhost
   when: installimage is succeeded
+
+# The stuff below is known to work!!!
+# installimage -a -r yes -l 0 -i /root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz -g -p swap:swap:4G,/boot:ext3:1G,/:ext4:all -t yes
+# DRIVE1 /dev/nvme0n1
+# DRIVE2 /dev/nvme1n1
+# SWRAID 1
+# SWRAIDLEVEL 0
+# HOSTNAME Ubuntu-2004-focal-64-minimal
+# PART  swap  swap  4G
+# PART  /boot  ext3  1G
+# PART  /  ext4  all
+# IMAGE //root/.oldroot/nfs/install/../images/Ubuntu-2004-focal-64-minimal.tar.gz

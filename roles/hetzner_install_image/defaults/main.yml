@@ -1,4 +1,4 @@
 ---
 install_image_raid_level: 1
-install_image_partitions: swap:swap:4G,/boot:ext3:1024M,/:ext4:all
+install_image_partitions: swap:swap:4G,/boot:ext3:1G,/:ext4:all
 install_image_filename: Ubuntu-2004-focal-64-minimal.tar.gz
