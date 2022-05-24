@@ -1,19 +1,4 @@
 ---
-# tasks file for loki
-
-- name: Update apt repo and cache on all Ubuntu box
-  apt:
-    update_cache: yes
-    force_apt_get: yes
-    cache_valid_time: 3600
-
-- name: Install required packages
-  apt:
-    name: "{{ install_packages }}"
-    state: present
-  tags:
-    - install_packages
-
 - name: Create loki user
   user:
     name: loki
@@ -26,7 +11,6 @@
     mode: '0755'
     group: loki
     owner: loki
-    recurse: yes
 
 - name: Create data directory
   file:
@@ -35,78 +19,59 @@
     mode: '0755'
     group: loki
     owner: loki
-    recurse: yes
 
-- name: Download file with check (sha256)
+- name: Download binary
   get_url:
-    url: https://github.com/grafana/loki/releases/download/{{ release_tag }}/loki-linux-amd64.zip
-    dest: /opt
-    checksum: sha256:{{ sha256 }}
+    url: https://github.com/grafana/loki/releases/download/{{ loki_version }}/loki-linux-amd64.zip
+    dest: /tmp/loki-linux-amd64.zip
+    checksum: sha256:{{ loki_download_sha256 }}
+  register: loki_download
 
-- name: Unarchive loki
+- name: Unarchive
   unarchive:
     src: /opt/loki-linux-amd64.zip
     dest: /usr/local/bin
     remote_src: yes
     owner: loki
     group: loki
+  when: loki_download.changed
+  notify: restart loki
 
-- name: Create systemd unit
-  copy:
+- name: binary file permission
+  file:
+    path: /usr/local/bin/loki-linux-amd64
+    owner: loki
+    group: loki
+
+- name: systemd unit
+  template:
     src: loki.service
     dest: /etc/systemd/system/loki.service
     mode: 0644
+  notify: restart loki
 
-- name: Create loki config file using Jinja2
+- name: config file
   template:
-    src: files/config.j2
+    src: config.yaml
     dest: /etc/loki/config.yaml
     mode: 0644
+  notify: restart loki
 
-- name: Setup loki user file permission
-  file:
-    path: /usr/local/bin/loki-linux-amd64 
-    owner: loki
-    group: loki
-
-- name: Setup loki user permission
-  file:
-    path: /etc/loki
-    owner: loki
-    group: loki
-    recurse: yes
-
-- name: Setup loki data permission
-  file:
-    path: "{{ loki_data_path }}"
-    owner: loki
-    group: loki
-    recurse: yes
-
-- name: make loki listening on DMZ/localhost
-  lineinfile:
-    path: /etc/loki/config.yaml
-    regexp: '^(.*)http_listen_address =(.*)$'
-    line: 'http_listen_address = {{ monitoring_host_internal_addr }}'
-    backrefs: yes
-
-- name: Systemd setup for loki
+- name: service enabled
   systemd:
     daemon_reload: yes
     name: loki
     enabled: yes
     state: started
 
-
-- name: Setup Datasource for loki
-  community.grafana.grafana_datasource:
-    name: Loki
-    grafana_url: "http://{{ monitoring_host_internal_addr }}:3000"
-    grafana_user: admin
-    grafana_password: "{{ grafana_password }}"
-    ds_type: loki
-    ds_url: "http://{{ monitoring_host_internal_addr }}:3100"
-
+# - name: Setup Datasource for loki
+#   community.grafana.grafana_datasource:
+#     name: Loki
+#     grafana_url: "http://{{ monitoring_host_internal_addr }}:3000"
+#     grafana_user: admin
+#     grafana_password: "{{ grafana_password }}"
+#     ds_type: loki
+#     ds_url: "http://{{ monitoring_host_internal_addr }}:3100"
 
 #- name: Setup Datasource for influxDB
 #  community.grafana.grafana_datasource:

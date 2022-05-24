@@ -1,3 +1,4 @@
 ---
-# override if not specified
 loki_data_path: /var/lib/loki
+loki_version: v2.4.2
+loki_download_sha256: 98c354d786c5b562506812c1d19676f519874d3b89b49c35bd9d1f05d18ed951
