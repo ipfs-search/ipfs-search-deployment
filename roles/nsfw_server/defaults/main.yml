@@ -5,4 +5,4 @@ nsfw_server_user: nsfw-server
 nsfw_server_group: nsfw-server
 nsfw_server_port: 3000
 nsfw_server_service: nsfw-server
-nsfw_server_version: master
+nsfw_server_version: main
