@@ -1,7 +1,0 @@
-- name: install grafana
-  hosts: caminer
-  gather_facts: yes
-  become: yes
-  roles:
-    - name: grafana installation
-      role: grafana

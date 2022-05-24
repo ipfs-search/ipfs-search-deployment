@@ -9,3 +9,12 @@
     - { name: influxdb2, tags: influxdb }
     # - { name: storagebox, tags: ['storagebox'] }
     # - { name: influxdb_backup, tags: influxdb_backup }
+    - name: grafana installation
+      role: grafana
+      tags: grafana
+    - name: loki installation
+      role: loki
+      tags: loki
+      vars:
+        # loki_data_path: /var/lib/loki
+        ## be careful there!
