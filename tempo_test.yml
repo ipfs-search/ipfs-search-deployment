@@ -1,0 +1,9 @@
+---
+- hosts: stats
+  become: true
+  vars_files:
+    - vars/common.yml
+  roles:
+    - name: tempo installation
+      role: tempo
+      tags: tempo
