@@ -1,12 +1,19 @@
+# EXPERIMENTAL!
+# search_enabled: true
+
 server:
   http_listen_address: {{ monitoring_host_internal_addr }}
   http_listen_port: 3300
+  grpc_listen_address: 127.0.0.1
+  grpc_listen_port: 9095               # default
 
 distributor:
+  log_received_traces: true
   receivers:                           # this configuration will listen on all ports and protocols that tempo is capable of.
-    jaeger:                            # the receives all come from the OpenTelemetry collector.  more configuration information can
+    jaeger/withendpoint:               # the receives all come from the OpenTelemetry collector.  more configuration information can
       protocols:                       # be found there: https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver
-        thrift_http:                   #
+        thrift_http:
+          endpoint: {{ monitoring_host_internal_addr }}:14268
 
 ingester:
   trace_idle_period: 10s               # the length of time after a trace has not received spans to consider it complete and flush it
@@ -35,8 +42,3 @@ storage:
     pool:
       max_workers: 100                 # worker pool determines the number of parallel requests to the object store backend
       queue_depth: 10000
-
-metrics_generator_enabled: false
-
-overrides:
-  metrics_generator_processors: [service-graphs, span-metrics]

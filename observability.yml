@@ -18,3 +18,6 @@
       vars:
         # loki_data_path: /var/lib/loki
         ## be careful there!
+    - name: tempo installation
+      role: tempo
+      tags: tempo
