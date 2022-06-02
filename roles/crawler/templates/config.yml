@@ -15,7 +15,7 @@ tika:
   max_file_size: 4GB
 instrumentation:
   sampling_ratio: 0.01
-  jaeger_endpoint: http://localhost:14268/api/traces
+  jaeger_endpoint: http://{{ monitoring_host_internal_addr }}:14268/api/traces
 crawler:
   direntry_buffer_size: 8192
   min_update_age: 12h
