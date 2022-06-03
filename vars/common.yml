@@ -1,8 +1,9 @@
 ---
 crawler_memlimit: 4G
-crawler_hash_workers: 192
+crawler_hash_workers: 256
 crawler_file_workers: 12
 crawler_directory_workers: 4
+crawler_version: mget_bulk_getter
 amqp_message_ttl: 4h
 golang_version: 1.16
 ipfs_version: v0.11.0
