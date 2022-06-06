@@ -68,6 +68,13 @@
     # should filter by 4000 vlanID or filter if it's in vlan CIDR
     # let's hope that var 'vlan_ip' exists for every host in hosts_var
 
+- name: enable search feature for Tempo on grafana web UI
+  ini_file:
+    path: /etc/grafana/grafana.ini
+    section: feature_toggles
+    option: "enable = tempoSearch tempoBackendSearch"
+    allow_no_value: yes
+
 - name: Systemd service restart
   systemd:
     name: grafana-server
