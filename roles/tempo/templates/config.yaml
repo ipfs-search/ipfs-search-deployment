@@ -1,5 +1,5 @@
 # EXPERIMENTAL!
-# search_enabled: true
+search_enabled: true
 
 server:
   http_listen_address: {{ monitoring_host_internal_addr }}
