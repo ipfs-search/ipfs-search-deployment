@@ -9,8 +9,8 @@
     state: directory
     path: /etc/tempo
     mode: '0755'
-    group: tempo
-    owner: tempo
+    group: root
+    owner: root
 
 - name: Create data directory
   file:
@@ -40,8 +40,8 @@
 - name: binary file permission
   file:
     path: /usr/local/bin/tempo
-    owner: tempo
-    group: tempo
+    owner: root
+    group: root
 
 - name: systemd unit
   template:
