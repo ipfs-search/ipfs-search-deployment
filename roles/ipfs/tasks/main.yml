@@ -24,7 +24,7 @@
     include_role:
       name: golang
       public: yes
-    when: golang_install_dir is not defined
+    when: golang_install_dir is not defined or ansible_local.golang.general.version != golang_version
   - block:
     - name: clean go-ipfs
       make:
