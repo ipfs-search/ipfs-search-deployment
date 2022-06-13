@@ -39,7 +39,7 @@
     name: "ipfs collect garbage"
     cron_file: /etc/crontab
     minute: "48"
-    hour: "*/3"
+    hour: "*/6"
     backup: "yes"
     user: "root"
     job: "/usr/bin/timeout {{ ipfs_gc_timeout }} {{ ipfs_gc_script }} > /dev/null"
