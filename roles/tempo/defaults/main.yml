@@ -1,0 +1,4 @@
+---
+tempo_data_path: /var/lib/tempo
+tempo_version: v1.4.1
+tempo_download_sha256: 69f165f6381c6c32da4349af352c0b89f4a4b57cedda35a5ed1cc7b6afe4392e

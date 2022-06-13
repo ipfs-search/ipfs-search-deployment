@@ -1,0 +1,12 @@
+[Unit]
+Description=Tempo service
+After=network.target
+
+[Service]
+Type=simple
+User=tempo
+Group=tempo
+ExecStart=/usr/local/bin/tempo -config.file /etc/tempo/config.yaml
+
+[Install]
+WantedBy=multi-user.target

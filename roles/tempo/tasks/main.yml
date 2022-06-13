@@ -1,0 +1,74 @@
+---
+- name: Create tempo user
+  user:
+    name: tempo
+    create_home: false
+
+- name: Create conf directory
+  file:
+    state: directory
+    path: /etc/tempo
+    mode: '0755'
+    group: root
+    owner: root
+
+- name: Create data directory
+  file:
+    state: directory
+    path: "{{ tempo_data_path }}"
+    mode: '0755'
+    group: tempo
+    owner: tempo
+
+- name: Download binary
+  get_url: 
+    url: https://github.com/grafana/tempo/releases/download/{{ tempo_version }}/tempo_{{ tempo_version[1:] }}_linux_amd64.tar.gz
+    dest: /tmp/tempo_linux_amd64.tar.gz
+    checksum: sha256:{{ tempo_download_sha256 }}
+  register: tempo_download
+
+- name: Unarchive
+  unarchive:
+    src: /tmp/tempo_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    owner: tempo
+    group: tempo
+  when: tempo_download.changed
+  notify: restart tempo
+
+- name: binary file permission
+  file:
+    path: /usr/local/bin/tempo
+    owner: root
+    group: root
+
+- name: systemd unit
+  template:
+    src: tempo.service
+    dest: /etc/systemd/system/tempo.service
+    mode: 0644
+  notify: restart tempo
+
+- name: config file
+  template:
+    src: config.yaml
+    dest: /etc/tempo/config.yaml
+    mode: 0644
+  notify: restart tempo
+
+- name: service enabled
+  systemd:
+    daemon_reload: yes
+    name: tempo
+    enabled: yes
+    state: started
+
+# - name: Setup Datasource for Tempo
+#   community.grafana.grafana_datasource:
+#     name: Loki
+#     grafana_url: "http://{{ monitoring_host_internal_addr }}:3000"
+#     grafana_user: admin
+#     grafana_password: "{{ grafana_password }}"
+#     ds_type: loki
+#     ds_url: "http://{{ monitoring_host_internal_addr }}:3100"
