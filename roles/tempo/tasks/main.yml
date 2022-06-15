@@ -31,17 +31,13 @@
   unarchive:
     src: /tmp/tempo_linux_amd64.tar.gz
     dest: /usr/local/bin
+    exclude: "!tempo"
     remote_src: yes
-    owner: tempo
-    group: tempo
-  when: tempo_download.changed
-  notify: restart tempo
-
-- name: binary file permission
-  file:
-    path: /usr/local/bin/tempo
     owner: root
     group: root
+    mode: 0755
+  when: tempo_download.changed
+  notify: restart tempo
 
 - name: systemd unit
   template:
