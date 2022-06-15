@@ -103,7 +103,12 @@
     "NoDNSLink": false,
     "NoFetch": false,
     "PathPrefixes": [],
-    "PublicGateways": null,
+    "PublicGateways": {
+        "localhost": {
+            "UseSubdomains": false,
+            "Paths": ["/ipfs", "/ipns", "/api"]
+        }
+    },
     "RootRedirect": "",
     "Writable": false
   },
