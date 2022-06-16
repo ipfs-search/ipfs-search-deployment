@@ -1,6 +1,9 @@
 ---
 - name: Create destination folder for search api
-  file: path={{ nsfw_server_install_path }} state=directory owner="{{ lookup('env','USER') }}"
+  file:
+    path: "{{ nsfw_server_install_path }}"
+    state: directory
+    owner: "{{ lookup('env','USER') }}"
 - block:
   - name: Clone nsfw-server repository
     git:
