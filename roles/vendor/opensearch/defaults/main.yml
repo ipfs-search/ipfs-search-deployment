@@ -1,16 +1,16 @@
 ---
 
-os_nodes: |-
-        {% for item in groups['os-cluster'] -%}
-          {{ item }}{% if not loop.last %}","{% endif %}
-        {%- endfor %}
+# os_nodes: |-
+#         {% for item in groups['os-cluster'] -%}
+#           {{ item }}{% if not loop.last %}","{% endif %}
+#         {%- endfor %}
 
-os_master_nodes: |-
-        {% for item in groups['master'] -%}
-          {{ item }}{% if not loop.last %}","{% endif %}
-        {%- endfor %}
+# os_master_nodes: |-
+#         {% for item in groups['master'] -%}
+#           {{ item }}{% if not loop.last %}","{% endif %}
+#         {%- endfor %}
 
-populate_inventory_to_hosts_file: true
+# populate_inventory_to_hosts_file: true
 
 os_home: /usr/share/opensearch
 os_conf_dir: /usr/share/opensearch/config
@@ -23,3 +23,48 @@ systemctl_path: /etc/systemd/system
 
 # Auth type: 'internal' or 'oidc' (OpenID). Default: internal
 auth_type: internal
+
+### COPIED FROM ansible-playbook/inventories/opensearch/group_vars/all/all.yml 
+## Common opensearch configuration parameters ##
+
+# os_cluster_name: development-cluster
+### declared in template
+
+# opensearch download
+os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
+
+# opensearch version
+# 2.x Latest Version
+os_version: "2.0.1"
+
+# opensearch dashboards version
+# 2.x Latest Version
+os_dashboards_version: "2.0.1"
+
+# Configure hostnames for opensearch nodes
+# It is required to configure SSL
+# Example es1.example.com, es2.example.com
+# domain_name: example.com
+### not used
+
+# Java memory heap values(GB) for opensearch
+# You can change it based on server specs
+xms_value: 2
+xmx_value: 2
+### 30 gb on a currently running elasticsearch nodes
+
+# Cluster type whether its single-node or multi-node
+cluster_type: multi-node
+
+# opensearch user info
+os_user: opensearch
+
+# os_dashboards_user: opensearch-dashboards
+### not used
+
+os_data_dir: "/var/lib/opensearch"
+os_log_dir: "/var/log/opensearch"
+oss_version: false
+os_action_auto_create_index: true
+### copied from ES playbook
+>>>>>>> c3a578b (opensearch cluster init w/o security plugin):roles/opensearch/defaults/main.yml

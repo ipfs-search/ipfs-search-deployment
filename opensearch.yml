@@ -1,0 +1,46 @@
+---
+- hosts: elasticsearch
+  become: true
+  serial: 1
+  any_errors_fatal: true
+  vars_files:
+    - vars/common.yml
+
+  ### NOTE: Comment out for clean installs!
+  # pre_tasks:
+  #   - name: Ensure ES cluster health is green
+  #     uri: url=http://localhost:9600/_cluster/health method=GET
+  #     register: response
+  #     until: "response.json.status == 'green'"
+  #     retries: 1000
+  #     delay: 2
+
+  roles:
+    - role: opensearch
+      tags: ['opensearch']
+      vars:
+        os_api_port: 9600 
+        # oss_version: true
+        os_log_dir: "/var/log/opensearch"
+        os_data_dir: "/var/lib/opensearch"
+        os_plugins:
+          - plugin: repository-s3
+        os_config:
+          plugins.security.disabled: true
+          http.port: 9600
+          cluster.name: ipfs-search-os
+          node.name: "{{ inventory_hostname_short }}"
+          node.attr.zone_id: "{{ zone_id }}"
+          # Disable zone awareness, for now.
+          # cluster.routing.allocation.awareness.attributes: zone_id
+          discovery.seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
+          network.publish_host: "{{ vlan_ip | ipaddr('address') }}"
+          ### Only during bootstrapping ###
+          # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
+          cluster.initial_master_nodes: "{{ groups['master'] }}"
+          #################################
+          repositories.url.allowed_urls: ["http://localhost:8080/*"]
+          network.host: ["_local_", "_site_"]
+          node.data: "{{ inventory_hostname in groups['index'] }}"
+          node.master: "{{ inventory_hostname in groups['master'] }}"
+    - { name: snapshots, tags: ['snapshots'] }

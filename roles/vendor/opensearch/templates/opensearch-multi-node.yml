@@ -14,7 +14,7 @@ node.name: {{inventory_hostname}}
 
 # Path to directory containing configuration (this file and logging.yml):
 
-path.data: {{ os_data_dirs | array_to_str }}
+path.data: {{ os_data_dir }}
 
 path.logs: {{ os_log_dir }}
 
@@ -82,6 +82,8 @@ xpack.notification.email:
 {% endif %}
 
 
+{% raw %}
 ### Next one is present in default OS config
 # bootstrap.memory_lock: true
 # node.roles: [{{ hostvars[inventory_hostname]['roles'] }}]
+{% endraw %}

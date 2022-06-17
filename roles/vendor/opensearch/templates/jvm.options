@@ -60,14 +60,14 @@
 -XX:HeapDumpPath=data
 
 # specify an alternative path for JVM fatal error logs
--XX:ErrorFile=logs/hs_err_pid%p.log
+-XX:ErrorFile={{ os_log_dir }}/hs_err_pid%p.log
 
 ## JDK 8 GC logging
 8:-XX:+PrintGCDetails
 8:-XX:+PrintGCDateStamps
 8:-XX:+PrintTenuringDistribution
 8:-XX:+PrintGCApplicationStoppedTime
-8:-Xloggc:logs/gc.log
+8:-Xloggc:{{ os_log_dir }}/gc.log
 8:-XX:+UseGCLogFileRotation
 8:-XX:NumberOfGCLogFiles=32
 8:-XX:GCLogFileSize=64m

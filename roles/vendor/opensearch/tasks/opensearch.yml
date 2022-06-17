@@ -15,6 +15,22 @@
     home: "{{ os_home }}"
   when: download.changed or iac_enable
 
+
+### added from ES playbook
+#Create required directories
+- name: Create Others Directories
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ os_user }}"
+    group: "{{ os_user }}"
+    mode: "2750"
+  with_items:
+    - "{{ os_log_dir }}"
+    - "{{ os_data_dir }}"
+
+
 - name: OpenSearch Install | Create home directory
   file:
     path: "{{ os_home }}"
@@ -28,16 +44,29 @@
   when: download.changed or iac_enable
 
 - name: OpenSearch Install | Copy Configuration File
-  blockinfile:
-    block: "{{ lookup('template', 'templates/opensearch-{{ cluster_type }}.yml') }}"
+  become: yes
+  template:
+    src: opensearch-multi-node.yml # hardcoded temporary
     dest: "{{ os_conf_dir }}/opensearch.yml"
-    backup: yes
-    state: present
-    create: yes
-    marker: "## {mark} opensearch main configuration ##"
     owner: "{{ os_user }}"
     group: "{{ os_user }}"
     mode: 0600
+    force: yes
+  # register: system_change
+  # notify: restart elasticsearch
+  ### probably need this later but for opensearch?
+
+  ### Original 'OpenSearch Install | Copy Configuration File' block
+  # blockinfile:
+  #   block: "{{ lookup('template', 'templates/opensearch-{{ cluster_type }}.yml') }}"
+  #   dest: "{{ os_conf_dir }}/opensearch.yml"
+  #   backup: yes
+  #   state: present
+  #   create: yes
+  #   marker: "## {mark} opensearch main configuration ##"
+  #   owner: "{{ os_user }}"
+  #   group: "{{ os_user }}"
+  #   mode: 0600
 
 - name: OpenSearch Install | Copy jvm.options File for Instance
   template:
@@ -47,6 +76,9 @@
     group: "{{ os_user }}"
     mode: 0600
     force: yes
+
+### Not sure about JVM settings here. 
+### Is everywhere 30gb is static? Asked in slack :^) Let's keep 2gb for a while
 
 - name: OpenSearch Install | create systemd service
   template:
