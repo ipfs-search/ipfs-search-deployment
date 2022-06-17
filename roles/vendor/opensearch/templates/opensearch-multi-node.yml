@@ -1,15 +1,87 @@
-cluster.name: "{{ os_cluster_name }}"
+{% if os_config %}
+{{ os_config | to_nice_yaml(indent=2) }}
+{% endif %}
 
-node.name: "{{ inventory_hostname }}"
+{% if os_config['cluster.name'] is not defined %}
+cluster.name: elasticsearch
+{% endif %}
 
-network.host: "{{ hostvars[inventory_hostname]['ip'] }}"
+{% if os_config['node.name'] is not defined %}
+node.name: {{inventory_hostname}}
+{% endif %}
 
-http.port: "{{ os_config_http_port }}"
+#################################### Paths ####################################
 
-bootstrap.memory_lock: true
+# Path to directory containing configuration (this file and logging.yml):
 
-discovery.seed_hosts: ["{{ os_nodes }}"]
+path.data: {{ os_data_dirs | array_to_str }}
 
-cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
+path.logs: {{ os_log_dir }}
 
-node.roles: [{{ hostvars[inventory_hostname]['roles'] }}]
+{% if os_path_repo is defined %}
+path.repo: {{ os_path_repo }}
+{% endif %}
+
+
+{% if os_action_auto_create_index == true %}
+action.auto_create_index: true
+{% elif not os_action_auto_create_index %}
+action.auto_create_index: false
+{% else %}
+action.auto_create_index: {{ os_action_auto_create_index }}
+{% endif %}
+
+{% if not oss_version and os_api_basic_auth_username is defined and os_api_basic_auth_password is defined %}
+xpack.security.enabled: true
+
+{% if os_enable_transport_ssl and os_enable_auto_ssl_configuration %}
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: "{{ os_ssl_verification_mode }}"
+{% if os_ssl_keystore and os_ssl_truststore %}
+xpack.security.transport.ssl.keystore.path: "{{ os_ssl_certificate_path }}/{{ os_ssl_keystore | basename }}"
+xpack.security.transport.ssl.truststore.path: "{{ os_ssl_certificate_path }}/{{ os_ssl_truststore | basename }}"
+{% elif os_ssl_key and  os_ssl_certificate %}
+xpack.security.transport.ssl.key: "{{ os_ssl_certificate_path }}/{{ os_ssl_key | basename }}"
+xpack.security.transport.ssl.certificate: "{{ os_ssl_certificate_path }}/{{ os_ssl_certificate | basename }}"
+{% if os_ssl_certificate_authority %}
+xpack.security.transport.ssl.certificate_authorities: "{{ os_ssl_certificate_path }}/{{ os_ssl_certificate_authority | basename }}"
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% if os_enable_http_ssl and os_enable_auto_ssl_configuration %}
+xpack.security.http.ssl.enabled: true
+{% if os_ssl_keystore and os_ssl_truststore %}
+xpack.security.http.ssl.keystore.path: "{{ os_ssl_certificate_path }}/{{ os_ssl_keystore | basename }}"
+xpack.security.http.ssl.truststore.path: "{{ os_ssl_certificate_path }}/{{ os_ssl_truststore | basename }}"
+{% elif os_ssl_key and  os_ssl_certificate %}
+xpack.security.http.ssl.key: "{{ os_ssl_certificate_path }}/{{ os_ssl_key | basename }}"
+xpack.security.http.ssl.certificate: "{{ os_ssl_certificate_path }}/{{ os_ssl_certificate | basename }}"
+{% if os_ssl_certificate_authority %}
+xpack.security.http.ssl.certificate_authorities: "{{ os_ssl_certificate_path }}/{{ os_ssl_certificate_authority | basename }}"
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% if os_mail_config is defined %}
+xpack.notification.email:
+  account:
+    {{ os_mail_config['account'] }}:
+      profile: {{ os_mail_config['profile'] }}
+      email_defaults:
+        from: {{ os_mail_config['from'] }}
+      smtp:
+        auth: {{ os_mail_config['require_auth'] }}
+        host: {{ os_mail_config['host'] }}
+        port: {{ os_mail_config['port'] }}
+        {% if os_mail_config['require_auth'] == true -%}
+        user: {{ os_mail_config['user'] }}
+        password: {{ os_mail_config['pass'] }}
+        {%- endif %}
+{% endif %}
+
+
+### Next one is present in default OS config
+# bootstrap.memory_lock: true
+# node.roles: [{{ hostvars[inventory_hostname]['roles'] }}]
