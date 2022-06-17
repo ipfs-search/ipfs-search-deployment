@@ -4,7 +4,7 @@ node.name: "{{ inventory_hostname }}"
 
 network.host: "{{ hostvars[inventory_hostname]['ip'] }}"
 
-http.port: 9200
+http.port: "{{ os_config_http_port }}"
 
 bootstrap.memory_lock: true
 
