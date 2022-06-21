@@ -9,6 +9,7 @@
     # Example:
     # ansible-playbook -e certbot_test=false frontend.yml
     # - certbot_test: true
+    nginx_anonymize_logs: true
   roles:
     - { name: nginx, tags: ['nginx']}
     - { name: frontend, tags: ['frontend']}
