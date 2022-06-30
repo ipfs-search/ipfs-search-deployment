@@ -8,12 +8,11 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
 - name: Make logs anonymized
-  debug: msg="enabling anonymized logs..."
   lineinfile: 
-      path: /etc/nginx/nginx.conf
-      regexp: '^(.*)access_log(.*)$' 
-      line: 'access_log /var/log/nginx/access.log anonymized;'
-      backrefs: yes
+    path: /etc/nginx/nginx.conf
+    regexp: '^(.*)access_log(.*)$' 
+    line: 'access_log /var/log/nginx/access.log anonymized;'
+    backrefs: yes
   when: nginx_anonymize_logs
 - name: Enable nginx service
   service: name=nginx enabled=yes state=started
