@@ -29,19 +29,15 @@
 
 - name: Unarchive
   unarchive:
-    src: /opt/loki-linux-amd64.zip
+    src: /tmp/loki-linux-amd64.zip
     dest: /usr/local/bin
+    exclude: "!loki-linux-amd64"
     remote_src: yes
-    owner: loki
-    group: loki
+    owner: root
+    group: root
+    mode: 0755
   when: loki_download.changed
   notify: restart loki
-
-- name: binary file permission
-  file:
-    path: /usr/local/bin/loki-linux-amd64
-    owner: loki
-    group: loki
 
 - name: systemd unit
   template:

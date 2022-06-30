@@ -1,4 +1,4 @@
 ---
 loki_data_path: /var/lib/loki
-loki_version: v2.4.2
-loki_download_sha256: 98c354d786c5b562506812c1d19676f519874d3b89b49c35bd9d1f05d18ed951
+loki_version: v2.5.0
+loki_download_sha256: 1b0fe3019b2afb6ec85a05685c369cfd2dfd60c80e99dc7d6f86fec5fd583255
