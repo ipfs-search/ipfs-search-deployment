@@ -48,7 +48,15 @@
     become: false
   when: source.changed
 - group: name=ipfs-crawler system=true state=present
-- user: name=ipfs-crawler comment="ipfs-crawler daemon" group=ipfs-crawler system=true state=present home=/nonexistent shell=/usr/sbin/nologin
+- user:
+    name: ipfs-crawler
+    comment: "ipfs-crawler daemon"
+    group: ipfs-crawler
+    system: true
+    state: present
+    home: /nonexistent
+    shell: /usr/sbin/nologin
+    create_home: no
 - name: Install crawler systemd service
   template: src=ipfs-crawler.service dest=/etc/systemd/system/ipfs-crawler.service
   notify: restart ipfs-crawler

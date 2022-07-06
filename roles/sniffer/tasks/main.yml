@@ -52,7 +52,14 @@
       action: upgrade
   when: source.changed
 - group: name=ipfs-sniffer system=true state=present
-- user: name=ipfs-sniffer group=ipfs-sniffer system=true state=present home="{{ sniffer_home }}" shell=/usr/sbin/nologin
+- user:
+    name: ipfs-sniffer
+    group: ipfs-sniffer
+    system: true
+    state: present
+    home: "{{ sniffer_home }}"
+    shell: /usr/sbin/nologin
+    create_home: no
 - file: path="{{ sniffer_home }}" owner=ipfs-sniffer group=ipfs-sniffer mode=750 state=directory
 - name: Configure service
   template: src=ipfs-sniffer.service dest=/etc/systemd/system/ipfs-sniffer.service

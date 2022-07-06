@@ -38,6 +38,7 @@
     system: true
     state: present
     home: /nonexistent
+    create_home: no
     shell: /usr/sbin/nologin
 - name: Install ipfs-search service
   template:

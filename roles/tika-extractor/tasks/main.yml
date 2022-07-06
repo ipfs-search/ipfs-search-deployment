@@ -13,7 +13,15 @@
     action: upgrade
   when: download.changed
 - group: name=tika-extractor system=true state=present
-- user: name=tika-extractor comment="Tika Extractor daemon" group=tika-extractor system=true state=present home="/nonexistent" shell=/usr/sbin/nologin
+- user:
+    name: tika-extractor
+    comment: "Tika Extractor daemon"
+    group: tika-extractor
+    system: true
+    state: present
+    home: "/nonexistent"
+    create_home: no
+    shell: /usr/sbin/nologin
 - name: Install systemd service
   template: src=tika-extractor.service dest=/etc/systemd/system/tika-extractor.service
   notify: restart tika-extractor

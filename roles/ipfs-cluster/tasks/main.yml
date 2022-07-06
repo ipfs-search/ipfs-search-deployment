@@ -55,6 +55,7 @@
     group: "{{ ipfs_cluster_group }}"
     system: true
     state: present
+    create_home: no
     home: "{{ ipfs_cluster_path }}"
     shell: /usr/sbin/nologin
 - file:

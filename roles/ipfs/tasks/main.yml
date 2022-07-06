@@ -55,8 +55,15 @@
       action: upgrade
   when: source.changed
 - group: name=ipfs system=true state=present
-- user: name=ipfs comment="IPFS daemon" group=ipfs system=true state=present home="{{ ipfs_path }}" shell=/usr/sbin/nologin
-- file: path="{{ ipfs_path }}" owner=ipfs group=ipfs mode=750 state=directory
+- user:
+    name: ipfs
+    comment: "IPFS daemon"
+    group: ipfs
+    system: true
+    state: present
+    home: "{{ ipfs_path }}"
+    shell: /usr/sbin/nologin
+# - file: path="{{ ipfs_path }}" owner=ipfs group=ipfs mode=750 state=directory
 - name: initialize IPFS repository
   command: "{{ ipfs_binary }} init --profile=badgerds"
   args:
