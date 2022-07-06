@@ -35,9 +35,10 @@
     group: "{{ api_group }}"
     system: true
     state: present
-    home: /nonexistent
-    create_home: no
     shell: /usr/sbin/nologin
+    # https://github.com/npm/cli/issues/4769
+    # home: /nonexistent
+    # create_home: no
 - name: Install ipfs-search service
   template: src=ipfs-search.service dest=/etc/systemd/system/ipfs-search.service
   notify: restart ipfs-search
