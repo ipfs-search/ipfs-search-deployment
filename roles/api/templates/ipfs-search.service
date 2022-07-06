@@ -7,8 +7,8 @@ After=elasticsearch.service
 WorkingDirectory={{ api_install_path }}/server
 ExecStart=/usr/bin/npm start
 Restart=always
-User=ipfs-search
-Group=ipfs-search
+User={{ api_user }}
+Group={{ api_group }}
 Environment=NODE_ENV=production
 
 [Install]

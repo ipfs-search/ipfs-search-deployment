@@ -24,9 +24,19 @@
     when: source.changed
   become: false
 - name: Create ipfs-search group
-  group: name=ipfs-search system=true state=present
+  group:
+    name: "{{ api_group }}"
+    system: true
+    state: present
 - name: Create ipfs-search user
-  user: name=ipfs-search comment="ipfs-search api" group=ipfs-search system=true state=present home=/nonexistent shell=/usr/sbin/nologin
+  user:
+    name: "{{ api_user }}"
+    comment: "ipfs-search api"
+    group: "{{ api_group }}"
+    system: true
+    state: present
+    home: /nonexistent
+    shell: /usr/sbin/nologin
 - name: Install ipfs-search service
   template: src=ipfs-search.service dest=/etc/systemd/system/ipfs-search.service
   notify: restart ipfs-search

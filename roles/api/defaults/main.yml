@@ -1,3 +1,5 @@
 ---
 api_install_path: /usr/local/libexec/ipfs-search/api
+api_user: ipfs-search
+api_group: ipfs-search
 api_version: master
