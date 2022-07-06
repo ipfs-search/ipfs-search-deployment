@@ -9,4 +9,4 @@
 - name: Install Node
   apt:
     name: nodejs
-    state: latest
+    state: present
