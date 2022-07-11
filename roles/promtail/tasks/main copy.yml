@@ -33,16 +33,6 @@
     mode: 0644
   notify: restart promtail
 
-- name: (WORKAROUND) add hostname as env var
-  # or maybe just copy $HOSTNAME from shell to env
-  # and use EnvironmentFile in systemd service
-  replace:
-    path: /etc/systemd/system/promtail.service
-    regexp: '<hostname>'
-    replace: "{{ inventory_hostname }}"
-  notify:
-    - restart promtail
-
 - name: promtail config
   template:
     src: config.yml
@@ -51,27 +41,17 @@
   notify:
     - restart promtail
 
-- name: Add elasticsearch log files
-  blockinfile:
-    dest: /etc/promtail/config.yml
-    block: |
-      - job_name: elasticsearch_logs
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: elasticsearch_logs
-            __path__: /var/log/elasticsearch/*.json
-
-      - job_name: elasticsearch_gc
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: elasticsearch_gc
-            __path__: /var/log/elasticsearch/gc.log
-    backup: yes
-  when: es_logs_to_loki
-  notify:
-    - restart promtail
+- name: Add custom logs files
+  # lineinfile: 
+  #   path: /etc/nginx/nginx.conf
+  #   regexp: '^(.*)access_log(.*)$' 
+  #   line: 'access_log /var/log/nginx/access.log anonymized;'
+  #   backrefs: yes
+  debug:
+    msg: "{{ item }}"
+  with_items:
+      - "{{ log_files_paths }}"
+  when: log_files_paths
 
 - name: Systemd service enabled
   systemd:

@@ -1,0 +1,12 @@
+---
+- hosts: elasticsearch
+  become: true
+  vars_files:
+    - vars/common.yml
+
+  roles:
+    - name: push logs files to loki using promtail
+      role: promtail
+      tags: promtail
+      vars: 
+        es_logs_to_loki: true

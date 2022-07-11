@@ -5,7 +5,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file=/etc/promtail/config.yml
+Environment="HOSTNAME=<hostname>"
+ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file=/etc/promtail/config.yml -config.expand-env=true
 
 [Install]
 WantedBy=multi-user.target

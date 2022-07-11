@@ -40,4 +40,10 @@
           network.host: ["_local_", "_site_"]
           node.data: "{{ inventory_hostname in groups['index'] }}"
           node.master: "{{ inventory_hostname in groups['master'] }}"
+    - name: push logs files to loki using promtail
+      role: promtail
+      tags: promtail
+      vars: 
+        es_logs_to_loki: true
     - { name: snapshots, tags: ['snapshots'] }
+    
