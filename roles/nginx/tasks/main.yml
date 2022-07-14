@@ -1,18 +1,16 @@
 - name: Install Nginx
-  apt: name=nginx-full state=present
+  apt:
+    name: nginx-full
+    state: latest
+  notify: restart nginx
 - name: Install nginx configuration
-  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
   notify: restart nginx
 - name: Disable default site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-- name: Make logs anonymized
-  lineinfile: 
-    path: /etc/nginx/nginx.conf
-    regexp: '^(.*)access_log(.*)$' 
-    line: 'access_log /var/log/nginx/access.log anonymized;'
-    backrefs: yes
-  when: nginx_anonymize_logs
 - name: Enable nginx service
   service: name=nginx enabled=yes state=started
