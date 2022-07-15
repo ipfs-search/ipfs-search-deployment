@@ -1,4 +1,2 @@
 ---
 snapshot_hour: "2"
-snapshot_name: s3
-snapshot_bucket: ipfs-search-snapshots-v8
