@@ -33,16 +33,6 @@
     mode: 0644
   notify: restart promtail
 
-- name: (WORKAROUND) add hostname as env var
-  # or maybe just copy $HOSTNAME from shell to env
-  # and use EnvironmentFile in systemd service
-  replace:
-    path: /etc/systemd/system/promtail.service
-    regexp: '<hostname>'
-    replace: "{{ inventory_hostname }}"
-  notify:
-    - restart promtail
-
 - name: promtail config
   template:
     src: config.yml

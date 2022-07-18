@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
-Environment="HOSTNAME=<hostname>"
+Environment="HOSTNAME={{ inventory_hostname }}"
 ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file=/etc/promtail/config.yml -config.expand-env=true
 
 [Install]
