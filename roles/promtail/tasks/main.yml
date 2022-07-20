@@ -41,6 +41,28 @@
   notify:
     - restart promtail
 
+- name: Add elasticsearch log files
+  blockinfile:
+    dest: /etc/promtail/config.yml
+    block: |
+      - job_name: elasticsearch_logs
+        static_configs:
+        - labels:
+            hostname: ${HOSTNAME}
+            job: elasticsearch_logs
+            __path__: /var/log/elasticsearch/*.json
+
+      - job_name: elasticsearch_gc
+        static_configs:
+        - labels:
+            hostname: ${HOSTNAME}
+            job: elasticsearch_gc
+            __path__: /var/log/elasticsearch/gc.log
+    backup: yes
+  when: es_logs_to_loki
+  notify:
+    - restart promtail
+
 - name: Systemd service enabled
   systemd:
     daemon_reload: yes
