@@ -52,8 +52,7 @@
     group: "{{ os_user }}"
     mode: 0600
     force: yes
-  # register: system_change
-  # notify: restart elasticsearch
+  register: opensearch_conf
   ### probably need this later but for opensearch?
 
   ### Original 'OpenSearch Install | Copy Configuration File' block

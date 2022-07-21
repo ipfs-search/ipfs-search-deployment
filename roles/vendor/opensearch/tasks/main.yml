@@ -29,6 +29,12 @@
 #   command: sed -i '/cluster.initial_master_nodes/d' "{{os_conf_dir}}/opensearch.yml"
 ### there is a check in master playbook already
 
+- name: restart opensearch service
+  service:
+    name: opensearch
+    state: restarted
+  when: opensearch_conf.changed
+
 - name: Pause for 5 seconds, wait for service to start
   pause:
     seconds: 5
@@ -51,7 +57,7 @@
   wait_for: host={{ vlan_ip | ipaddr('address') }} port={{os_api_port}} delay=5 connect_timeout=1
 
 - name: Check the opensearch status
-  command: curl http://{{ vlan_ip | ipaddr('address') }}:{{ os_api_port }}/_cluster/health?pretty -u 'admin:{{ admin_password }}' -k
+  command: curl http://{{ vlan_ip | ipaddr('address') }}:{{ os_api_port }}/_cluster/health?pretty -k
   register: os_status
 
 - name: Show the opensearch status
@@ -60,7 +66,7 @@
   failed_when: "'number_of_nodes' not in os_status.stdout"
 
 - name: Verify the roles of opensearch cluster nodes
-  command: curl http://{{ vlan_ip | ipaddr('address') }}:{{ os_api_port }}/_cat/nodes?v -u 'admin:{{ admin_password }}' -k
+  command: curl http://{{ vlan_ip | ipaddr('address') }}:{{ os_api_port }}/_cat/nodes?v -k
   register: os_roles
   run_once: true
 

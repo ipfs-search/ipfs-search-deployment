@@ -27,7 +27,8 @@
           - plugin: repository-s3
         os_config:
           plugins.security.disabled: true
-          http.port: 9600
+          http.port: 9600 # no port collision with ES
+          transport.port: 9700 # no port collision with ES
           cluster.name: ipfs-search-os
           node.name: "{{ inventory_hostname_short }}"
           node.attr.zone_id: "{{ zone_id }}"
