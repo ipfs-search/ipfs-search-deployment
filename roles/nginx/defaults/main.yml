@@ -1,0 +1,3 @@
+---
+nginx_anonymize_logs: false
+nginx_logs_keep_days: 14

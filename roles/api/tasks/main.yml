@@ -40,10 +40,14 @@
     # home: /nonexistent
     # create_home: no
 - name: Install ipfs-search service
-  template: src=ipfs-search.service dest=/etc/systemd/system/ipfs-search.service
+  template:
+    src: ipfs-search.service
+    dest: /etc/systemd/system/ipfs-search.service
   notify: restart ipfs-search
 - name: Install nginx configuration
-  template: src=nginx-api.conf dest=/etc/nginx/sites-available/api.conf
+  template:
+    src: nginx-api.conf
+    dest: /etc/nginx/sites-available/api.conf
   notify: restart nginx
 - name: Enable nginx configuration
   file:

@@ -25,6 +25,7 @@ http {
 	include /etc/nginx/mime.types;
 	default_type application/octet-stream;
 
+	{% if nginx_anonymize_logs %}
 	##
 	# Anonymize ip
 	##
@@ -48,12 +49,13 @@ http {
 	log_format anonymized '$ip_anonymized - $remote_user [$time_local] '
 	'"$request" $status $body_bytes_sent '
 	'"$http_referer" "$http_user_agent"';
+	{% endif %}
 
 	##
 	# Logging Settings
 	##
 
-	access_log /var/log/nginx/access.log;
+	access_log /var/log/nginx/access.log{% if nginx_anonymize_logs%} anonymized{% endif %};
 	error_log /var/log/nginx/error.log;
 
 	##
@@ -66,7 +68,7 @@ http {
 	# and avoid clickjacking http://en.wikipedia.org/wiki/Clickjacking
 	# if you need to allow [i]frames, you can use SAMEORIGIN or even set an uri with ALLOW-FROM uri
 	# https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-	add_header X-Frame-Options DENY;
+	add_header X-Frame-Options DENY always;
 
 	# when serving user-supplied content, include a X-Content-Type-Options: nosniff header along with the Content-Type: header,
 	# to disable content-type sniffing on some browsers.
@@ -74,13 +76,13 @@ http {
 	# currently suppoorted in IE > 8 http://blogs.msdn.com/b/ie/archive/2008/09/02/ie8-security-part-vi-beta-2-update.aspx
 	# http://msdn.microsoft.com/en-us/library/ie/gg622941(v=vs.85).aspx
 	# 'soon' on Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=471020
-	add_header X-Content-Type-Options nosniff;
+	add_header X-Content-Type-Options nosniff always;
 
 	# This header enables the Cross-site scripting (XSS) filter built into most recent web browsers.
 	# It's usually enabled by default anyway, so the role of this header is to re-enable the filter for
 	# this particular website if it was disabled by the user.
 	# https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-	add_header X-XSS-Protection "1; mode=block";
+	add_header X-XSS-Protection "1; mode=block" always;
 
     # Source: https://www.digitalocean.com/community/tutorials/how-to-add-the-gzip-module-to-nginx-on-ubuntu-14-04
     gzip on;

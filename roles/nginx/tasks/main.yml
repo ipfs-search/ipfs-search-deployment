@@ -1,18 +1,20 @@
 - name: Install Nginx
   apt: name=nginx-full state=present
 - name: Install nginx configuration
-  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
   notify: restart nginx
+- name: Reconfigure log rotation
+  lineinfile:
+    path: /etc/logrotate.d/nginx
+    regexp: '^(.*)rotate'
+    line: '\1rotate {{nginx_logs_keep_days}}'
+    firstmatch: yes
+    backrefs: yes
 - name: Disable default site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-- name: Make logs anonymized
-  lineinfile: 
-    path: /etc/nginx/nginx.conf
-    regexp: '^(.*)access_log(.*)$' 
-    line: 'access_log /var/log/nginx/access.log anonymized;'
-    backrefs: yes
-  when: nginx_anonymize_logs
 - name: Enable nginx service
   service: name=nginx enabled=yes state=started
