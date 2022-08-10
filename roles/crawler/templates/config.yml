@@ -13,6 +13,10 @@ tika:
   url: http://localhost:8081
   timeout: 5m
   max_file_size: 4GB
+nsfw:
+    url: http://localhost:{{ nsfw_server_port }}
+    timeout: 1m
+    max_file_size: 1GB
 instrumentation:
   sampling_ratio: 0.01
   jaeger_endpoint: http://{{ monitoring_host_internal_addr }}:14268/api/traces
