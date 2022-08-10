@@ -9,6 +9,7 @@
     - "100%"
   roles:
     - { name: tika-extractor, tags: ['tika-extractor'] }
+    - { name: nsfw_server, tags: ['nsfw_server']}
     - { name: ipfs, tags: ['ipfs'] }
     - { name: ipfs-gc, tags: ['ipfs-gc'] }
     - { name: crawler, tags: ['crawler'] }
