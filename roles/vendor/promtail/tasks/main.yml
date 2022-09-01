@@ -16,7 +16,8 @@
   unarchive:
     copy: no
     src: "{{ promtail_download.dest }}"
-    dest: /usr/local/bin/promtail-linux-amd64
+    dest: /usr/local/bin/
+    exclude: "!promtail-linux-amd64"
   when: promtail_download.changed
   notify: restart promtail
 

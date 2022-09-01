@@ -1,5 +1,4 @@
 ---
 # aux host role; anything that's not properly distributed yet: sniffer, rabbitmq
-- import_playbook: monitoring.yml
 - import_playbook: rabbitmq.yml
 - import_playbook: sniffer.yml
