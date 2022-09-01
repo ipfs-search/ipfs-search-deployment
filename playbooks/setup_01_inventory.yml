@@ -46,7 +46,6 @@
     - setup:
 - name: Configure DNS
   hosts: all
-  serial: 1
   roles:
     - role: setup/cloudflare_dns
       tags: dns
