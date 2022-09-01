@@ -4,26 +4,38 @@
   gather_facts: false
   vars_files:
     # `JSON.stringify(Array.from(document.querySelectorAll("#mw-content-text > div.mw-parser-output > table > tbody > tr > td:nth-child(2)")).map(e => e.innerText.split(",", 1)[0].toLowerCase() + '.ipfs-search.com'));`
-    - vars/new_hostnames.json
+    - ../../group_vars/new_hostnames.json
   roles:
     - role: setup/generate_hostnames
-      tags: 'hostnames'
-- name: Generate VLAN IP's
+      tags: 'generate_hostnames'
+- name: Create group of hosts without VLAN IP
   hosts: dmz
   gather_facts: false
+  tags: generate_vlan_ip
+  tasks:
+  - name: Create group for VLAN-less hosts
+    group_by:
+      key: "{% if vlan_ip is defined %}vlanip{% else %}novlanip{% endif %}"
+- name: Generate VLAN IP's
+  hosts: novlanip
+  gather_facts: false
+  tags: generate_vlan_ip
   roles:
     - role: setup/generate_vlan_ip
-      tags: 'vlan'
 - name: Generate IPFS keys
   hosts: ipfs
   gather_facts: false
   roles:
     - role: setup/generate_ipfs_key
-      tags: 'ipfs'
-- name: Configure reverse DNS
+      tags: 'generate_ipfs_key'
+- name: Configure DNS
   hosts: all
-  vars_files:
-    - vars/common.yml
+  tags: dns
   roles:
     - role: setup/cloudflare_inventory_dns
-      tags: ['dns']
+      tag: dns
+  tasks:
+    - community.hrobot.reverse_dns:
+        tag: reverse_dns
+        ip: "{{ ansible_default_ipv4.address }}"
+        value: "{{ inventory_hostname_short }}.{{ domain_name }}"

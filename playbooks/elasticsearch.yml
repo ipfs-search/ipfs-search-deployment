@@ -4,8 +4,6 @@
   become: true
   serial: 1
   any_errors_fatal: true
-  vars_files:
-    - vars/common.yml
 
   # NOTE: Comment out for clean installs!
   pre_tasks:

@@ -2,8 +2,6 @@
 - name: RabbitMQ
   hosts: rabbitmq
   become: true
-  vars_files:
-    - vars/common.yml
   roles:
     - role: vendor/rabbitmq
       tags: rabbitmq

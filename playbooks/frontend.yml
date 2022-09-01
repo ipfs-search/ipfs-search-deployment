@@ -2,8 +2,6 @@
 - name: Setup frontend and direct dependencies.
   hosts: frontend
   become: true
-  vars_files:
-    - vars/common.yml
   vars:
     # Note: manually disable certbot testing from the command line!
     # Example:

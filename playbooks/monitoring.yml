@@ -3,8 +3,6 @@
   hosts: all,!poppycorn
   become: true
   strategy: free
-  vars_files:
-    - vars/common.yml
   roles:
     - role: vendor/telegraf
       tags: telegraf

@@ -2,8 +2,6 @@
 - name: NodeJS API server and dependencies.
   hosts: index
   become: true
-  vars_files:
-    - vars/common.yml
   roles:
     - role: vendor/nginx
       tags: ['nginx']

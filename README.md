@@ -15,7 +15,7 @@ In order to ensure that the correct version of Ansible and it's dependencies is 
 ## Inventory
 The default Ansible configuration we're using, `ansible.cfg` in the current directory, configures the [inventory](https://docs.ansible.com/ansible/2.8/user_guide/intro_inventory.html) in `inventory.yml` in the current directory. In our production setting we pull the inventory in a separate, private, repository.
 
-In order to use Ansible deployment, `backend` and `frontend` host groups need to be configured here. An example is provided in [`inventory_example.yml`](inventory_example.yml).
+In order to use Ansible deployment, `backend` and `frontend` host groups need to be configured here. An example is provided in [`docs/inventory_example.yml`](docs/inventory_example.yml).
 
 ## Ansible Galaxy requirements
 May be installed with:
@@ -35,8 +35,8 @@ After bootstrapping, the `site` playbook will do common configuration, including
 
 Then, using , execute:
 ```sh
-$ ansible-playbook bootstrap.yml --user root --ask-pass
-$ ansible-playbook site.yml
+$ ansible-playbook playbooks/bootstrap.yml --user root --ask-pass
+$ ansible-playbook playbooks/site.yml
 ```
 
 ## Frontend deploy
@@ -48,7 +48,7 @@ By default, staging certificates are requested from LetsEncrypt. Once the above 
 By default, the `v2` branch of the [frontend repository] is deployed, using the following command (the `-t frontend` makes sure that only the actual frontend code is deployed, rather than the entire frontend server setup):
 
 ```sh
-$ ansible-playbook frontend.yml -t frontend
+$ ansible-playbook playbooks/frontend.yml -t frontend
 ```
 
 ## Deploying on Hetzner infrastructure
@@ -59,18 +59,18 @@ For verbosity reasons, we are using Ansible to *generate* certain inventory vari
 Once a new host has been delivered by Hetzner, it will show up in the inventory and the `setup_inventory.yml` playbook can be used to generate the required variables. This will not require any interaction with any server, but it does have local dependencies, particularly [go-ipfs](https://dist.ipfs.io/#go-ipfs). Once IPFS is installed, run:
 
 ```sh
-ansible-playbook setup_inventory.yml
+ansible-playbook playbooks/setup/01_inventory.yml
 ```
 
 ### Install a new server
 In order to (re)install a machine, first make sure the machine is running in the [rescue system](https://docs.hetzner.com/robot/dedicated-server/troubleshooting/hetzner-rescue-system/). Then, run:
 
 ```sh
-ansible-playbook setup_01_inventory.yml -l $HOSTNAME
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook setup_02_hetzner.yml -l $HOSTNAME
-ansible-playbook setup_03_bootstrap.yml -l $HOSTNAME
-ansible-playbook setup_04_server.yml -l $HOSTNAME
-ansible-playbook site -l $HOSTNAME
+ansible-playbook playbooks/setup_01_inventory.yml -u root -l $HOSTNAME
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/setup_02_hetzner.yml -l $HOSTNAME
+ansible-playbook playbooks/setup_03_bootstrap.yml -l $HOSTNAME
+ansible-playbook playbooks/setup_04_server.yml -l $HOSTNAME
+ansible-playbook playbooks/site.yml -l $HOSTNAME
 ```
 
 ## License

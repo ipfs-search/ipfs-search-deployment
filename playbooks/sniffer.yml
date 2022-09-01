@@ -2,8 +2,6 @@
 - import_playbook: rabbitmq.yml
 - hosts: sniffer
   become: true
-  vars_files:
-    - vars/common.yml
   roles:
     - role: services/sniffer
       tags: ['sniffer']

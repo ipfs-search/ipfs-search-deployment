@@ -2,8 +2,6 @@
 - name: Crawler and direct dependencies.
   hosts: index
   become: true
-  vars_files:
-    - vars/common.yml
   serial:
     - 1
     - "100%"
