@@ -27,15 +27,17 @@
   gather_facts: false
   roles:
     - role: setup/generate_ipfs_key
-      tags: 'generate_ipfs_key'
+- name: Explicitly gather facts
+  hosts: all
+  gather_facts: false
+  tags: dns
+  tasks:
+    - setup:
 - name: Configure DNS
   hosts: all
-  tags: dns
+  serial: 1
   roles:
-    - role: setup/cloudflare_inventory_dns
-      tag: dns
-  tasks:
-    - community.hrobot.reverse_dns:
-        tag: reverse_dns
-        ip: "{{ ansible_default_ipv4.address }}"
-        value: "{{ inventory_hostname_short }}.{{ domain_name }}"
+    - role: setup/cloudflare_dns
+      tags: dns
+    - role: setup/hetzner_reverse_dns
+      tags: reverse_dns

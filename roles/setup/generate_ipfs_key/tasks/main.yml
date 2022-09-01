@@ -30,7 +30,7 @@
 - name: Add keypair to host vars
   block:
   - name: Encrypt ipfs_peer_key
-    command: ansible-vault encrypt_string
+    command: ansible-vault encrypt_string --vault-password-file=../vault/decrypt_passphrase.sh
     args:
       stdin: "{{ ipfs_peer_key }}"
     register: ipfs_peer_encrypted

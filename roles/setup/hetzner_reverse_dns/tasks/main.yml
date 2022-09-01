@@ -1,1 +1,28 @@
 ---
+- name: Set PTR records
+  block:
+  - name: Get existing records
+    set_fact:
+      fqdn: "{{ hostname }}.{{ domain_name }}"
+      ptr4_record: "{{ lookup('dig', ipv4_address + '/PTR')[:-1] }}" # Remove trailing dot
+      ptr6_record: "{{ lookup('dig', ipv6_address + '/PTR')[:-1] }}"
+  - name: IPv4 reverse DNS
+    community.hrobot.reverse_dns:
+      ip: "{{ ipv4_address }}"
+      value: "{{ fqdn }}"
+      hetzner_user: "{{ hetzner_user }}"
+      hetzner_password: "{{ hetzner_password }}"
+    when: fqdn != ptr4_record
+    retries: 3
+    delay: 3
+  - name: IPv6 reverse DNS
+    community.hrobot.reverse_dns:
+      ip: "{{ ipv6_address }}"
+      value: "{{ fqdn }}"
+      hetzner_user: "{{ hetzner_user }}"
+      hetzner_password: "{{ hetzner_password }}"
+    when: fqdn != ptr6_record
+    retries: 3
+    delay: 3
+  when: inventory_hostname in groups['hetzner']
+  delegate_to: localhost

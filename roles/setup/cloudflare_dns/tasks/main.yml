@@ -1,6 +1,10 @@
 ---
 - name: Set A and AAAA records
   block:
+  - name: Get existing records
+    set_fact:
+      a_record: "{{ lookup('dig', hostname + '.' + domain_name + './A') }}"
+      aaaa_record: "{{ lookup('dig', hostname + '.' + domain_name + './AAAA') }}"
   - name: A record for host
     cloudflare_dns:
       zone: "{{ domain_name }}"
@@ -8,6 +12,9 @@
       type: A
       value: "{{ ipv4_address }}"
       api_token: "{{ cloudflare_token }}"
+    when: ipv4_address != a_record
+    retries: 3
+    delay: 3
   - name: AAAA record for host
     cloudflare_dns:
       zone: "{{ domain_name }}"
@@ -15,4 +22,7 @@
       type: AAAA
       value: "{{ ipv6_address }}"
       api_token: "{{ cloudflare_token }}"
+    when: ipv6_address != aaaa_record
+    retries: 3
+    delay: 3
   delegate_to: localhost
