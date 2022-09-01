@@ -3,7 +3,7 @@ crawler_memlimit: 4G
 crawler_hash_workers: 256
 crawler_file_workers: 12
 crawler_directory_workers: 4
-crawler_version: mget_bulk_getter
+crawler_version: nsfw_extractor
 amqp_message_ttl: 4h
 golang_version: 1.18.2
 ipfs_version: v0.13.0
@@ -27,3 +27,4 @@ influxdb_backup_bucket: "telegraf"
 storagebox_mountpoint_group: "{{ lookup('env','USER') }}"
 domain_name: "dwebsearch.org"
 nsfw_server_port: 3432
+nsfw_server_version: v0.9.0

@@ -7,4 +7,3 @@
   roles:
     - { name: nginx, tags: ['nginx']}
     - { name: api, tags: ['api']}
-    - { name: nsfw_server, tags: ['nsfw_server']}
