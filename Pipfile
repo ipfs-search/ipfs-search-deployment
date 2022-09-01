@@ -8,6 +8,7 @@ ansible = "<4"
 six = "*"
 netaddr = "*"
 jmespath = "*"
+ansible-lint = "*"
 
 [dev-packages]
 

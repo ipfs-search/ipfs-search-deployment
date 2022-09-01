@@ -12,8 +12,8 @@
 #     - hetzner_add_to_switch
 - name: Install OS image
   hosts: all # TODO: Filter by machines in rescue mode
-  user: root
-  ignore_unreachable: yes
+  remote_user: root
+  ignore_unreachable: true
   tags: install_image
   roles:
-    - hetzner_install_image
+    - setup/hetzner_install_image

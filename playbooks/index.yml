@@ -1,6 +1,6 @@
 ---
-# Direct dependencies for crawling.
-- hosts: index
+- name: Crawler and direct dependencies.
+  hosts: index
   become: true
   vars_files:
     - vars/common.yml
@@ -8,9 +8,15 @@
     - 1
     - "100%"
   roles:
-    - { name: tika-extractor, tags: ['tika-extractor'] }
-    - { name: nsfw_server, tags: ['nsfw_server']}
-    - { name: ipfs, tags: ['ipfs'] }
-    - { name: ipfs-gc, tags: ['ipfs-gc'] }
-    - { name: crawler, tags: ['crawler'] }
-
+    - role: services/tika-extractor
+      tags: ['tika-extractor']
+    - role: vendor/nodejs
+      tags: ['nodejs']
+    - role: services/nsfw_server
+      tags: ['nsfw_server']
+    - role: vendor/ipfs
+      tags: ['ipfs']
+    - role: vendor/ipfs-gc
+      tags: ['ipfs-gc']
+    - role: services/crawler
+      tags: ['crawler']

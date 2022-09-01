@@ -1,11 +1,11 @@
 ---
 # WIP
 - name: Check which servers are to be added
-    uri:
-      url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id}}"
-      url_username: "{{ hetzner_user }}"
-      url_password: "{{ hetzner_password }}"
-      body:
+  uri:
+    url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id }}"
+    url_username: "{{ hetzner_user }}"
+    url_password: "{{ hetzner_password }}"
+    body:
   # "server":[
   #   {
   #     "server_ip":"123.123.123.123",
@@ -21,16 +21,16 @@
   #   }
         'server[]': "{{ hrobot_server_number }}"
         # Add all servers to be added here
-    when: hrobot_server_name != picked_hostname
+  when: hrobot_server_name != picked_hostname
 
 - name: Add server to switch
-    uri:
-      url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id}}/server"
-      url_username: "{{ hetzner_user }}"
-      url_password: "{{ hetzner_password }}"
-      body_format: form-urlencoded
-      method: POST
-      body:
-        'server[]': "{{ hrobot_server_number }}"
-        # Add all servers to be added here
+  uri:
+    url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id }}/server"
+    url_username: "{{ hetzner_user }}"
+    url_password: "{{ hetzner_password }}"
+    body_format: form-urlencoded
+    method: POST
+    body:
+      'server[]': "{{ hrobot_server_number }}"
+      # Add all servers to be added here
     when: hrobot_server_name != picked_hostname

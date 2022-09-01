@@ -2,7 +2,6 @@
   template:
     src: vlan.yaml.j2
     dest: "{{ vlan_netplan_config_file }}"
-  register: netplan_config
-- name: Apply netplan config
-  command: netplan apply
-  when: netplan_config.changed
+    mode: 0644
+  notify:
+    - Apply netplan config

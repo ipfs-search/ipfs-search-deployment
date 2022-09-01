@@ -1,0 +1,63 @@
+---
+- name: Install apt-transport-https
+  apt: name=apt-transport-https state=present
+- name: Install ca-certificates
+  apt: name=ca-certificates state=latest
+- name: Install InfluxDB repository key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+- name: Add Influxdata repository
+  apt_repository:
+    repo: "deb https://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_lsb.codename }} stable"
+    filename: "influxdata"
+    state: present
+- name: Install packages
+  apt:
+    pkg: telegraf
+    state: latest
+    update_cache: true
+  notify: restart telegraf
+- name: Install lm-sensors and modules
+  block:
+    - name: Install lm-sensors package
+      apt:
+        pkg: lm-sensors
+        state: present
+    - name: Configure sensor-modules
+      template:
+        src: sensors.conf
+        dest: /etc/modules-load.d/sensors.conf
+        mode: 0644
+      register: sensors
+      when: sensor_modules is defined
+    - name: Load modules
+      systemd:
+        service: systemd-modules-load
+        state: restarted
+      when: sensors.changed
+    - name: Enable service
+      systemd:
+        service: lm-sensors
+        enabled: yes
+        state: started
+  when: has_sensors is defined
+- name: Telegraf configuration
+  template:
+    src: telegraf.toml.j2
+    dest: /etc/telegraf/telegraf.conf
+    mode: 0600
+  notify: restart telegraf
+  register: telegraf_config
+- name: Telegraf test run
+  command: telegraf --test
+  register: telegraf_test
+  ignore_errors: True
+  # Good enough when we get *any* output, due to online plugins
+  failed_when: "telegraf_test.rc == 1 and telegraf_test.stdout == ''"
+- name: Display (only) Telegraf errrors
+  fail:
+    msg: "{{ telegraf_test.stderr }}"
+  when: telegraf_test.failed
+- name: Enable telegraf service
+  service: name=telegraf enabled=yes state=started

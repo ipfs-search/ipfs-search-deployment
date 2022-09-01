@@ -1,0 +1,68 @@
+---
+- name: Create destination folder for search api
+  file:
+    path: "{{ api_install_path }}"
+    state: directory
+    owner: "{{ lookup('env', 'USER') }}"
+    mode: 0755
+- name: Clone and install
+  block:
+  - name: Clone ipfs-search-api repository
+    git:
+      dest: "{{ api_install_path }}"
+      repo: https://github.com/ipfs-search/ipfs-search-api.git
+      version: "{{ api_version }}"
+      force: true
+    register: source
+  - name: Install dependencies
+    command: npm install --production --no-save
+    args:
+      chdir: "{{ api_install_path }}/server"
+    when: source.changed
+    notify: restart ipfs-search
+  - name: annotate
+    include_role:
+      name: annotate
+    vars:
+      role: api
+      version: "{{ source.after }}"
+      action: upgrade
+    when: source.changed
+  become: false
+- name: Create ipfs-search group
+  group:
+    name: "{{ api_group }}"
+    system: true
+    state: present
+- name: Create ipfs-search user
+  user:
+    name: "{{ api_user }}"
+    comment: "ipfs-search api"
+    group: "{{ api_group }}"
+    system: true
+    state: present
+    shell: /usr/sbin/nologin
+    # https://github.com/npm/cli/issues/4769
+    # home: /nonexistent
+    # create_home: no
+- name: Install ipfs-search service
+  template:
+    src: ipfs-search.service
+    dest: /etc/systemd/system/ipfs-search.service
+    mode: 0644
+  notify: restart ipfs-search
+- name: Install nginx configuration
+  template:
+    src: nginx-api.conf
+    dest: /etc/nginx/sites-available/api.conf
+    mode: 0644
+  notify: restart nginx
+- name: Enable nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/api.conf
+    src: /etc/nginx/sites-available/api.conf
+    state: link
+    mode: 0644
+  notify: restart nginx
+- name: Enable search service
+  service: name=ipfs-search enabled=yes state=started

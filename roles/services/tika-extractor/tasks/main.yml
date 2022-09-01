@@ -1,0 +1,58 @@
+---
+- name: Create libexec directory
+  file:
+    path: "{{ tika_extractor_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Download tika-extractor
+  get_url:
+    url: "{{ tika_extractor_url }}"
+    dest: "{{ tika_extractor_path }}/{{ tika_extractor_jar }}"
+    owner: root
+    group: root
+    checksum: sha256:{{ tika_extractor_sha256 }}
+    mode: 0644
+  notify: restart tika-extractor
+  register: download
+- name: Annotate
+  include_role:
+    name: annotate
+  vars:
+    role: tika
+    version: "{{ tika_extractor_jar }}"
+    action: upgrade
+  when: download.changed
+- name: Setup group
+  group:
+    name: tika-extractor
+    system: true
+    state: present
+- name: Setup user
+  user:
+    name: tika-extractor
+    comment: "Tika Extractor daemon"
+    group: tika-extractor
+    system: true
+    state: present
+    home: "/nonexistent"
+    create_home: no
+    shell: /usr/sbin/nologin
+- name: Install systemd service
+  template:
+    src: tika-extractor.service
+    dest: /etc/systemd/system/tika-extractor.service
+    mode: 0644
+  notify: restart tika-extractor
+- name: Enable service
+  systemd: name=tika-extractor daemon_reload=yes state=started enabled=yes
+- name: Enable tika-extractor stale temp removal
+  cron:
+    name: Delete stale temp files
+    minute: "23"
+    hour: "*"
+    job: "find /tmp -maxdepth 1 -user tika-extractor -cmin +23 -delete"
+    state: present
+    cron_file: /etc/crontab
+    user: tika-extractor

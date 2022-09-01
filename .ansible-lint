@@ -1,0 +1,11 @@
+---
+offline: true
+exclude_paths:
+  - ../../.ansible/
+skip_list:
+  - name[casing]
+  - fqcn-builtins
+warn_list:
+  - no-handler
+  - no-changed-when
+  - package-latest

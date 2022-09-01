@@ -1,9 +1,15 @@
 ---
-# Direct dependencies for API nodes.
-- hosts: index
+- name: NodeJS API server and dependencies.
+  hosts: index
   become: true
   vars_files:
     - vars/common.yml
   roles:
-    - { name: nginx, tags: ['nginx']}
-    - { name: api, tags: ['api']}
+    - role: vendor/nginx
+      tags: ['nginx']
+    - role: vendor/nodejs
+      tags: ['nodejs']
+    - role: services/nsfw_server
+      tags: ['nsfw_server']
+    - role: services/api
+      tags: ['api']

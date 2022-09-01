@@ -6,7 +6,8 @@
   environment:
     TERM: xterm # Somehow, at least on one host, this is is necessary.
   register: installimage
-- reboot:
+- name: Reboot
+  reboot:
     reboot_timeout: 7200
 - name: Setup SSH host keys
   include_role:

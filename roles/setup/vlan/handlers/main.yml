@@ -1,2 +1,4 @@
 - name: restart networking
   systemd: state=restarted name=networking
+- name: Apply netplan config
+  command: netplan apply

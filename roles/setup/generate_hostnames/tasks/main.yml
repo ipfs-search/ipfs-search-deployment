@@ -1,8 +1,9 @@
 ---
-- block:
-  - name: Get available hostnames
+- name: Generate hostnames
+  block:
+  - name: Get available hostnames in randomized order
     set_fact:
-      available_hostnames: "{{ new_hostnames | unique | difference(groups['all']) }}"
+      available_hostnames: "{{ new_hostnames | unique | difference(groups['all']) | shuffle }}"
     run_once: True
   - name: Assert enough hostnames available
     assert:

@@ -1,72 +1,17 @@
 ---
-- hosts: all
-  user: root
+- name: Add admin users
+  hosts: all
+  remote_user: root
   tags:
     - admin_users
   roles:
-    - add_admin_users
-- hosts: all
+    - setup/add_admin_users
+
+- name: Secure SSH and upgrade packages
+  hosts: all
   become: true
-  tags:
-    - ssh_security
-  tasks:
-  - name: Disallow root SSH access
-    lineinfile:
-      dest=/etc/ssh/sshd_config
-      regexp="^PermitRootLogin"
-      line="PermitRootLogin no"
-      state=present
-    notify:
-      - restart sshd
-
-  - name: Disallow SSH password authentication
-    lineinfile:
-      dest=/etc/ssh/sshd_config
-      regexp="^PasswordAuthentication"
-      line="PasswordAuthentication no"
-      state=present
-    notify:
-      - restart sshd
-
-  - name: Disallow SSH GSS API authentication
-    lineinfile:
-      dest=/etc/ssh/sshd_config
-      regexp="^GSSAPIAuthentication"
-      line="GSSAPIAuthentication no"
-      state=present
-    notify:
-      - restart sshd
-
-  handlers:
-  - name: restart sshd
-    service:
-      name=sshd
-      state=restarted
-
-- hosts: all
-  become: true
-  tags: package_upgrade
-
-  tasks:
-
-  # Workaround: https://stackoverflow.com/questions/33563425/ansible-1-9-4-failed-to-lock-apt-for-exclusive-operation/40933352
-  - name: packages | ensure apt list dir exists
-    file:
-      path: /var/lib/apt/lists/
-      state: directory
-      mode: 0755
-
-  - name: Full (unsafe) upgrade of packages
-    apt:
-      update_cache: yes
-      upgrade: full
-      autoremove: yes
-      autoclean: yes
-    notify:
-      - reboot
-
-  handlers:
-  - name: reboot
-    reboot:
-      reboot_timeout: 7200
-
+  roles:
+    - role: setup/secure_ssh
+      tag: secure_ssh
+    - role: setup/upgrade_packages
+      tag: upgrade_packages

@@ -1,9 +1,9 @@
 ---
-- name: update apt cache
+- name: Update apt cache
   apt: update_cache=yes cache_valid_time=3600
-- name: install apt upgrades
+- name: Install apt upgrades
   apt: upgrade=dist
-- name: set timezone to Europe/Lisbon
+- name: Set timezone to Europe/Lisbon
   timezone: name=Europe/Lisbon
 - name: Install misc utils
   apt:
@@ -22,7 +22,12 @@
       - acl
     state: present
 - name: Install scripts
-  copy: dest=/usr/local/ src=bin owner=root group=root mode=755
+  copy:
+    dest: /usr/local/
+    src: bin
+    owner: root
+    group: root
+    mode: 0755
 - name: Force default locale
   # Does away by endless LC_ALL warnings
   lineinfile:
@@ -30,4 +35,5 @@
     regexp: "^LC_ALL="
     line: "LC_ALL=en_US.UTF-8"
     create: true
+    mode: 0644
   become: false

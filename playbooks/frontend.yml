@@ -1,6 +1,6 @@
 ---
-# Direct dependencies for frontend.
-- hosts: frontend
+- name: Setup frontend and direct dependencies.
+  hosts: frontend
   become: true
   vars_files:
     - vars/common.yml
@@ -11,6 +11,9 @@
     # - certbot_test: true
     nginx_anonymize_logs: true
   roles:
-    - { name: nginx, tags: ['nginx']}
-    - { name: frontend, tags: ['frontend']}
-    - { name: certbot , tags: ['certbot']}
+    - role: vendor/nginx
+      tags: ['nginx']
+    - role: vendor/certbot
+      tags: ['certbot']
+    - role: services/frontend
+      tags: ['frontend']

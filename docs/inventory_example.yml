@@ -30,4 +30,3 @@ all:
       hosts:
         <frontend_host1>:
           ansible_host: <fqdn_host_name>
-

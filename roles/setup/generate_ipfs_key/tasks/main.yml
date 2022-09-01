@@ -1,5 +1,6 @@
 ---
-- block:
+- name: Generate IPFS keypair
+  block:
   - name: Create temporary directory
     tempfile:
       state: directory
@@ -26,7 +27,8 @@
       ipfs_peer_key: "{{ ipfs_config['Identity']['PrivKey'] }}"
   delegate_to: localhost
   when: ipfs_peer_id is undefined
-- block:
+- name: Add keypair to host vars
+  block:
   - name: Encrypt ipfs_peer_key
     command: ansible-vault encrypt_string
     args:
@@ -41,11 +43,13 @@
       path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^ipfs_peer_id'
       line: "ipfs_peer_id: {{ ipfs_peer_id }}"
+      mode: 0644
   - name: Add ipfs_peer_key to host_vars
     lineinfile:
       create: true
       path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^ipfs_peer_key'
       line: "ipfs_peer_key: {{ ipfs_peer_encrypted.stdout }}"
+      mode: 0644
   delegate_to: localhost
   when: generated_ipfs_key is defined and generated_ipfs_key

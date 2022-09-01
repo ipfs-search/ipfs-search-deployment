@@ -4,16 +4,21 @@
   vars_files:
     - vars/common.yml
   roles:
-    - { name: common, tags: ['common'] }
-    - { name: hostname, tags: ['hostname']}
-    - { name: unattended_upgrades, tags: ['upgrades']}
-    - role: cgconfig
+    - role: common
+      tags: ['common']
+    - role: setup/hostname
+      tags: ['hostname']
+    - role: setup/unattended_upgrades
+      tags: ['unattended_upgrades']
+    - role: setup/cgconfig
       tags: ['cgconfig']
-    - { name: firewall, tags: ['firewall']}
-    - { name: jre, tags: ['jre']}
+    - role: setup/firewall
+      tags: ['firewall']
+    - role: vendor/jre
+      tags: ['jre']
 - hosts: dmz
   become: true
   roles:
-    - role: vlan
+    - role: setup/vlan
       tags: ['vlan']
 - import_playbook: monitoring.yml

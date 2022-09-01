@@ -1,0 +1,90 @@
+---
+- name: build requirements
+  apt:
+    pkg:
+      - build-essential
+      - libssl-dev
+      - pkg-config
+    state: present
+- name: clone ipfs-search
+  git:
+    dest: "{{ crawler_build }}"
+    repo: https://github.com/ipfs-search/ipfs-search.git
+    version: "{{ crawler_version }}"
+    force: true
+  register: source
+  become: false
+- name: Build crawler
+  block:
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
+      public: yes
+    when: golang_install_dir is not defined or ansible_local.golang.general.version != golang_version
+  - name: Build and install
+    block:
+    - name: Get
+      command:
+        cmd: go get ./...
+        chdir: "{{ crawler_build }}"
+    - name: Build
+      command:
+        cmd: go build -o ipfs-crawler
+        chdir: "{{ crawler_build }}"
+    - name: Install ipfs-crawler
+      copy:
+        src: "{{ crawler_build }}/ipfs-crawler"
+        dest: "{{ crawler_binary }}"
+        remote_src: True
+        mode: 0755
+      become: true
+      notify: restart ipfs-crawler
+    - name: Annotate
+      include_role:
+        name: annotate
+      vars:
+        role: crawler
+        version: "{{ source.after }}"
+        action: upgrade
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
+  when: source.changed
+- name: Configure group
+  group:
+    name: ipfs-crawler
+    system: true
+    state: present
+- name: Configure user
+  user:
+    name: ipfs-crawler
+    comment: "ipfs-crawler daemon"
+    group: ipfs-crawler
+    system: true
+    state: present
+    home: /nonexistent
+    shell: /usr/sbin/nologin
+    create_home: no
+- name: Install crawler systemd service
+  template:
+    src: ipfs-crawler.service
+    dest: /etc/systemd/system/ipfs-crawler.service
+    mode: 0644
+  notify: restart ipfs-crawler
+- name: Ensures ipfs-search dir exists
+  file:
+    path: /etc/ipfs-crawler
+    state: directory
+    mode: 0755
+- name: Install configuration file
+  template:
+    src: config.yml
+    dest: /etc/ipfs-crawler/config.yml
+    mode: 0644
+  notify:
+    - restart ipfs-crawler
+- name: Start service
+  service:
+    name: ipfs-crawler
+    enabled: yes
+    state: started

@@ -1,20 +1,19 @@
 ---
-- hosts: stats
+- name: Infrastructure for observability.
+  hosts: stats
   become: true
   vars_files:
     - vars/common.yml
   vars:
     influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
   roles:
-    - { name: influxdb2, tags: influxdb }
+    - role: vendor/influxdb2
+      tags: influxdb
     # - { name: storagebox, tags: ['storagebox'] }
     # - { name: influxdb_backup, tags: influxdb_backup }
-    - name: grafana installation
-      role: grafana
+    - role: vendor/grafana
       tags: grafana
-    - name: loki installation
-      role: loki
+    - role: vendor/loki
       tags: loki
-    - name: tempo installation
-      role: tempo
+    - role: vendor/tempo
       tags: tempo

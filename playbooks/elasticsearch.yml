@@ -1,5 +1,6 @@
 ---
-- hosts: elasticsearch
+- name: Configure Elasticsearch.
+  hosts: elasticsearch
   become: true
   serial: 1
   any_errors_fatal: true
@@ -41,9 +42,10 @@
           node.data: "{{ inventory_hostname in groups['index'] }}"
           node.master: "{{ inventory_hostname in groups['master'] }}"
     - name: push logs files to loki using promtail
-      role: promtail
+      role: vendor/promtail
       tags: promtail
       vars: 
         es_logs_to_loki: true
-    - { name: snapshots, tags: ['snapshots'] }
+    - role: vendor/es_snapshots
+      tags: ['snapshots']
     

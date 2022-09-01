@@ -1,13 +1,12 @@
 ---
-# Common configuration for all hosts
-- hosts: all,!poppycorn
+- name: Common configuration for all hosts.
+  hosts: all,!poppycorn
   become: true
   strategy: free
   vars_files:
     - vars/common.yml
   roles:
-    - role: telegraf
+    - role: vendor/telegraf
       tags: telegraf
-    - name: promtail installation
-      role: promtail
+    - role: vendor/promtail
       tags: promtail

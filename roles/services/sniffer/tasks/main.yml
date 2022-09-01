@@ -1,0 +1,89 @@
+---
+- name: Build requirements
+  apt:
+    pkg:
+      - build-essential
+      - libssl-dev
+      - pkg-config
+    state: present
+- name: Build directory
+  file:
+    path: "{{ sniffer_build }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('env', 'USER') }}"
+- name: Clone ipfs-sniffer
+  git:
+    dest: "{{ sniffer_build }}"
+    repo: https://github.com/ipfs-search/ipfs-sniffer.git
+    version: "{{ sniffer_version }}"
+  register: source
+  become: false
+- name: Build and install
+  block:
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
+      public: yes
+  - name: Get and build
+    block:
+    - name: Get dependencies
+      command:
+        cmd: go get -tags=openssl
+        chdir: "{{ sniffer_build }}"
+    - name: Build
+      command:
+        cmd: go build -tags=openssl -o ipfs-sniffer
+        chdir: "{{ sniffer_build }}"
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
+  - name: Install ipfs-sniffer
+    copy:
+      src: "{{ sniffer_build }}/ipfs-sniffer"
+      dest: "{{ sniffer_binary }}"
+      remote_src: True
+      mode: 0775
+    become: true
+    notify: restart sniffer
+  - name: Annotate
+    include_role:
+      name: annotate
+    vars:
+      role: sniffer
+      version: "{{ source.after }}"
+      action: upgrade
+  when: source.changed
+- name: Setup group
+  group:
+    name: ipfs-sniffer
+    system: true
+    state: present
+- name: Setup user
+  user:
+    name: ipfs-sniffer
+    group: ipfs-sniffer
+    system: true
+    state: present
+    home: "{{ sniffer_home }}"
+    shell: /usr/sbin/nologin
+    create_home: no
+- name: Setup home directory
+  file:
+    path: "{{ sniffer_home }}"
+    owner: ipfs-sniffer
+    group: ipfs-sniffer
+    mode: 0750
+    state: directory
+- name: Configure service
+  template:
+    src: ipfs-sniffer.service
+    dest: /etc/systemd/system/ipfs-sniffer.service
+    mode: 0644
+  notify: restart sniffer
+- name: Enable service
+  systemd:
+    name: ipfs-sniffer
+    daemon_reload: yes
+    state: started
+    enabled: yes

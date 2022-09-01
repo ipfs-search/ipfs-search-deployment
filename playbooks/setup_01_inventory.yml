@@ -1,21 +1,29 @@
 ---
-- hosts: nameless
-  gather_facts: no
+- name: Generate hostnames
+  hosts: nameless
+  gather_facts: false
   vars_files:
     # `JSON.stringify(Array.from(document.querySelectorAll("#mw-content-text > div.mw-parser-output > table > tbody > tr > td:nth-child(2)")).map(e => e.innerText.split(",", 1)[0].toLowerCase() + '.ipfs-search.com'));`
     - vars/new_hostnames.json
   roles:
-    - { name: generate_hostnames, tags: 'hostnames' }
-- hosts: dmz
-  gather_facts: no
+    - role: setup/generate_hostnames
+      tags: 'hostnames'
+- name: Generate VLAN IP's
+  hosts: dmz
+  gather_facts: false
   roles:
-    - { name: generate_vlan_ip, tags: 'vlan' }
-- hosts: ipfs
-  gather_facts: no
+    - role: setup/generate_vlan_ip
+      tags: 'vlan'
+- name: Generate IPFS keys
+  hosts: ipfs
+  gather_facts: false
   roles:
-    - { name: generate_ipfs_key, tags: 'ipfs' }
-- hosts: all
+    - role: setup/generate_ipfs_key
+      tags: 'ipfs'
+- name: Configure reverse DNS
+  hosts: all
   vars_files:
     - vars/common.yml
   roles:
-    - { name: cloudflare_inventory_dns, tags: ['dns']}
+    - role: setup/cloudflare_inventory_dns
+      tags: ['dns']

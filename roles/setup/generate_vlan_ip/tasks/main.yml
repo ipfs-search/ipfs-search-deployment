@@ -1,19 +1,20 @@
 ---
 # TODO: Check for pre-existing IP's and pick next *available* one. Don't assume proper order of hosts!
-- name: Get host index
-  set_fact:
-    host_index: "{{ groups['dmz'].index(inventory_hostname) }}"
-  run_once: true
-  delegate_to: localhost
-- block:
+- name: Generate VLAN IP
+  block:
+  - name: Get host index
+    set_fact:
+      host_index: "{{ groups['dmz'].index(inventory_hostname) }}"
+    run_once: true
   - name: Generate vlan_ip
     set_fact:
       generated_vlan_ip: true
       # Add subnet
       vlan_ip: "{{ vlan_subnet | ansible.netcommon.ipaddr(host_index) }}"
+    when: vlan_ip is undefined
   delegate_to: localhost
-  when: vlan_ip is undefined
-- block:
+- name: Add VLAN IP to host vars
+  block:
   - name: Print IP's
     debug:
       var: vlan_ip
@@ -23,6 +24,6 @@
       path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^vlan_ip'
       line: "vlan_ip: {{ vlan_ip }}"
+      mode: 0644
   delegate_to: localhost
   when: generated_vlan_ip is defined and generated_vlan_ip
-

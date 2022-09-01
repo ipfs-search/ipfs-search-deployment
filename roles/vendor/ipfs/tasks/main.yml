@@ -1,0 +1,139 @@
+---
+- name: Build requirements
+  apt:
+    pkg:
+      - build-essential
+      - libssl-dev
+      - pkg-config
+    state: present
+- name: Build dir exists
+  file:
+    path: "{{ ipfs_build }}"
+    state: directory
+    mode: 0755
+    owner: "{{ lookup('env', 'USER') }}"
+- name: clone go-ipfs
+  git:
+    dest: "{{ ipfs_build }}"
+    repo: https://github.com/ipfs/go-ipfs.git
+    version: "{{ ipfs_version }}"
+  register: source
+  become: false
+- name: Build and install
+  block:
+  - name: Ensure golang's available for building
+    include_role:
+      name: golang
+      public: true
+    when: golang_install_dir is not defined or ansible_local.golang.general.version != golang_version
+  - name: Clean and build
+    block:
+    - name: clean go-ipfs
+      make:
+        chdir: "{{ ipfs_build }}"
+        target: clean
+    - name: make go-ipfs
+      make:
+        chdir: "{{ ipfs_build }}"
+        params:
+          GOTAGS=openssl
+        target: build
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
+  - name: Install ipfs binary
+    copy:
+      src: "{{ ipfs_build }}/cmd/ipfs/ipfs"
+      dest: "{{ ipfs_binary }}"
+      remote_src: true
+      mode: 0755
+    become: true
+    notify: restart ipfs
+  - name: Annotate
+    include_role:
+      name: annotate
+    vars:
+      role: ipfs
+      version: "{{ source.after }}"
+      action: upgrade
+  when: source.changed
+- name: Setup group
+  group:
+    name: "{{ ipfs_group }}"
+    system: true
+    state: present
+- name: Setup user
+  user:
+    name: "{{ ipfs_user }}"
+    comment: "IPFS daemon"
+    group: "{{ ipfs_group }}"
+    system: true
+    state: present
+    home: "{{ ipfs_path }}"
+    shell: /usr/sbin/nologin
+# - file: path="{{ ipfs_path }}" owner=ipfs group=ipfs mode=750 state=directory
+- name: initialize IPFS repository
+  command: "{{ ipfs_binary }} init --profile=badgerds"
+  args:
+    creates: "{{ ipfs_path }}/version"
+  environment:
+    IPFS_PATH: "{{ ipfs_path }}"
+  become: true
+  become_user: "{{ ipfs_user }}"
+- name: Increase UDP Receive Buffer Size for quic-go v0.19.x+
+  sysctl:
+    name: net.core.rmem_max
+    value: "2500000"
+    state: present
+  notify: restart ipfs
+- name: Configure IPFS service
+  template:
+    src: ipfs.service
+    dest: /etc/systemd/system/ipfs.service
+    mode: 0644
+  notify: restart ipfs
+- name: Ensure sniffer service started
+  systemd:
+    name: ipfs-sniffer
+    state: started
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['sniffer'] }}"
+  run_once: true
+- name: Get sniffer heads for peering
+  uri:
+    url: http://127.0.0.1:7779/heads
+    return_content: true
+  register: sniffer_heads
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['sniffer'] }}"
+  when: sniffer_heads is not defined
+  run_once: true
+- name: Gather facts from other IPFS nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  with_items: "{{ groups['ipfs'] }}"
+  ignore_unreachable: true
+- name: Set sniffer heads and ipfs peers
+  set_fact:
+    ipfs_peers: "[{% for host in groups['ipfs'] if host != inventory_hostname and 'ipfs_peer_id' in hostvars[host] and 'ansible_default_ipv4' in hostvars[host] %}{\"ID\": \"{{ hostvars[host][\"ipfs_peer_id\"] }}\", \"Addrs\": [\"/ip4/{{ hostvars[host].ansible_default_ipv4.address }}/udp/4001/quic\"]}{% if not loop.last %},{% endif %}{% endfor %}]"
+    sniffer_heads: "[{% for heads in sniffer_heads.results if 'content' in heads %}{{ heads['content'].splitlines()[0] }}{% if not loop.last %},{% endif %}{% endfor %}]"
+    cacheable: true
+- name: Render IPFS configuration file
+  template:
+    src: ipfs_config.json.j2
+    dest: "{{ ipfs_path }}/config"
+    mode: 0600
+    owner: "{{ ipfs_user }}"
+    group: "{{ ipfs_group }}"
+  notify: restart ipfs
+- name: Enable IPFS service
+  systemd: name=ipfs daemon_reload=true state=started enabled=true
+- name: ipfs convenience alias
+  lineinfile:
+    path: "{{ ansible_env.PWD }}/.bashrc" # Workaround https://github.com/ansible/ansible/issues/15901
+    regexp: "^alias ipfs="
+    line: "alias ipfs='sudo -u {{ ipfs_user }} IPFS_PATH={{ ipfs_path }} {{ ipfs_binary }}'"
+    mode: 0600
+  become: false
