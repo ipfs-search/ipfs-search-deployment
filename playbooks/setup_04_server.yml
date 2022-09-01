@@ -12,8 +12,6 @@
       tags: ['cgconfig']
     - role: setup/firewall
       tags: ['firewall']
-    - role: vendor/jre
-      tags: ['jre']
 - hosts: dmz
   become: true
   roles:
