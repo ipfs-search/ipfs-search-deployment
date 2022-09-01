@@ -26,7 +26,6 @@
       ipfs_peer_id: "{{ ipfs_config['Identity']['PeerID'] }}"
       ipfs_peer_key: "{{ ipfs_config['Identity']['PrivKey'] }}"
   delegate_to: localhost
-  when: ipfs_peer_id is undefined
 - name: Add keypair to host vars
   block:
   - name: Encrypt ipfs_peer_key

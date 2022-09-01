@@ -22,15 +22,26 @@
   tags: generate_vlan_ip
   roles:
     - role: setup/generate_vlan_ip
-- name: Generate IPFS keys
+- name: Create group of hosts without IPFS peer id
   hosts: ipfs
   gather_facts: false
+  tags: generate_ipfs_key
+  tasks:
+  - name: Create group for VLAN-less hosts
+    group_by:
+      key: "{% if ipfs_peer_id is defined %}hasipfspeerid{% else %}noipfspeerid{% endif %}"
+- name: Generate IPFS keys
+  hosts: noipfspeerid
+  gather_facts: false
+  tags: generate_ipfs_key
   roles:
     - role: setup/generate_ipfs_key
 - name: Explicitly gather facts
   hosts: all
   gather_facts: false
-  tags: dns
+  tags:
+    - dns
+    - reverse_dns
   tasks:
     - setup:
 - name: Configure DNS
