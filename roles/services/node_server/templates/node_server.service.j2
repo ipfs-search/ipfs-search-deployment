@@ -1,0 +1,16 @@
+[Unit]
+Description=Node server {{ node_server_name }}.
+Requires={{ node_server_requires }}
+After={{ node_server_after }}
+
+[Service]
+WorkingDirectory={{ node_server_install_path }}
+ExecStart=/usr/bin/npm start
+Restart=always
+User={{ node_server_user }}
+Group={{ node_server_group }}
+Environment=NODE_ENV=production
+Environment={{ node_server_environment }}
+
+[Install]
+WantedBy=default.target

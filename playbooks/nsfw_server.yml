@@ -1,0 +1,15 @@
+---
+- name: nsfw_server
+  hosts: nsfw_server
+  tags: nsfw_server
+  become: true
+  roles:
+    - name: nsfw_server
+      role: services/node_server
+      vars:
+        node_server_name: nsfw-server
+        node_server_repo: "https://github.com/ipfs-search/nsfw-server.git"
+        node_server_environment: "NSFW_SERVER_PORT={{ nsfw_server_port }}"
+        node_server_version: "{{ nsfw_server_version }}"
+        node_server_requires: ipfs.service
+        node_server_port: "{{ nsfw_server_port }}"

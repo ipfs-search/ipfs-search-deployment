@@ -7,7 +7,6 @@
       tags: ['nginx']
     - role: vendor/nodejs
       tags: ['nodejs']
-    - role: services/nsfw_server
-      tags: ['nsfw_server']
     - role: services/api
       tags: ['api']
+- import_playbook: nsfw_server.yml

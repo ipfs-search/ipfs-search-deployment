@@ -1,0 +1,28 @@
+---
+- name: nyats dependencies
+  hosts: nyats
+  become: true
+  tags: nyats_deps
+  roles:
+    - role: vendor/ipfs
+      tags: ipfs
+    - role: vendor/ipfs-gc
+      tags: ipfs-gc
+    - role: vendor/nodejs
+      tags: nodejs
+- name: Not Yet Another Thumbnailer Server
+  hosts: nyats
+  tags: nyats
+  become: true
+  roles:
+    - name: nyats
+      role: services/node_server
+      vars:
+        node_server_name: nyats
+        node_server_repo: "https://github.com/ipfs-search/nyats.git"
+        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} NYATS_SERVER_HOST={{ nyats_host }}"
+        node_server_version: "{{ nyats_version }}"
+        node_server_requires: ipfs.service
+        node_server_host: "{{ nyats_host }}"
+        node_server_port: "{{ nyats_port }}"
+
