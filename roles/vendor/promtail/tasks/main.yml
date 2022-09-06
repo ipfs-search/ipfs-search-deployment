@@ -1,4 +1,9 @@
 ---
+- name: Install unzip, required for unpacking
+  apt:
+    name: unzip
+    state: present
+
 - name: Download binary
   get_url:
     url: https://github.com/grafana/loki/releases/download/{{ promtail_version }}/promtail-linux-amd64.zip
@@ -11,7 +16,8 @@
   unarchive:
     copy: no
     src: "{{ promtail_download.dest }}"
-    dest: /usr/local/bin
+    dest: /usr/local/bin/
+    exclude: "!promtail-linux-amd64"
   when: promtail_download.changed
   notify: restart promtail
 

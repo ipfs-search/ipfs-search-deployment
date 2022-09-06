@@ -17,7 +17,7 @@
         state: directory
         mode: 0755
     - name: Build badger command
-      command: "go get github.com/dgraph-io/badger/...@{{ badger_version }}"
+      command: "go install github.com/dgraph-io/badger/...@{{ badger_version }}"
       args:
         creates: "{{ badger_build_dir }}/badger"
       environment:
@@ -40,7 +40,7 @@
 - name: Enable IPFS garbage collection crontab
   cron:
     name: "ipfs collect garbage"
-    cron_file: /etc/crontab
+    cron_file: ipfs-gc
     minute: "48"
     hour: "*/6"
     backup: "yes"

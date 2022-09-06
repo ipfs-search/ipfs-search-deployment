@@ -6,6 +6,8 @@
     - 1
     - "100%"
   roles:
+    - role: vendor/jre
+      tags: ['jre']
     - role: services/tika-extractor
       tags: ['tika-extractor']
     - role: vendor/nodejs
