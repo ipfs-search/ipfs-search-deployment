@@ -1,0 +1,13 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    include /etc/nginx/locations-enabled/*.conf;
+
+    allow 127.0.0.1;
+    allow {{ frontend_ip }};
+    deny all;
+
+    # Server closes the connection and it's as if there were no server at all.
+    return 444;
+}

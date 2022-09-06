@@ -7,14 +7,14 @@ stages:
   - requirements
   - lint
 
-requirements:
+requirements-install:
   stage: requirements
   script:
     - pipenv sync
     - pipenv run ansible-galaxy install -r requirements.txt
 
-package-safety:
-  stage: lint
+requirements-check:
+  stage: requirements
   script:
     - pipenv check --ignore 42923
       # Ignore: https://bugzilla.redhat.com/show_bug.cgi?id=1956464

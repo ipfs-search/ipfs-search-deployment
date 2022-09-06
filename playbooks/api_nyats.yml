@@ -1,29 +1,26 @@
 ---
-- name: nyats dependencies
+- name: nyats (thumbnailer)
   hosts: nyats
+  tags: nyats
   become: true
-  tags: nyats_deps
   roles:
     - role: vendor/ipfs
       tags: ipfs
     - role: vendor/ipfs-gc
       tags: ipfs-gc
-    - role: vendor/ipfs-gateway
-      tags: gateway
-- name: Not Yet Another Thumbnailer Server
-  hosts: nyats
-  tags: nyats
-  become: true
-  roles:
+    - role: vendor/nginx
+      tags: nginx
     - name: nyats
-      role: services/node_server
+      role: services/node-server
       vars:
         node_server_name: nyats
         node_server_repo: "https://github.com/ipfs-search/nyats.git"
-        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} NYATS_SERVER_HOST={{ nyats_host }}"
+        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} NYATS_SERVER_HOST={{ nyats_host }} IPFS_GATEWAY=https://gw.dwebsearch.com"
         node_server_version: "{{ nyats_version }}"
         node_server_requires: ipfs.service
         node_server_host: "{{ nyats_host }}"
         node_server_port: "{{ nyats_port }}"
         node_server_proxy_location: "/v1/thumbnail/"
         node_server_proxy_root: "/thumbnail/"
+- name: Configure IPFS gateway
+  import_playbook: ipfs-gateway.yml

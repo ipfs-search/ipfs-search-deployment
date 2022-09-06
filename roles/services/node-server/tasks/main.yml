@@ -55,6 +55,12 @@
     name: "{{ node_server_service_name }}"
     enabled: yes
     state: started
+- name: Enable nginx location
+  include_role:
+    name: services/location-proxy
+  vars:
+    location_template: nginx-location.conf.j2
+    location_name: "{{ node_server_proxy_location_name }}"
 - name: Call handlers
   meta: flush_handlers
 - name: Get service facts
@@ -77,10 +83,3 @@
     state: stopped
     timeout: 5
     msg: "Service {{ node_server_service_name }} was available on public IP."
-- name: Enable nginx location
-  include_role:
-    name: services/api
-    tasks_from: 'install_location.yml'
-  vars:
-    location_template: nginx-location.conf.j2
-    location_name: "{{ node_server_proxy_location_name }}"

@@ -5,10 +5,10 @@ upstream ipfs {
 }
 
 server {
-	server_name ipfs.dwebsearch.org;
+	server_name {{ ipfs_gateway_hostname }};
 
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen 80;
+    listen [::]:80;
 
     location /server_status {
         # Enable Nginx stats
@@ -24,19 +24,25 @@ server {
     add_header 'Access-Control-Allow-Headers' 'X-Requested-With, Range, Content-Range, X-Chunked-Output, X-Stream-Output' always;
     add_header 'Access-Control-Expose-Headers' 'Content-Range, X-Chunked-Output, X-Stream-Output' always;
 
-    // Only allow GET
-	limit_except GET {
-	    allow 127.0.0.1;
-	    deny  all;
-	}
-
     proxy_pass_header ipfs;
     proxy_read_timeout 1800s;
 
-    // Only IPFS and IPNS, for now.
+    # Only IPFS and IPNS, for now.
     location ~ "^/(ipfs|ipns)(/|$)" {
-        proxy_set_header Host \$host;
+        limit_except GET {
+            allow 127.0.0.1;
+            deny  all;
+        }
+
         proxy_set_header X-Ipfs-Gateway-Prefix "";
         proxy_pass http://ipfs;
+    }
+
+    location / {
+        # Disable default page.
+        deny all;
+
+        # Server closes the connection and it's as if there were no server at all.
+        return 444;
     }
 }

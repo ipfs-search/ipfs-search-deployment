@@ -1,4 +1,12 @@
 ---
+- name: "Create location proxy directories"
+  file:
+    name: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/nginx/locations-available/
+    - /etc/nginx/locations-enabled/
 - name: "Install location {{ location_name }}"
   template:
     src: "{{ location_template }}"
