@@ -43,7 +43,8 @@
     - dns
     - reverse_dns
   tasks:
-    - setup:
+    - name: Gather facts
+      gather_facts:
 - name: Configure DNS
   hosts: all
   roles:

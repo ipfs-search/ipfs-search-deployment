@@ -9,8 +9,10 @@
       tags: nodejs
     - role: vendor/location-proxy
       tags: location-proxy
-- import_playbook: api_nsfw_server.yml
-- import_playbook: api_nyats.yml
+- name: Configure NSFW server
+  import_playbook: api_nsfw_server.yml
+- name: Configure nyats (thumbnailer)
+  import_playbook: api_nyats.yml
 - name: Search API
   hosts: ipfs-search-api
   tags: ipfs-search-api

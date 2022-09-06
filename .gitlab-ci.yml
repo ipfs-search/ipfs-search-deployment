@@ -1,0 +1,25 @@
+image: python:3.8-slim
+
+before_script:
+  - pip install --no-cache-dir pipenv
+
+stages:
+  - requirements
+  - lint
+
+requirements:
+  stage: requirements
+  script:
+    - pipenv sync
+    - pipenv run ansible-galaxy install -r requirements.txt
+
+package-safety:
+  stage: lint
+  script:
+    - pipenv check --ignore 42923
+      # Ignore: https://bugzilla.redhat.com/show_bug.cgi?id=1956464
+
+ansible-lint:
+  stage: lint
+  script:
+    - scripts/lint.sh
