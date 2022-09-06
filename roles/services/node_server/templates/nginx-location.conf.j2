@@ -1,0 +1,3 @@
+location {{ node_server_proxy_location }} {
+    proxy_pass http://{{ node_server_host }}:{{ node_server_port }}{{ node_server_proxy_root }};
+}

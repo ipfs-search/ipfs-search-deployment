@@ -8,8 +8,8 @@
       tags: ipfs
     - role: vendor/ipfs-gc
       tags: ipfs-gc
-    - role: vendor/nodejs
-      tags: nodejs
+    - role: vendor/ipfs-gateway
+      tags: gateway
 - name: Not Yet Another Thumbnailer Server
   hosts: nyats
   tags: nyats
@@ -25,4 +25,5 @@
         node_server_requires: ipfs.service
         node_server_host: "{{ nyats_host }}"
         node_server_port: "{{ nyats_port }}"
-
+        node_server_proxy_location: "/v1/thumbnail/"
+        node_server_proxy_root: "/thumbnail/"

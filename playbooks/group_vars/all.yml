@@ -31,4 +31,4 @@ nsfw_server_version: f5334dddc9dc31ef950e4d994bfc1280b93a1586
 node_branch: node_16.x
 nyats_host: "{{ hostvars[groups['nyats'].0].vlan_ip  | ipaddr('address') }}"
 nyats_port: 9614
-nyats_version: 21bdfb403eb5695e79da167974605b45c102db37
+nyats_version: 6f46225c04905431dcdbbb2d37cb09c3bf90afbd

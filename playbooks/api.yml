@@ -1,12 +1,31 @@
 ---
-- name: NodeJS API server and dependencies.
+- name: API and dependencies.
   hosts: index
   become: true
   roles:
     - role: vendor/nginx
-      tags: ['nginx']
+      tags: nginx
     - role: vendor/nodejs
-      tags: ['nodejs']
-    - role: services/api
-      tags: ['api']
-- import_playbook: nsfw_server.yml
+      tags: nodejs
+    - role: vendor/location-proxy
+      tags: location-proxy
+- import_playbook: api_nsfw_server.yml
+- import_playbook: api_nyats.yml
+- name: Search API
+  hosts: ipfs-search-api
+  tags: ipfs-search-api
+  become: true
+  roles:
+    - name: ipfs-search-api
+      role: services/node_server
+      vars:
+        node_server_name: ipfs-search
+        node_server_install_path: "/usr/local/libexec/ipfs-search/api"
+        node_server_working_directory: "/usr/local/libexec/ipfs-search/api/server"
+        node_server_repo: "https://github.com/ipfs-search/ipfs-search-api.git"
+        node_server_version: "{{ ipfs_search_api_version }}"
+        node_server_requires: elasticsearch.service
+        node_server_port: "{{ ipfs_search_api_port }}" # 9615
+        node_server_proxy_location_name: "99_ipfs-search.conf"
+        node_server_proxy_location: "/v1/"
+        node_server_proxy_root: "/"

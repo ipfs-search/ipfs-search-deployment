@@ -30,3 +30,9 @@ argument_specs:
         type: "str"
       node_server_after:
         type: "str"
+      node_server_proxy_location:
+        type: "str"
+      node_server_proxy_location_name:
+        type: "str"
+      node_server_proxy_root:
+        type: "str"

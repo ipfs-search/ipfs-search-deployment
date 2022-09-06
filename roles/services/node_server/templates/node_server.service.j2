@@ -4,7 +4,7 @@ Requires={{ node_server_requires }}
 After={{ node_server_after }}
 
 [Service]
-WorkingDirectory={{ node_server_install_path }}
+WorkingDirectory={{ node_server_working_directory }}
 ExecStart=/usr/bin/npm start
 Restart=always
 User={{ node_server_user }}

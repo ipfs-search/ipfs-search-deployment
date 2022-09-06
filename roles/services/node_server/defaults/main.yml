@@ -1,9 +1,13 @@
 ---
 node_server_install_path: "/usr/local/libexec/{{ node_server_name }}"
+node_server_working_directory: "{{ node_server_install_path }}"
 node_server_user: "{{ node_server_name }}"
 node_server_group: "{{ node_server_name }}"
 node_server_service_name: "{{ node_server_name }}"
 node_server_version: main
 node_server_requires:
 node_server_after: "{{ node_server_requires }}"
-node_server_host: localhost
+node_server_host: "127.0.0.1"
+node_server_proxy_location_name: "{{ node_server_name }}"
+node_server_proxy_location: "/v1/{{ node_server_name }}"
+node_server_proxy_root: "/"

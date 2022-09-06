@@ -1,0 +1,42 @@
+# Ref: https://github.com/ipfs/infra/blob/master/ipfs/gateway/nginx.conf
+
+upstream ipfs {
+	server 127.0.0.1:8080;
+}
+
+server {
+	server_name ipfs.dwebsearch.org;
+
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location /server_status {
+        # Enable Nginx stats
+        stub_status on;
+        # Only allow access from localhost
+        allow 127.0.0.1;
+        # Other request should be denied
+        deny all;
+    }
+
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Methods' 'GET' always;
+    add_header 'Access-Control-Allow-Headers' 'X-Requested-With, Range, Content-Range, X-Chunked-Output, X-Stream-Output' always;
+    add_header 'Access-Control-Expose-Headers' 'Content-Range, X-Chunked-Output, X-Stream-Output' always;
+
+    // Only allow GET
+	limit_except GET {
+	    allow 127.0.0.1;
+	    deny  all;
+	}
+
+    proxy_pass_header ipfs;
+    proxy_read_timeout 1800s;
+
+    // Only IPFS and IPNS, for now.
+    location ~ "^/(ipfs|ipns)(/|$)" {
+        proxy_set_header Host \$host;
+        proxy_set_header X-Ipfs-Gateway-Prefix "";
+        proxy_pass http://ipfs;
+    }
+}

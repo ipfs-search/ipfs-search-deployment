@@ -16,7 +16,7 @@
   - name: Install dependencies
     command: npm install --production --no-save
     args:
-      chdir: "{{ node_server_install_path }}"
+      chdir: "{{ node_server_working_directory }}"
     when: source.changed
     notify: "restart node_server"
   - name: Annotate
@@ -77,4 +77,10 @@
     state: stopped
     timeout: 5
     msg: "Service {{ node_server_service_name }} was available on public IP."
-
+- name: Enable nginx location
+  include_role:
+    name: services/api
+    tasks_from: 'install_location.yml'
+  vars:
+    location_template: nginx-location.conf.j2
+    location_name: "{{ node_server_proxy_location_name }}"

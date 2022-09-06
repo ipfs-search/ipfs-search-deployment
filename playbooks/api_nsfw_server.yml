@@ -1,4 +1,13 @@
 ---
+- name: nsfw-server dependencies
+  hosts: nsfw_server
+  become: true
+  tags: nsfw_server_deps
+  roles:
+    - role: vendor/ipfs
+      tags: ipfs
+    - role: vendor/ipfs-gc
+      tags: ipfs-gc
 - name: nsfw_server
   hosts: nsfw_server
   tags: nsfw_server
@@ -13,3 +22,4 @@
         node_server_version: "{{ nsfw_server_version }}"
         node_server_requires: ipfs.service
         node_server_port: "{{ nsfw_server_port }}"
+        node_server_proxy_location: "/v1/nsfw/"
