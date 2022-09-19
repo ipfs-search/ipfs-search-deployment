@@ -1,18 +1,15 @@
 ---
-- name: API and dependencies.
-  hosts: ipfs-search-api
-  become: true
-  roles:
-    - role: vendor/nginx
-      tags: nginx
-    - role: vendor/nodejs
-      tags: nodejs
 - name: Search API
-  hosts: ipfs-search-api
+  hosts: search_api
   tags: ipfs-search-api
   become: true
+  serial:
+    - 1
+    - "100%"
+  strategy: free
   roles:
     - name: ipfs-search-api
+      tags: node-server
       role: services/node-server
       vars:
         node_server_name: ipfs-search
@@ -21,7 +18,7 @@
         node_server_repo: "https://github.com/ipfs-search/ipfs-search-api.git"
         node_server_version: "{{ ipfs_search_api_version }}"
         node_server_requires: elasticsearch.service
-        node_server_port: "{{ ipfs_search_api_port }}" # 9615
+        node_server_port: "{{ ipfs_search_api_port }}"
         node_server_proxy_location_name: "99_ipfs-search.conf"
         node_server_proxy_location: "/v1/"
         node_server_proxy_root: "/"

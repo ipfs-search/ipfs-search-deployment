@@ -12,11 +12,11 @@
     src: "{{ location_template }}"
     dest: "/etc/nginx/locations-available/{{ location_name }}.conf"
     mode: 0644
-  notify: restart nginx
+  notify: reload nginx
 - name: "Enable location {{ location_name }}"
   file:
     path: "/etc/nginx/locations-enabled/{{ location_name }}.conf"
     src: "/etc/nginx/locations-available/{{ location_name }}.conf"
     state: link
     mode: 0644
-  notify: restart nginx
+  notify: reload nginx

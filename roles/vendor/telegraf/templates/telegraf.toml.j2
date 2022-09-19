@@ -2235,10 +2235,10 @@ indices_include = ["_all"]
 
 
 # # HTTP/HTTPS request given an address a method and a timeout
-{% if 'index' in group_names %}
+{% if 'search_api' in group_names %}
 [[inputs.http_response]]
 #   ## Server address (default http://localhost)
-  urls = ["http://localhost:9615/search?q=test"]
+  urls = ["http://localhost:{{ ipfs_search_api_port }}/search?q=test"]
 #
 #   ## Set http_proxy (telegraf uses the system wide proxy settings if it's is not set)
 #   # http_proxy = "http://localhost:8888"

@@ -4,14 +4,14 @@
     src: nginx-api.conf.j2
     dest: /etc/nginx/sites-available/api.conf
     mode: 0644
-  notify: restart nginx
+  notify: reload nginx
 - name: Enable nginx configuration
   file:
     path: /etc/nginx/sites-enabled/api.conf
     src: /etc/nginx/sites-available/api.conf
     state: link
     mode: 0644
-  notify: restart nginx
+  notify: reload nginx
 - name: Enable server status
   include_role:
     name: services/location-proxy

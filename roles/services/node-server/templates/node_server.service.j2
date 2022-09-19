@@ -10,7 +10,9 @@ Restart=always
 User={{ node_server_user }}
 Group={{ node_server_group }}
 Environment=NODE_ENV=production
+{% if node_server_environment %}
 Environment={{ node_server_environment }}
+{% endif  %}
 
 [Install]
 WantedBy=default.target

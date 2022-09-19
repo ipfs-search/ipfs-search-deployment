@@ -1,5 +1,5 @@
 ---
-- name: Create destination folder
+- name: Create destination folder {{ node_server_install_path }}
   file:
     path: "{{ node_server_install_path }}"
     state: directory
@@ -7,7 +7,7 @@
     mode: 0755
 - name: Install
   block:
-  - name: Clone repository
+  - name: Clone repository {{ node_server_repo }}
     git:
       dest: "{{ node_server_install_path }}"
       repo: "{{ node_server_repo }}"
@@ -44,20 +44,21 @@
     # https://github.com/npm/cli/issues/4769
     # home: /nonexistent
     # create_home: no
-- name: Install service
+- name: Install service {{ node_server_service_name }}
   template:
     src: "node_server.service.j2"
     dest: "/etc/systemd/system/{{ node_server_service_name }}.service"
     mode: 0644
   notify: "restart node_server"
-- name: Enable service
+- name: Enable service {{ node_server_service_name }}
   service:
     name: "{{ node_server_service_name }}"
     enabled: yes
     state: started
-- name: Enable nginx location
+- name: Enable nginx location {{ node_server_proxy_location_name }}
   include_role:
     name: services/location-proxy
+    tasks_from: 'install_location.yml'
   vars:
     location_template: nginx-location.conf.j2
     location_name: "{{ node_server_proxy_location_name }}"
@@ -65,7 +66,7 @@
   meta: flush_handlers
 - name: Get service facts
   service_facts:
-- name: Check if service is running
+- name: Check if service {{ node_server_service_name }} is running
   fail:
     msg: "Service {{ node_server_service_name }} not defined or running"
   when:
