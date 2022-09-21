@@ -1,0 +1,9 @@
+---
+- name: Redis cluster install
+  hosts: redis
+  become: true
+  roles:
+      - vendor/redis
+
+# to init cluster, after playbook run execute command on any of redis nodes
+# redis-cli -h 127.0.0.1 -p 7000 -a "pass" --cluster create M1:7000 M2:7000 M3:7000 S2:7001 S3:7001 S1:7001 --cluster-replicas 1

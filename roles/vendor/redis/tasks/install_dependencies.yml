@@ -1,0 +1,22 @@
+- name: Update all packages
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Install required packages for redis
+  apt:
+    name:
+      - pkg-config
+      - make
+      - gcc
+      - libc6-dev
+      - tcl
+      - libsystemd-dev
+      - jq
+    state: latest
+
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+    force_apt_get: yes
