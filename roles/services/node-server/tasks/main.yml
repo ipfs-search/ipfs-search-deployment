@@ -14,11 +14,17 @@
       version: "{{ node_server_version }}"
     register: source
   - name: Install dependencies
-    command: npm install --production --no-save
+    command: "npm install {% if not node_server_build %}--production{% endif %} --no-save"
     args:
       chdir: "{{ node_server_working_directory }}"
     when: source.changed
-    notify: "restart node_server"
+    notify: "restart {{ node_server_name }}"
+  - name: Run build script (if present)
+    command: npm run --if-present build
+    args:
+      chdir: "{{ node_server_working_directory }}"
+    when: source.changed and node_server_build
+    notify: "restart {{ node_server_name }}"
   - name: Annotate
     include_role:
       name: annotate
@@ -49,7 +55,7 @@
     src: "node_server.service.j2"
     dest: "/etc/systemd/system/{{ node_server_service_name }}.service"
     mode: 0644
-  notify: "restart node_server"
+  notify: "restart {{ node_server_name }}"
 - name: Enable service {{ node_server_service_name }}
   service:
     name: "{{ node_server_service_name }}"

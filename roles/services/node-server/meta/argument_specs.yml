@@ -36,3 +36,7 @@ argument_specs:
         type: "str"
       node_server_proxy_root:
         type: "str"
+      node_server_build:
+        default: false
+        type: "bool"
+

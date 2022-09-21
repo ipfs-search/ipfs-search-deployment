@@ -12,3 +12,4 @@ node_server_proxy_location_name: "{{ node_server_name }}"
 node_server_proxy_location: "/v1/{{ node_server_name }}"
 node_server_proxy_root: "/"
 node_server_environment:
+node_server_build: false

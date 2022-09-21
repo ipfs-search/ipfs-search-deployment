@@ -1,5 +1,5 @@
 ---
-- name: "restart node_server"
+- name: "restart {{ node_server_name }}"
   systemd:
     name: "{{ node_server_name }}"
     daemon_reload: yes

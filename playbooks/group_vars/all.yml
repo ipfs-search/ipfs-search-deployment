@@ -30,6 +30,6 @@ nsfw_server_port: 3432
 nsfw_server_version: f5334dddc9dc31ef950e4d994bfc1280b93a1586
 node_branch: node_16.x
 nyats_port: 9614
-nyats_version: 6f46225c04905431dcdbbb2d37cb09c3bf90afbd
+nyats_version: 4ea9d62
 ipfs_search_api_port: 9615
 ipfs_search_api_version: master
