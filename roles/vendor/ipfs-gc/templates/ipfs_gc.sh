@@ -16,6 +16,9 @@ echo "$DELETED items deleted"
 echo "Repo stat:"
 $IPFS repo stat -H
 
+echo "Listing services depending on ipfs"
+DEPENDENTS=`systemctl list-dependencies --reverse --plain ipfs`
+
 echo "Stopping IPFS"
 systemctl stop ipfs
 
@@ -26,7 +29,7 @@ echo "Starting IPFS"
 systemctl start ipfs
 
 echo "Starting dependent services"
-systemctl list-dependencies --reverse --plain ipfs | sed -n "s/^  \(\S*\)\.service$/\1/p" | xargs systemctl start
+systemctl start $DEPENDENTS
 
 echo "Repo stat:"
 $IPFS repo stat -H
