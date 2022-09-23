@@ -1,0 +1,11 @@
+- name: Configure snapshots
+  tags: snapshots
+  hosts: elasticsearch
+  become: true
+  strategy: free
+  serial:
+    - 1
+    - "100%"
+  roles:
+    - role: vendor/es_snapshots
+      tags: ['snapshots']

@@ -1,4 +1,9 @@
 ---
 snapshot_hour: "2"
-snapshot_name: s3
-snapshot_bucket: ipfs-search-snapshots-v8
+snapshot_name: "{{ es_snapshots.name }}"
+snapshot_region: "{{ es_snapshots.region }}"
+snapshot_bucket: "{{ es_snapshots.bucket }}"
+snapshot_endpoint: "{{ es_snapshots.endpoint }}"
+snapshot_key: "{{ es_snapshots.key }}"
+snapshot_secret: "{{ es_snapshots.secret }}"
+snapshot_cron_host: "{{ es_snapshots.cron_host }}"

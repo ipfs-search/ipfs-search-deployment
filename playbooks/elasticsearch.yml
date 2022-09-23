@@ -1,5 +1,5 @@
 ---
-- name: Configure Elasticsearch.
+- name: Configure Elasticsearch
   hosts: elasticsearch
   become: true
   serial: 1
@@ -39,11 +39,10 @@
           network.host: ["_local_", "_site_"]
           node.data: "{{ inventory_hostname in groups['index'] }}"
           node.master: "{{ inventory_hostname in groups['master'] }}"
+    # Not 100% sure this belongs here.
+    # Perhaps ask in promtail script whether inventory hostname is in groups['elasticsearch']?
     - name: push logs files to loki using promtail
       role: vendor/promtail
       tags: promtail
-      vars: 
+      vars:
         es_logs_to_loki: true
-    - role: vendor/es_snapshots
-      tags: ['snapshots']
-    
