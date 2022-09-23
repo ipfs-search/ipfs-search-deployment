@@ -19,7 +19,7 @@
         node_server_name: nyats
         node_server_repo: "https://github.com/ipfs-search/nyats.git"
         node_server_working_directory: "/usr/local/libexec/nyats/packages/server"
-        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} IPFS_GATEWAY=https://gw.dwebsearch.com DEBUG=nyats*"
+        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} PUBLIC_IPFS_GATEWAY=https://gw.dwebsearch.com DEBUG=nyats*"
         node_server_version: "{{ nyats_version }}"
         node_server_requires: ipfs.service
         node_server_port: "{{ nyats_port }}"
