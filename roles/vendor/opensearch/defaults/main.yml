@@ -30,7 +30,7 @@ auth_type: internal
 os_enable_security: true
 os_node_name: "{{ inventory_hostname }}"
 os_node_roles: "{{ hostvars[inventory_hostname]['roles'] }}"
-os_network_host: "{{ hostvars[inventory_hostname]['ip'] }}"
+# os_network_host: "{{ hostvars[inventory_hostname]['ip'] }}"
 os_api_host: "{{ inventory_hostname }}"
 os_data_dirs:
   - "/var/lib/opensearch"
@@ -41,3 +41,5 @@ os_cluster_init: false
 os_download_path: "/tmp/opensearch.tar.gz"
 
 os_set_hostname: true
+
+os_multi_node: true

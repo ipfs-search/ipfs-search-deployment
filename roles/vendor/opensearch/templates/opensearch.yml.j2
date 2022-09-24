@@ -2,13 +2,23 @@ cluster.name: "{{ os_cluster_name }}"
 
 node.name: "{{ os_node_name }}"
 
-network.host: "{{ os_network_host }}"
+{% if not "network.host" in os_config %}
+network.host: {{ os_network_host }}
+{% endif %}
 
 http.port: {{ os_api_port }}
 
-discovery.type: single-node
-
 bootstrap.memory_lock: true
+
+{% if os_multi_node %}
+discovery.seed_hosts: [{{ os_seed_hosts }}]
+
+{% if os_cluster_init %}
+cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
+{% endif %}
+
+node.roles: [{{ os_node_roles }}]
+{% endif %}
 
 ### ipfs-search.com
 # Path to directory containing configuration (this file and logging.yml):

@@ -1,10 +1,18 @@
 ---
+- name: OpenSearch Install | Create opensearch user
+  user:
+    name: "{{ os_user }}"
+    state: present
+    shell: /bin/false
+    create_home: false
+    home: "{{ os_home }}"
+
 - name: Attempt download over local IPFS node
   get_url:
     url: "{{ os_ipfs_download_url }}"
     dest: "{{ os_download_path }}"
     checksum: "sha256:{{ os_sha256 }}"
-  register: download
+  register: ipfs_download
   when: os_ipfs_download_url is defined
   ignore_errors: true
 
@@ -12,19 +20,11 @@
   get_url:
     url: "{{ os_download_url }}/{{ os_version }}/opensearch-{{ os_version }}-linux-x64.tar.gz"
     dest: "{{ os_download_path }}"
-    # checksum: "sha256:{{ os_sha256 }}"
+    checksum: "sha256:{{ os_sha256 }}"
   register: download
-  when: download.failed
+  when: ipfs_download.failed
 
 - block:
-  - name: OpenSearch Install | Create opensearch user
-    user:
-      name: "{{ os_user }}"
-      state: present
-      shell: /bin/false
-      create_home: false
-      home: "{{ os_home }}"
-
   - name: Clear home directory
     file:
       path: "{{ os_home }}"
@@ -51,19 +51,19 @@
 
   - name: Copy default configuration to Configuration Directory
     copy:
-      src: "{{ os_home }}/config"
+      src: "{{ os_home }}/config/"
       dest: "{{ os_conf_dir }}"
       owner: "root"
       group: "{{ os_user }}"
       mode: "u=rwX,g=rwX"
       remote_src: true
-  when: download.changed
+  when: ipfs_download.changed or download.changed
   notify:
     - restart opensearch
 
 - name: OpenSearch Install | Copy Configuration File
   blockinfile:
-    block: "{{ lookup('template', 'templates/opensearch-{{ cluster_type }}.yml') }}"
+    block: "{{ lookup('template', 'templates/opensearch.yml.j2') }}"
     dest: "{{ os_conf_dir }}/opensearch.yml"
     backup: yes
     state: present
@@ -93,7 +93,6 @@
     owner: root
     group: "{{ os_user }}"
     mode: "2750"
-  when: download.changed or iac_enable
 
 - name: OpenSearch Install | Create PID Directory
   file:
@@ -102,7 +101,6 @@
     owner: "{{ os_user }}"
     group: "{{ os_user }}"
     mode: "755"
-  when: download.changed or iac_enable
 
 - name: OpenSearch Install | Create Others Directories
   file:
@@ -114,7 +112,6 @@
   with_items:
     - "{{ os_log_dir }}"
     - "{{ os_data_dirs }}"
-  when: download.changed or iac_enable
 
 - name: OpenSearch Install | create systemd service
   template:

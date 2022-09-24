@@ -2,7 +2,6 @@
 
 os_cluster_name: ipfs-search
 os_node_name: "{{ inventory_hostname_short }}"
-os_network_host: "_local_, _site_"
 os_node_roles: "{% if inventory_hostname in groups['master'] %}master{% else %}data, ingest{% endif %}"
 os_conf_dir: /etc/opensearch
 os_api_host: 127.0.0.1
@@ -12,6 +11,10 @@ os_data_dirs:
   - "/var/lib/opensearch"
 os_seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
 os_config:
+  network.host:
+    - _local_
+    - _site_
+
   node.attr.zone_id: "{{ zone_id }}"
   # Disable zone awareness, for now.
   # cluster.routing.allocation.awareness.attributes: zone_id
@@ -49,7 +52,7 @@ xms_value: 2
 xmx_value: 2
 
 # Cluster type whether its single-node or multi-node
-cluster_type: multi-node
+os_multi_node: true
 
 # opensearch user info
 os_user: opensearch

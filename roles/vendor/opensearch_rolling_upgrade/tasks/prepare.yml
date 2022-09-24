@@ -25,12 +25,9 @@
   run_once: true
   register: response
   until: "response.json._shards.failed == 0"
-  retries: 5
+  retries: 3
   delay: 5
-- name: Stop opensearch
-  service:
-    name: opensearch
-    state: stopped
+  ignore_errors: true
 ### <ES>
 - name: Stop elasticsearch
   service:

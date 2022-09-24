@@ -1,25 +1,29 @@
-- name: Check whether {{ es_data_dir }} exists
+- name: Stat {{ es_data_dir }}
   stat:
     path: "{{ es_data_dir }}"
   register: es_data_dir_stat
-- debug:
-    var:
-      es_data_dir_stat
+- name: Stat {{ data_dir_backup }}
+  stat:
+    path: "{{ data_dir_backup }}"
+  register: data_dir_backup_stat
 - name: Replace {{ data_dir }} by {{ es_data_dir }}
   block:
+    - name: Stop opensearch
+      service:
+        name: opensearch
+        state: stopped
+    ### <ES>
+    - name: Stop elasticsearch
+      service:
+        name: elasticsearch
+        state: stopped
+    ### </ES>
     - name: Stat {{ data_dir }}
       stat:
         path: "{{ data_dir }}"
       register: data_dir_stat
     - name: Backup {{ data_dir }}
       block:
-      - name: Stat {{ data_dir_backup }}
-        stat:
-          path: "{{ data_dir_backup }}"
-        register: data_dir_backup_stat
-        failed_when: data_dir_backup_stat.stat.exists
-      - pause:
-          prompt: "Move {{ data_dir }} to {{ data_dir_backup }}"
       - name: Move {{ data_dir }} to {{ data_dir_backup }}
         command:
           argv:
@@ -29,8 +33,6 @@
           removes: "{{ data_dir }}"
           creates: "{{ data_dir_backup }}"
       when: data_dir_stat.stat.exists
-    - pause:
-        prompt: "Move {{ es_data_dir }} to {{ data_dir }}"
     - name: Move {{ es_data_dir }} to {{ data_dir }}
       command:
         argv:
@@ -47,4 +49,8 @@
         group: "{{ os_user }}"
         mode: "u=rwX,g=rwX"
         recurse: true
-  when: es_data_dir_stat.stat.exists
+    - name: Start opensearch
+      service:
+        name: opensearch
+        state: started
+  when: es_data_dir_stat.stat.exists and not data_dir_backup_stat.stat.exists

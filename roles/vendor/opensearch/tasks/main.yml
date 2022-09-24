@@ -76,8 +76,3 @@
   command: curl http{% if os_enable_security %}s{% endif %}://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_roles
   run_once: true
-
-- name: Show the roles of opensearch cluster nodes
-  debug:
-    msg: "{{ os_roles.stdout }}"
-  run_once: true

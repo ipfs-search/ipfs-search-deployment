@@ -4,6 +4,7 @@
   become: true
   gather_facts: false
   any_errors_fatal: true
+  tags: shutdown
   tasks:
     - name: Stop crawler
       service:
@@ -34,6 +35,7 @@
 - name: Re-enable crawler
   hosts: index
   become: true
+  tags: restart
   tasks:
     - name: Start crawler
       service:
