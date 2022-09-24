@@ -20,7 +20,7 @@
 
 - name: include security plugin for opensearch
   include: security.yml
-  when: os_disable_security
+  when: os_enable_security
 
 # After the cluster forms successfully for the first time,
 # remove the cluster.initial_master_nodes setting from each nodes' configuration.
@@ -45,7 +45,7 @@
   wait_for: host={{ os_api_host }} port={{os_api_port}} delay=5 connect_timeout=1
 
 - name: Check the opensearch status
-  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% not os_disable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_status
 
 - name: Show the opensearch status
@@ -54,7 +54,7 @@
   failed_when: "'number_of_nodes' not in os_status.stdout"
 
 - name: Verify the roles of opensearch cluster nodes
-  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% not os_disable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_roles
   run_once: true
 

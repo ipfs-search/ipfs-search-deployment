@@ -115,4 +115,4 @@ custom_security_plugin_configs:
 iac_enable: false
 
 ### ipfs-search.com
-os_disable_security: true
+os_enable_security: false
