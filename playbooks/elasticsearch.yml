@@ -19,9 +19,6 @@
       tags: ['elasticsearch']
       vars:
         oss_version: true
-        es_log_dir: "/var/log/elasticsearch"
-        es_data_dirs:
-          - "/var/lib/elasticsearch"
         es_plugins:
           - plugin: repository-s3
         es_config:

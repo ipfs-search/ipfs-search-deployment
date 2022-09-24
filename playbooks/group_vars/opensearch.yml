@@ -1,6 +1,15 @@
 ## Common opensearch configuration parameters ##
 
 os_cluster_name: ipfs-search
+os_node_name: "{{ inventory_hostname_short }}"
+os_network_host: ["_local_", "_site_"]
+os_roles: "{{ [] + ['master'] if inventory_hostname in groups['master'] + ['index'] if inventory_hostname in groups['index'] }}"
+os_conf_dir: /etc/opensearch
+os_api_host: 127.0.0.1
+populate_inventory_to_hosts_file: false
+os_log_dir: "/var/log/opensearch"
+os_data_dirs:
+  - "/var/lib/opensearch"
 
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch

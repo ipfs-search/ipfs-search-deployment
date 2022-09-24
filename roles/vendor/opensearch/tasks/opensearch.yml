@@ -11,7 +11,7 @@
     name: "{{ os_user }}"
     state: present
     shell: /bin/false
-    create_home: true
+    create_home: false
     home: "{{ os_home }}"
   when: download.changed or iac_enable
 
@@ -19,8 +19,39 @@
   file:
     path: "{{ os_home }}"
     state: directory
+    owner: "root"
+    group: "root"
+    mode: "755"
+  when: download.changed or iac_enable
+
+- name: OpenSearch Install | Create Configuration Directory
+  file:
+    path: "{{ os_conf_dir }}"
+    state: directory
+    owner: root
+    group: "{{ os_user }}"
+    mode: "2750"
+  when: download.changed or iac_enable
+
+- name: OpenSearch Install | Create PID Directory
+  file:
+    path: "{{ os_pid_dir }}"
+    state: directory
     owner: "{{ os_user }}"
     group: "{{ os_user }}"
+    mode: "755"
+  when: download.changed or iac_enable
+
+- name: OpenSearch Install | Create Others Directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ os_user }}"
+    group: "{{ os_user }}"
+    mode: "2750"
+  with_items:
+    - "{{ os_log_dir }}"
+    - "{{ os_data_dirs }}"
   when: download.changed or iac_enable
 
 - name: OpenSearch Install | Extract the tar file

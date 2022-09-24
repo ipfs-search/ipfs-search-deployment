@@ -12,7 +12,7 @@ WorkingDirectory={{ os_home }}
 User={{ os_user }}
 Group={{ os_user }}
 
-ExecStart={{ os_home }}/bin/opensearch -p {{ os_home }}/opensearch.pid -q
+ExecStart={{ os_home }}/bin/opensearch -p {{ os_pid_dir }}/opensearch.pid -q
 
 StandardOutput=journal
 StandardError=inherit

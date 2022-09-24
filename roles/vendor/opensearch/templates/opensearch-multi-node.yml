@@ -13,3 +13,10 @@ discovery.seed_hosts: ["{{ os_nodes }}"]
 cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
 
 node.roles: [{{ os_node_roles }}]
+
+### ipfs-search.com
+# Path to directory containing configuration (this file and logging.yml):
+
+path.data: {{ os_data_dirs | array_to_str }}
+
+path.logs: {{ os_log_dir }}
