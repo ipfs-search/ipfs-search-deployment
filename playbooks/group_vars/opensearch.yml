@@ -13,6 +13,8 @@ os_data_dirs:
 
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
+os_sha256: 696500b3126d2f2ad7216456cff1c58e8ea89402d76e0544a2e547549cf910ca
+os_dashboards_sha256: 2cb533d1ebf6bed2ee3b06f6458318b2fd8f36317ef35e10f092b4a9cb8a14ae
 
 # opensearch version
 # 2.x Latest Version

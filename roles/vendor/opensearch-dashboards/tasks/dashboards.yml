@@ -4,6 +4,7 @@
   get_url:
     url: "{{ os_download_url }}-dashboards/{{ os_dashboards_version }}/opensearch-dashboards-{{ os_dashboards_version }}-linux-x64.tar.gz"
     dest: "/tmp/opensearch-dashboards.tar.gz"
+    checksum: "sha256:{{ os_dashboards_sha256 }}"
   register: download
 
 - name: Dashboards Install | Create opensearch dashboard user
