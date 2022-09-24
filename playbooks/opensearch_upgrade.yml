@@ -1,0 +1,41 @@
+---
+- name: Disable crawler
+  hosts: index
+  become: true
+  gather_facts: false
+  any_errors_fatal: true
+  tasks:
+    - name: Stop crawler
+      service:
+        name: ipfs-crawler
+        state: stopped
+- name: Perform rolling upgrade on index (data) nodes
+  hosts: os-cluster:!master
+  become: true
+  serial: 1
+  any_errors_fatal: true
+  vars:
+    required_nodes: 30
+    required_version: 2.3.0
+  roles:
+    - role: vendor/opensearch_rolling_upgrade
+      tags: rolling-upgrade
+- name: Perform rolling upgrade on master nodes
+  hosts: master
+  become: true
+  serial: 1
+  any_errors_fatal: true
+  vars:
+    required_nodes: 30
+    required_version: 2.3.0
+  roles:
+    - role: vendor/opensearch_rolling_upgrade
+      tags: rolling-upgrade
+- name: Re-enable crawler
+  hosts: index
+  become: true
+  tasks:
+    - name: Start crawler
+      service:
+        name: ipfs-crawler
+        state: started

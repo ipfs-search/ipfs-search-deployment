@@ -1,0 +1,13 @@
+---
+- import_tasks: prepare.yml
+  tags: prepare
+- import_tasks: migrate_es.yml
+  tags: migrate
+- name: Install OpenSearch
+  include_role:
+    name: vendor/opensearch
+  tags: install
+- import_tasks: conclude.yml
+  tags: conclude
+- import_tasks: cleanup_es.yml
+  tags: cleanup

@@ -1,0 +1,8 @@
+---
+required_cluster_health: green
+http_api_port: 9200
+http_api_host: 127.0.0.1
+base_url: "http://{{ http_api_host }}:{{ http_api_port }}"
+data_dir: "/var/lib/opensearch"
+data_dir_backup: "{{ data_dir }}.backup"
+es_data_dir: "/var/lib/elasticsearch"

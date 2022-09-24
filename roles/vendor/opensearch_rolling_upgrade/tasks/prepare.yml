@@ -1,0 +1,39 @@
+---
+- import_tasks: ensure_health.yml
+  vars:
+    required_cluster_health: ["green"]
+- name: Ensure required node count {{ required_nodes }}
+  fail:
+    msg: "Only {{ response.json.number_of_nodes }} nodes in cluster, less than required {{required_nodes }}."
+  when: "response.json.number_of_nodes < required_nodes"
+- name: Disable shard allocation
+  uri:
+    url: "{{ base_url }}/_cluster/settings"
+    method: PUT
+    body_format: json
+    body:
+      {
+        "persistent": {
+          "cluster.routing.allocation.enable": "primaries"
+        }
+      }
+  run_once: true
+- name: Perform a 'synced flush'
+  uri:
+    url: "{{ base_url }}/_flush/synced"
+    method: POST
+  run_once: true
+  register: response
+  until: "response.json._shards.failed == 0"
+  retries: 5
+  delay: 5
+- name: Stop opensearch
+  service:
+    name: opensearch
+    state: stopped
+### <ES>
+- name: Stop elasticsearch
+  service:
+    name: elasticsearch
+    state: stopped
+### </ES>
