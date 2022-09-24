@@ -10,7 +10,7 @@
         name: ipfs-crawler
         state: stopped
 - name: Perform rolling upgrade on index (data) nodes
-  hosts: os-cluster:!master
+  hosts: opensearch:!master
   become: true
   serial: 1
   any_errors_fatal: true

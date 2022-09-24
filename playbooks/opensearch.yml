@@ -1,14 +1,14 @@
 ---
 
 - name: opensearch installation & configuration
-  hosts: os-cluster
+  hosts: opensearch
   tags: opensearch
   gather_facts: true
   roles:
     - { role: vendor/opensearch }
 
 - name: opensearch dashboards installation & configuration
-  hosts: os-dashboards
+  hosts: opensearch_dashboards
   tags: dashboards
   gather_facts: true
   roles:
