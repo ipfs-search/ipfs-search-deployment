@@ -19,7 +19,7 @@
   include: opensearch.yml
 
 - name: include security plugin for opensearch
-  include: security.yml
+  include_tasks: security.yml
   when: os_enable_security
 
 - name: Make sure opensearch is started
@@ -36,11 +36,14 @@
   debug:
     msg: "{{ list_plugins.stdout }}"
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Wait for opensearch to startup
   wait_for: host={{ os_api_host }} port={{os_api_port}} delay=5 connect_timeout=1
 
 - name: Check the opensearch status
-  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+  command: curl http{% if os_enable_security %}s{% endif %}://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_status
 
 - name: Show the opensearch status
@@ -49,7 +52,7 @@
   failed_when: "'number_of_nodes' not in os_status.stdout"
 
 - name: Verify the roles of opensearch cluster nodes
-  command: curl https://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+  command: curl http{% if os_enable_security %}s{% endif %}://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_roles
   run_once: true
 

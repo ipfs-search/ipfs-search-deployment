@@ -8,7 +8,7 @@ http.port: {{ os_api_port }}
 
 bootstrap.memory_lock: true
 
-discovery.seed_hosts: ["{{ os_nodes }}"]
+discovery.seed_hosts: [{{ os_seed_hosts }}]
 
 {% if os_cluster_init %}
 cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
@@ -25,4 +25,8 @@ path.logs: {{ os_log_dir }}
 
 {% if os_config %}
 {{ os_config | to_nice_yaml(indent=2) }}
+{% endif %}
+
+{% if not os_enable_security %}
+plugins.security.disabled: true
 {% endif %}
