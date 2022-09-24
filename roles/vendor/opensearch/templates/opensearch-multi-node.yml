@@ -20,3 +20,7 @@ node.roles: [{{ os_node_roles }}]
 path.data: {{ os_data_dirs | array_to_str }}
 
 path.logs: {{ os_log_dir }}
+
+{% if os_config %}
+{{ os_config | to_nice_yaml(indent=2) }}
+{% endif %}
