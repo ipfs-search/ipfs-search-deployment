@@ -10,7 +10,9 @@ bootstrap.memory_lock: true
 
 discovery.seed_hosts: ["{{ os_nodes }}"]
 
+{% if os_cluster_init %}
 cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
+{% endif %}
 
 node.roles: [{{ os_node_roles }}]
 

@@ -22,11 +22,6 @@
   include: security.yml
   when: os_enable_security
 
-# After the cluster forms successfully for the first time,
-# remove the cluster.initial_master_nodes setting from each nodes' configuration.
-- name: Remove `cluster.initial_master_nodes` setting from configuration
-  command: sed -i '/cluster.initial_master_nodes/d' "{{os_conf_dir}}/opensearch.yml"
-
 - name: Make sure opensearch is started
   service:
     name: opensearch
