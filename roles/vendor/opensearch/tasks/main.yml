@@ -22,19 +22,24 @@
   include_tasks: security.yml
   when: os_enable_security
 
+- name: Get all the installed ES plugins
+  command: "{{ os_plugin_bin_path }} list"
+  register: list_plugins
+
+- name: Install plugins
+  command: "{{ os_plugin_bin_path }} install --batch {{ item }}"
+  when: item not in list_plugins.stdout
+  with_items: "{{ os_plugins }}"
+
+- name: Show all the installed ES plugins
+  debug:
+    msg: "{{ list_plugins.stdout }}"
+
 - name: Make sure opensearch is started
   service:
     name: opensearch
     state: started
     enabled: yes
-
-- name: Get all the installed ES plugins
-  command: "{{ os_plugin_bin_path }} list"
-  register: list_plugins
-
-- name: Show all the installed ES plugins
-  debug:
-    msg: "{{ list_plugins.stdout }}"
 
 - name: Flush handlers
   meta: flush_handlers

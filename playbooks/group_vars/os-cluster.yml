@@ -21,6 +21,9 @@ os_config:
   # cluster.initial_master_nodes: "{{ groups['master'] }}"
   repositories.url.allowed_urls: ["http://localhost:8080/*"]
 
+os_plugins:
+  - repository-s3
+
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
 os_sha256: 696500b3126d2f2ad7216456cff1c58e8ea89402d76e0544a2e547549cf910ca
