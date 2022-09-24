@@ -43,3 +43,4 @@ os_download_path: "/tmp/opensearch.tar.gz"
 os_set_hostname: true
 
 os_multi_node: true
+os_heap_size: 2g
