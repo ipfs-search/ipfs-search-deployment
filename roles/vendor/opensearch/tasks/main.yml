@@ -2,6 +2,7 @@
 
 - hostname:
     name: "{{ inventory_hostname }}"
+  when: os_set_hostname
 
 # Disabling for Amazon Linux 2 as selinux is disabled by default.
 - name: Disable the selinux

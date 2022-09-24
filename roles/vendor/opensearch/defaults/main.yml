@@ -38,3 +38,5 @@ os_pid_dir: "/var/run/opensearch"
 
 os_cluster_init: false
 os_download_path: "/tmp/opensearch.tar.gz"
+
+os_set_hostname: true
