@@ -4,7 +4,7 @@ node.name: "{{ os_node_name }}"
 
 network.host: "{{ os_network_host }}"
 
-http.port: 9200
+http.port: {{ os_api_port }}
 
 bootstrap.memory_lock: true
 
