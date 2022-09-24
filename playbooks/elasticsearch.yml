@@ -21,21 +21,6 @@
         oss_version: true
         es_plugins:
           - plugin: repository-s3
-        es_config:
-          cluster.name: ipfs-search
-          node.name: "{{ inventory_hostname_short }}"
-          node.attr.zone_id: "{{ zone_id }}"
-          # Disable zone awareness, for now.
-          # cluster.routing.allocation.awareness.attributes: zone_id
-          discovery.seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
-          network.publish_host: "{{ vlan_ip | ipaddr('address') }}"
-          # Only during bootstrapping
-          # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
-          # cluster.initial_master_nodes: "{{ groups['master'] }}"
-          repositories.url.allowed_urls: ["http://localhost:8080/*"]
-          network.host: ["_local_", "_site_"]
-          node.data: "{{ inventory_hostname in groups['index'] }}"
-          node.master: "{{ inventory_hostname in groups['master'] }}"
     - name: push logs files to loki using promtail
       role: vendor/promtail
       tags: promtail

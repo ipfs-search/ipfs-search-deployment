@@ -2,14 +2,24 @@
 
 os_cluster_name: ipfs-search
 os_node_name: "{{ inventory_hostname_short }}"
-os_network_host: ["_local_", "_site_"]
-os_roles: "{{ [] + ['master'] if inventory_hostname in groups['master'] + ['index'] if inventory_hostname in groups['index'] }}"
+os_network_host: "_local_, _site_"
+os_node_roles: "{% if inventory_hostname in groups['master'] %}master{% else %}data, ingest{% endif %}"
 os_conf_dir: /etc/opensearch
 os_api_host: 127.0.0.1
 populate_inventory_to_hosts_file: false
 os_log_dir: "/var/log/opensearch"
 os_data_dirs:
   - "/var/lib/opensearch"
+os_seed_hosts: "{% for host in groups['master'] %}{{ hostvars[host].vlan_ip | ipaddr('address') }}{% if not loop.last %}, {% endif %}{% endfor %}"
+os_config:
+  node.attr.zone_id: "{{ zone_id }}"
+  # Disable zone awareness, for now.
+  # cluster.routing.allocation.awareness.attributes: zone_id
+  network.publish_host: "{{ vlan_ip | ipaddr('address') }}"
+  # Only during bootstrapping
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
+  # cluster.initial_master_nodes: "{{ groups['master'] }}"
+  repositories.url.allowed_urls: ["http://localhost:8080/*"]
 
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
