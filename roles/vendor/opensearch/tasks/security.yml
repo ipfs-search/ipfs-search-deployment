@@ -272,7 +272,7 @@
     -key {{ os_conf_dir }}/admin.key
     -cd {{ os_sec_plugin_conf_path }}
     -nhnv -icl
-    -h {{ hostvars[inventory_hostname]['ip'] }}
+    -h {{ os_network_host }}
   environment:
     JAVA_HOME: "{{ os_home }}/jdk"
   run_once: true

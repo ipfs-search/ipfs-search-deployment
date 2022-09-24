@@ -1,8 +1,8 @@
 cluster.name: "{{ os_cluster_name }}"
 
-node.name: "{{ inventory_hostname }}"
+node.name: "{{ os_node_name }}"
 
-network.host: "{{ hostvars[inventory_hostname]['ip'] }}"
+network.host: "{{ os_network_host }}"
 
 http.port: 9200
 

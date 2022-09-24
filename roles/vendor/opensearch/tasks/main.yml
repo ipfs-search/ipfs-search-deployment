@@ -42,7 +42,7 @@
     msg: "{{ list_plugins.stdout }}"
 
 - name: Wait for opensearch to startup
-  wait_for: host={{ hostvars[inventory_hostname]['ip'] }} port={{os_api_port}} delay=5 connect_timeout=1
+  wait_for: host={{ os_network_host }} port={{os_api_port}} delay=5 connect_timeout=1
 
 - name: Check the opensearch status
   command: curl https://{{ inventory_hostname }}:9200/_cluster/health?pretty {% not os_disable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k

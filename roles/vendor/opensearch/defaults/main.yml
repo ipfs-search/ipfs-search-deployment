@@ -26,3 +26,6 @@ auth_type: internal
 
 ### ipfs-search.com
 os_disable_security: false
+os_node_name: "{{ inventory_hostname }}"
+os_node_roles: "{{ hostvars[inventory_hostname]['roles'] }}"
+os_network_host: "{{ hostvars[inventory_hostname]['ip'] }}"
