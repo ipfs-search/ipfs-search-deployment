@@ -26,6 +26,7 @@ os_plugins:
 
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
+os_ipfs_download_url: http://127.0.0.1:8080/ipfs/QmXrMLA6njKaJhBo5epozXMqDQFgRJ7Ms5FfLxWsGcnbWs
 os_sha256: 696500b3126d2f2ad7216456cff1c58e8ea89402d76e0544a2e547549cf910ca
 os_dashboards_sha256: 2cb533d1ebf6bed2ee3b06f6458318b2fd8f36317ef35e10f092b4a9cb8a14ae
 

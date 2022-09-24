@@ -1,4 +1,12 @@
 ---
+- name: Attempt download over local IPFS node
+  get_url:
+    url: "{{ os_ipfs_download_url }}"
+    dest: "{{ os_download_path }}"
+    checksum: "sha256:{{ os_sha256 }}"
+  register: download
+  when: os_ipfs_download_url is defined
+  ignore_errors: true
 
 - name: OpenSearch Install | Download opensearch {{ os_version }}
   get_url:
@@ -6,6 +14,7 @@
     dest: "{{ os_download_path }}"
     # checksum: "sha256:{{ os_sha256 }}"
   register: download
+  when: download.failed
 
 - block:
   - name: OpenSearch Install | Create opensearch user
