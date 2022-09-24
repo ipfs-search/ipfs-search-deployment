@@ -25,11 +25,12 @@ systemctl_path: /etc/systemd/system
 auth_type: internal
 
 ### ipfs-search.com
-os_disable_security: false
+os_enable_security: true
 os_node_name: "{{ inventory_hostname }}"
 os_node_roles: "{{ hostvars[inventory_hostname]['roles'] }}"
 os_network_host: "{{ hostvars[inventory_hostname]['ip'] }}"
 os_api_host: "{{ inventory_hostname }}"
-os_data_dirs: "/var/lib/opensearch"
+os_data_dirs:
+  - "/var/lib/opensearch"
 os_log_dir: "/var/log/opensearch"
 os_pid_dir: "/var/run/opensearch"
