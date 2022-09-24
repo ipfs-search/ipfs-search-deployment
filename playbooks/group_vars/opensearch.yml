@@ -1,6 +1,6 @@
 ## Common opensearch configuration parameters ##
 
-os_cluster_name: development-cluster
+os_cluster_name: ipfs-search
 
 # opensearch download
 os_download_url: https://artifacts.opensearch.org/releases/bundle/opensearch
@@ -92,3 +92,6 @@ custom_security_plugin_configs:
 # /tmp/opensearch-nodecerts directory was missing on the server from which the
 # playbook was launched and new certificates were generated)
 iac_enable: false
+
+### ipfs-search.com
+os_disable_security: true

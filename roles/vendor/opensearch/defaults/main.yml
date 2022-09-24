@@ -23,3 +23,6 @@ systemctl_path: /etc/systemd/system
 
 # Auth type: 'internal' or 'oidc' (OpenID). Default: internal
 auth_type: internal
+
+### ipfs-search.com
+os_disable_security: false
