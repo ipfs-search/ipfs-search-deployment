@@ -1,0 +1,13 @@
+---
+
+- name: opensearch installation & configuration
+  hosts: os-cluster
+  gather_facts: true
+  roles:
+    - { role: linux/opensearch }
+
+- name: opensearch dashboards installation & configuration
+  hosts: dashboards
+  gather_facts: true
+  roles:
+    - { role: linux/dashboards }
