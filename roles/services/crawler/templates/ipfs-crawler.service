@@ -1,7 +1,7 @@
 [Unit]
 Description=ipfs-search crawler daemon
-Requires=elasticsearch.service ipfs.service tika-extractor.service
-After=elasticsearch.service ipfs.service tika-extractor.service
+Requires=opensearch.service ipfs.service tika-extractor.service
+After=opensearch.service ipfs.service tika-extractor.service
 
 [Service]
 ExecStart={{ crawler_binary }} -c /etc/ipfs-crawler/config.yml crawl
