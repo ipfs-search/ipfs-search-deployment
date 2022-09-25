@@ -1,0 +1,30 @@
+---
+- name: nyats (thumbnailer)
+  hosts: nyats
+  tags: nyats
+  become: true
+  serial:
+    - 1
+    - "100%"
+  strategy: free
+  roles:
+    - role: vendor/ipfs
+      tags: ipfs
+    - role: vendor/ipfs-gc
+      tags: ipfs-gc
+    - name: nyats
+      role: services/node-server
+      tags: node-server
+      vars:
+        node_server_name: nyats
+        node_server_repo: "https://github.com/ipfs-search/nyats.git"
+        node_server_working_directory: "/usr/local/libexec/nyats/packages/server"
+        node_server_environment: "NYATS_SERVER_PORT={{ nyats_port }} PUBLIC_IPFS_GATEWAY=https://gw.dwebsearch.com DEBUG=nyats*"
+        node_server_version: "{{ nyats_version }}"
+        node_server_requires: ipfs.service
+        node_server_port: "{{ nyats_port }}"
+        node_server_proxy_location: "/v1/thumbnail/"
+        node_server_proxy_root: "/thumbnail/"
+        node_server_build: true
+- name: Configure IPFS gateway
+  import_playbook: ipfs-gateway.yml

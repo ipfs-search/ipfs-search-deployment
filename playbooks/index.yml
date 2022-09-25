@@ -12,8 +12,6 @@
       tags: ['tika-extractor']
     - role: vendor/nodejs
       tags: ['nodejs']
-    - role: services/nsfw_server
-      tags: ['nsfw_server']
     - role: vendor/ipfs
       tags: ['ipfs']
     - role: vendor/ipfs-gc

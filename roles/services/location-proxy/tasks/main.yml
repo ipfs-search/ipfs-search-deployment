@@ -1,0 +1,21 @@
+---
+- name: Install nginx configuration
+  template:
+    src: nginx-api.conf.j2
+    dest: /etc/nginx/sites-available/api.conf
+    mode: 0644
+  notify: reload nginx
+- name: Enable nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/api.conf
+    src: /etc/nginx/sites-available/api.conf
+    state: link
+    mode: 0644
+  notify: reload nginx
+- name: Enable server status
+  include_role:
+    name: services/location-proxy
+    tasks_from: 'install_location.yml'
+  vars:
+    location_name: server-status
+    location_template: nginx-server-status.conf.j2

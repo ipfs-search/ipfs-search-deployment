@@ -3,8 +3,8 @@
   block:
   - name: Get last VLAN IP
     set_fact:
-      last_vlan_ip: "{{ groups['dmz'] | map('extract',hostvars) |
-                   selectattr('vlan_ip','defined') |
+      last_vlan_ip: "{{ groups['dmz'] | map('extract', hostvars) |
+                   selectattr('vlan_ip', 'defined') |
                    map(attribute='vlan_ip') |
                    ipaddr('int') |
                    sort |
@@ -20,7 +20,7 @@
       create: true
       path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}.yml"
       regexp: '^vlan_ip'
-      line: "vlan_ip: {{ generated_vlan_ip }}/{{ vlan_subnet | ansible.utils.ipaddr('prefix')}}"
+      line: "vlan_ip: {{ generated_vlan_ip }}/{{ vlan_subnet | ansible.utils.ipaddr('prefix') }}"
       mode: 0644
     when: generated_vlan_ip is defined
   - name: Refresh inventory to ensure new hostnames exist in inventory

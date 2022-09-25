@@ -1,6 +1,8 @@
 ---
-- import_playbook: rabbitmq.yml
-- hosts: sniffer
+- name: RabbitMQ
+  import_playbook: rabbitmq.yml
+- name: Sniffer
+  hosts: sniffer
   become: true
   roles:
     - role: services/sniffer

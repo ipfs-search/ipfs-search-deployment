@@ -1,0 +1,14 @@
+---
+- name: Install nginx configuration
+  template:
+    src: nginx-gateway.conf.j2
+    dest: /etc/nginx/sites-available/gateway.conf
+    mode: 0644
+  notify: restart nginx
+- name: Enable nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/gateway.conf
+    src: /etc/nginx/sites-available/gateway.conf
+    state: link
+    mode: 0644
+  notify: restart nginx
