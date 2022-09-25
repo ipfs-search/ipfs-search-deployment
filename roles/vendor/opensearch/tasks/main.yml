@@ -52,10 +52,11 @@
     msg: "{{ list_plugins.stdout }}"
 
 - name: Make sure opensearch is started
-  service:
+  systemd:
     name: opensearch
     state: started
     enabled: yes
+    daemon_reload: yes
 
 - name: Flush handlers
   meta: flush_handlers
