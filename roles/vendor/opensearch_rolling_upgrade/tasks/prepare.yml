@@ -4,7 +4,7 @@
     required_cluster_health: ["green"]
 - name: Ensure required node count {{ required_nodes }}
   fail:
-    msg: "Only {{ response.json.number_of_nodes }} nodes in cluster, less than required {{required_nodes }}."
+    msg: "Only {{ response.json.number_of_nodes }} nodes in cluster, less than required {{ required_nodes }}."
   when: "response.json.number_of_nodes < required_nodes"
 - name: Disable shard allocation
   uri:
