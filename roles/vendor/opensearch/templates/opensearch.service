@@ -1,0 +1,68 @@
+[Unit]
+Description=opensearch
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+RuntimeDirectory=opensearch
+PrivateTmp=true
+Environment=OPENSEARCH_HOME={{ os_home }}
+Environment=OPENSEARCH_PATH_CONF={{ os_conf_dir }}
+Environment=PID_DIR={{ os_pid_dir }}
+Environment=OPENSEARCH_SD_NOTIFY=true
+
+WorkingDirectory=/usr/share/opensearch
+
+User={{ os_user }}
+Group={{ os_user }}
+
+#ExecStart=/usr/share/opensearch/bin/systemd-entrypoint -p ${PID_DIR}/opensearch.pid --quiet
+ExecStart={{ os_home }}/bin/opensearch -p ${PID_DIR}/opensearch.pid -q
+
+# StandardOutput is configured to redirect to journalctl since
+# some error messages may be logged in standard output before
+# opensearch logging system is initialized. OpenSearch
+# stores its logs in /var/log/opensearch and does not use
+# journalctl by default. If you also want to enable journalctl
+# logging, you can simply remove the "quiet" option from ExecStart.
+StandardOutput=journal
+StandardError=inherit
+
+# Specifies the maximum file descriptor number that can be opened by this process
+LimitNOFILE=65535
+
+# Specifies the maximum number of processes
+LimitNPROC=4096
+
+# Specifies the maximum size of virtual memory
+LimitAS=infinity
+
+# Specifies the maximum file size
+LimitFSIZE=infinity
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=0
+
+# SIGTERM signal is used to stop the Java process
+KillSignal=SIGTERM
+
+# Send the signal only to the JVM rather than its control group
+KillMode=process
+
+# Java process is never killed
+SendSIGKILL=no
+
+# When a JVM receives a SIGTERM signal it exits with code 143
+SuccessExitStatus=143
+
+# Allow a slow startup before the systemd notifier module kicks in to extend the timeout
+TimeoutStartSec=75
+
+WorkingDirectory={{ os_home }}
+
+# Specifies the memory lock settings
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

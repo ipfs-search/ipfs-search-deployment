@@ -84,7 +84,8 @@
   notify:
     - restart ipfs-crawler
 - name: Start service
-  service:
+  systemd:
     name: ipfs-crawler
     enabled: yes
     state: started
+    daemon_reload: yes

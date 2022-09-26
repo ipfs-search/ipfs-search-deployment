@@ -1,0 +1,22 @@
+---
+- name: Ensure required node count {{ required_nodes }}
+  uri:
+    url: "{{ base_url }}/_cluster/health"
+  register: response
+  until: "response.json.number_of_nodes >= required_nodes"
+  retries: 15
+  delay: 1
+- import_tasks: ensure_health.yml
+  vars:
+    required_cluster_health: ["green", "yellow"]
+- name: Re-enable shard allocation
+  uri:
+    url: "{{ base_url }}/_cluster/settings"
+    method: PUT
+    body_format: json
+    body:
+      {
+        "persistent": {
+          "cluster.routing.allocation.enable": "all"
+        }
+      }

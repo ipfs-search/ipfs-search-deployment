@@ -1,0 +1,8 @@
+---
+- name: Ensure cluster health is in {{ required_cluster_health }}
+  uri:
+    url: "{{ base_url }}/_cluster/health"
+  register: response
+  until: "response.json.status in required_cluster_health"
+  retries: 2880 # Wait up to 4 hours
+  delay: 5

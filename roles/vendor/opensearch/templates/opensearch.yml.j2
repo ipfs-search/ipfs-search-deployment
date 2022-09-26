@@ -1,0 +1,36 @@
+cluster.name: "{{ os_cluster_name }}"
+
+node.name: "{{ os_node_name }}"
+
+{% if not "network.host" in os_config %}
+network.host: {{ os_network_host }}
+{% endif %}
+
+http.port: {{ os_api_port }}
+
+bootstrap.memory_lock: true
+
+{% if os_multi_node %}
+discovery.seed_hosts: [{{ os_seed_hosts }}]
+
+{% if os_cluster_init %}
+cluster.initial_master_nodes: ["{{ os_master_nodes }}"]
+{% endif %}
+
+node.roles: [{{ os_node_roles }}]
+{% endif %}
+
+### ipfs-search.com
+# Path to directory containing configuration (this file and logging.yml):
+
+path.data: {{ os_data_dirs | array_to_str }}
+
+path.logs: {{ os_log_dir }}
+
+{% if os_config %}
+{{ os_config | to_nice_yaml(indent=2) }}
+{% endif %}
+
+{% if not os_enable_security %}
+plugins.security.disabled: true
+{% endif %}

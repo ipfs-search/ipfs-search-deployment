@@ -1,0 +1,46 @@
+---
+
+os_nodes: |-
+        {% for item in groups['opensearch'] -%}
+          {{ item }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}
+
+os_master_nodes: |-
+        {% for item in groups['master'] -%}
+          {{ item }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}
+
+populate_inventory_to_hosts_file: true
+
+os_home: /usr/share/opensearch
+os_conf_dir: /usr/share/opensearch/config
+os_keystore_bin_path: "{{ os_home }}/bin/opensearch-keystore"
+os_plugin_bin_path: "{{ os_home }}/bin/opensearch-plugin"
+os_plugins: []
+os_sec_plugin_conf_path: /usr/share/opensearch/plugins/opensearch-security/securityconfig
+os_sec_plugin_tools_path: /usr/share/opensearch/plugins/opensearch-security/tools
+os_api_port: 9200
+
+systemctl_path: /etc/systemd/system
+
+# Auth type: 'internal' or 'oidc' (OpenID). Default: internal
+auth_type: internal
+
+### ipfs-search.com
+os_enable_security: true
+os_node_name: "{{ inventory_hostname }}"
+os_node_roles: "{{ hostvars[inventory_hostname]['roles'] }}"
+# os_network_host: "{{ hostvars[inventory_hostname]['ip'] }}"
+os_api_host: "{{ inventory_hostname }}"
+os_data_dirs:
+  - "/var/lib/opensearch"
+os_log_dir: "/var/log/opensearch"
+os_pid_dir: "/var/run/opensearch"
+
+os_cluster_init: false
+os_download_path: "/tmp/opensearch.tar.gz"
+
+os_set_hostname: true
+
+os_multi_node: true
+os_heap_size: 2g

@@ -1,0 +1,20 @@
+---
+
+- name: opensearch installation & configuration
+  hosts: opensearch
+  tags: opensearch
+  become: true
+  gather_facts: true
+  serial: 1
+  any_errors_fatal: true
+  roles:
+    - { role: vendor/opensearch }
+
+# Currently disabled
+# - name: opensearch dashboards installation & configuration
+#   hosts: opensearch_dashboards
+#   tags: dashboards
+#   become: true
+#   gather_facts: true
+#   roles:
+#     - { role: vendor/opensearch-dashboards }
