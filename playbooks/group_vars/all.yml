@@ -33,14 +33,3 @@ nyats_port: 9614
 nyats_version: thumbnail_server_fixups
 ipfs_search_api_port: 9615
 ipfs_search_api_version: master
-snapshot_repo_name: filebase
-snapshot_repo_settings:
-  client: filebase
-  region: us-east-1
-  bucket: ipfs-search-snapshots-v8
-  endpoint: s3.filebase.com
-  chunk_size: 524288000B
-  compress: true
-  read_timeout: "5m"
-  max_retries: 10
-  max_snapshot_bytes_per_sec: "60mb"
