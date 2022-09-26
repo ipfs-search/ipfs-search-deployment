@@ -10,13 +10,13 @@
   command: "/usr/share/elasticsearch/bin/elasticsearch-keystore add s3.client.{{ snapshot_repo_name }}.access_key --stdin"
   args:
     stdin: "{{ snapshot_key }}"
-  when: "'s3.client.'+snapshot_repo_name+'.access_key' not in keystore.stdout"
+  when: "'s3.client.' + snapshot_repo_name + '.access_key' not in keystore.stdout"
   register: added_access_key
 - name: Add secret key
   command: "/usr/share/elasticsearch/bin/elasticsearch-keystore add s3.client.{{ snapshot_repo_name }}.secret_key --stdin"
   args:
     stdin: "{{ snapshot_secret }}"
-  when: "'s3.client.'+snapshot_repo_name+'.secret_key' not in keystore.stdout"
+  when: "'s3.client.' + snapshot_repo_name + '.secret_key' not in keystore.stdout"
   register: added_secret_key
 - name: Reload secure settings
   uri:
