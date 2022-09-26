@@ -1,7 +1,7 @@
 - name: "Elasticsearch {{ snapshot_repo_name }} daily snapshot cronjob on cron host"
   cron:
     name: "Elasticsearch {{ snapshot_repo_name }} snapshot"
-    cron_file: /etc/crontab
+    cron_file: "{{ snapshot_repo_name }}"
     minute: "16"
     hour: "{{ snapshot_hour }}"
     backup: yes
@@ -11,7 +11,7 @@
   run_once: True
 - name: "Remove Elasticsearch {{ snapshot_repo_name }} daily snapshot cronjob on other hosts"
   cron:
-    cron_file: /etc/crontab
+    cron_file: "{{ snapshot_repo_name }}"
     name: "Elasticsearch {{ snapshot_repo_name }} snapshot"
     state: absent
   when: inventory_hostname != snapshot_cron_host
