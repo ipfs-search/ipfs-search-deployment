@@ -1,2 +1,5 @@
 ---
+os_home: /usr/share/opensearch
+os_conf_dir: /usr/share/opensearch/config
+os_keystore_bin_path: "{{ os_home }}/bin/opensearch-keystore"
 snapshot_hour: "2"

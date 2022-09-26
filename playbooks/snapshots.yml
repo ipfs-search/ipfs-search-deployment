@@ -2,10 +2,7 @@
   tags: snapshots
   hosts: opensearch
   become: true
-  strategy: free
-  serial:
-    - 1
-    - "100%"
+  gather_facts: false
   roles:
     - role: vendor/snapshots
       tags: ['snapshots']

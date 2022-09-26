@@ -1,23 +1,28 @@
 ---
-- name: Check keystore
-  command: /usr/share/opensearch/bin/opensearch-keystore list
-  register: keystore
-  failed_when: keystore.rc not in [0, 65]
-- name: Create keystore
-  command: /usr/share/opensearch/bin/opensearch-keystore create
-  when: keystore.rc == 65
-- name: Add access key
-  command: "/usr/share/opensearch/bin/opensearch-keystore add s3.client.{{ snapshot_repo_name }}.access_key --stdin"
-  args:
-    stdin: "{{ snapshot_key }}"
-  when: "'s3.client.' + snapshot_repo_name + '.access_key' not in keystore.stdout"
-  register: added_access_key
-- name: Add secret key
-  command: "/usr/share/opensearch/bin/opensearch-keystore add s3.client.{{ snapshot_repo_name }}.secret_key --stdin"
-  args:
-    stdin: "{{ snapshot_secret }}"
-  when: "'s3.client.' + snapshot_repo_name + '.secret_key' not in keystore.stdout"
-  register: added_secret_key
+- name: Configure access and secret key in keystore
+  block:
+  - name: Check keystore
+    command: "{{ os_keystore_bin_path }} list sss"
+    register: keystore
+    changed_when: false
+    failed_when: keystore.rc not in [0, 65]
+  - name: Create keystore
+    command: "{{ os_keystore_bin_path }} create"
+    when: keystore.rc == 65
+  - name: Add access key
+    command: "{{ os_keystore_bin_path }} add s3.client.{{ snapshot_repo_name }}.access_key --stdin"
+    args:
+      stdin: "{{ snapshot_key }}"
+    when: "'s3.client.' + snapshot_repo_name + '.access_key' not in keystore.stdout"
+    register: added_access_key
+  - name: Add secret key
+    command: "{{ os_keystore_bin_path }} add s3.client.{{ snapshot_repo_name }}.secret_key --stdin"
+    args:
+      stdin: "{{ snapshot_secret }}"
+    when: "'s3.client.' + snapshot_repo_name + '.secret_key' not in keystore.stdout"
+    register: added_secret_key
+  environment:
+    OPENSEARCH_PATH_CONF: "{{ os_conf_dir }}"
 - name: Reload secure settings
   uri:
     url: "http://127.0.0.1:9200/_nodes/reload_secure_settings"
@@ -31,6 +36,7 @@
     status_code: 200, 404
     body_format: json
   run_once: true
+  changed_when: false
   register: snapshot_get
 - name: Create snapshot repository
   uri:
