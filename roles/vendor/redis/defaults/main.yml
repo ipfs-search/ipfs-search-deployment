@@ -1,8 +1,7 @@
 ---
 #Redis version
 redis_stable_version: '7.0.4'
-#Redis password
-redis_pass: pass
+redis_pass: # No password by default
 # redis sha256 of version
 redis_sha256: f0e65fda74c44a3dd4fa9d512d4d4d833dd0939c934e946a5c622a630d057f2f
 #Redis build source dir
