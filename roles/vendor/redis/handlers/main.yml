@@ -1,0 +1,14 @@
+---
+- name: restart redis cluster
+  systemd:
+    name: "{{ item }}.service"
+    daemon_reload: yes
+    state: restarted
+  with_items:
+    - redis_7000
+    - redis_7001
+- name: restart redis
+  systemd:
+    name: "redis.service"
+    daemon_reload: yes
+    state: restarted

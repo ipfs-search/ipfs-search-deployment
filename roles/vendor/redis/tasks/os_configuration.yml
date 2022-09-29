@@ -55,6 +55,7 @@
     - { src: 'redis_7000.service', dest: '/etc/systemd/system/redis_7000.service' }
     - { src: 'redis_7001.service', dest: '/etc/systemd/system/redis_7001.service' }
   when: redis_cluster == true
+  notify: restart redis cluster
 
 - name: Apply redis configuration file
   template:
@@ -64,6 +65,7 @@
     - { src: 'redis.conf', dest: '/etc/redis_cluster/redis_7000/redis.conf' }
     - { src: 'redis.service', dest: '/etc/systemd/system/redis.service' }
   when: redis_cluster == false
+  notify: restart redis
 
 - name: Configure redis permissions
   file:
