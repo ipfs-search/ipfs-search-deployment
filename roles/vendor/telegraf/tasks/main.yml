@@ -55,9 +55,10 @@
   command: telegraf --test
   register: telegraf_test
   ignore_errors: True
-  become: false
+  become_user: telegraf
   # Good enough when we get *any* output, due to online plugins
   failed_when: "telegraf_test.rc == 1 and telegraf_test.stdout == ''"
+  changed_when: false
 - name: Display (only) Telegraf errrors
   fail:
     msg: "{{ telegraf_test.stderr }}"
