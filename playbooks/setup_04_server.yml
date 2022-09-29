@@ -9,11 +9,15 @@
       tags: ['hostname']
     - role: setup/unattended_upgrades
       tags: ['unattended_upgrades']
+- name: cgconfig and firewall
+  hosts: all:!hcloud
+  become: true
+  roles:
     - role: setup/cgconfig
       tags: ['cgconfig']
     - role: setup/firewall
       tags: ['firewall']
-- hosts: dmz
+- hosts: dmz:!hcloud
   become: true
   roles:
     - role: setup/vlan
