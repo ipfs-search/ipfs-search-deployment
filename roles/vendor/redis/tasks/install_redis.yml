@@ -1,22 +1,21 @@
 - name: Download Redis stable
   get_url:
     url: https://download.redis.io/releases/redis-{{redis_stable_version}}.tar.gz
-    dest: /opt
+    dest: /tmp/redis.tar.gz
     mode: '0440'
     checksum: sha256:{{redis_sha256}}
+  register: download
 
 - name: Unarchive redis tarball build
   unarchive:
-    src: '{{redis_install_dir}}-{{redis_stable_version}}.tar.gz'
+    src: /tmp/redis.tar.gz
     dest: /opt
     remote_src: yes
-
-- name: Remove redis tarball
-  ansible.builtin.file:
-    path: '{{redis_install_dir}}-{{redis_stable_version}}.tar.gz'
-    state: absent
+  when: download.changed
 
 - name: Compile Redis
   make:
     chdir: '{{redis_install_dir}}-{{redis_stable_version}}'
     target: install
+  when: download.changed
+  notify: restart redis
