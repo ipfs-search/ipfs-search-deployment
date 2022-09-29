@@ -46,13 +46,16 @@
   template:
     src: telegraf.toml.j2
     dest: /etc/telegraf/telegraf.conf
-    mode: 0600
+    mode: 0640
+    owner: root
+    group: telegraf
   notify: restart telegraf
   register: telegraf_config
 - name: Telegraf test run
   command: telegraf --test
   register: telegraf_test
   ignore_errors: True
+  become: false
   # Good enough when we get *any* output, due to online plugins
   failed_when: "telegraf_test.rc == 1 and telegraf_test.stdout == ''"
 - name: Display (only) Telegraf errrors
