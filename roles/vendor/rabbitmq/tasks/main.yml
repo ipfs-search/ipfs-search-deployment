@@ -14,7 +14,7 @@
     state: present
     update_cache: yes
 - name: Install required packages
-  apt: pkg=rabbitmq-server state=latest
+  apt: pkg=rabbitmq-server state=present
   notify: restart rabbitmq
 - name: Configuration file
   template:
