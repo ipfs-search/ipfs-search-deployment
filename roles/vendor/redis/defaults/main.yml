@@ -9,4 +9,4 @@ redis_install_dir: /opt/redis
 # true/false , false - single node setup
 redis_cluster: true
 # size in bytes for total redis memory
-redis_maxmemory_bytes: 1073741824
+redis_maxmemory: 1073741824
