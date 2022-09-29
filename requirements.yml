@@ -14,3 +14,5 @@ collections:
     version: 2.4.0
   - name: community.hrobot
     version: 1.5.2
+  - name: hetzner.hcloud
+    version: 1.8.2
