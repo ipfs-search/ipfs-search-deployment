@@ -36,12 +36,6 @@
     redis_port: 7000
   when: redis_cluster == true
 
-- name: Configure Redis cluster port 7001
-  include_tasks: cluster_configuration_service.yml
-  vars:
-    redis_port: 7001
-  when: redis_cluster == true
-
 - name: Configure redis permissions
   file:
     path: /usr/local/bin/{{ item }}
@@ -59,3 +53,9 @@
 - name: Configure Redis single node
   include_tasks: single_configuration_service.yml
   when: redis_cluster == false
+
+- name: Configure Redis cluster port 7001
+  include_tasks: cluster_configuration_service.yml
+  vars:
+    redis_port: 7001
+  when: redis_cluster == true
