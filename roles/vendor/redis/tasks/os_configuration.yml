@@ -68,6 +68,7 @@
 - name: Configure redis permissions
   file:
     path: /usr/local/bin/{{ item }}
+    mode: 0755
     owner: redis
     group: redis
   with_items:
