@@ -2,6 +2,7 @@
 - name: Redis cluster install
   hosts: redis
   become: true
+  serial: 1
   roles:
       - vendor/redis
 
