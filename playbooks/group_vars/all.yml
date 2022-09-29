@@ -3,7 +3,7 @@ crawler_memlimit: 4G
 crawler_hash_workers: 256
 crawler_file_workers: 12
 crawler_directory_workers: 4
-crawler_version: nsfw_extractor
+crawler_version: redis_cache
 amqp_message_ttl: 4h
 golang_version: 1.18.2
 ipfs_version: v0.13.0
