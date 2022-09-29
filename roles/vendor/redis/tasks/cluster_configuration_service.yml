@@ -21,7 +21,7 @@
     daemon_reload: yes
     enabled: yes
     state: started
-- name: Restart service
+- name: Restart service redis_{{ redis_port }}
   systemd:
     name: "redis_{{ redis_port }}"
     daemon_reload: yes
