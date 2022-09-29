@@ -30,42 +30,17 @@
     - /var/run/redis_cluster
   when: redis_cluster == true
 
-- name: Create redis single node directories
-  file:
-    path: '{{ item }}'
-    state: directory
-    owner: redis
-    group: redis
-    mode: 0755
-    recurse: yes
-  loop:
-    - /etc/redis
-    - /var/log/redis
-    - /var/lib/redis
-    - /var/run/redis
-  when: redis_cluster == false
-
-- name: Apply redis configuration files
-  template:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  loop:
-    - { src: 'redis_7000.conf', dest: '/etc/redis_cluster/redis_7000/redis_7000.conf' }
-    - { src: 'redis_7001.conf', dest: '/etc/redis_cluster/redis_7001/redis_7001.conf' }
-    - { src: 'redis_7000.service', dest: '/etc/systemd/system/redis_7000.service' }
-    - { src: 'redis_7001.service', dest: '/etc/systemd/system/redis_7001.service' }
+- name: Configure Redis cluster port 7000
+  include_tasks: cluster_configuration_service.yml
+  vars:
+    redis_port: 7000
   when: redis_cluster == true
-  notify: restart redis cluster
 
-- name: Apply redis configuration file
-  template:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  loop:
-    - { src: 'redis.conf', dest: '/etc/redis_cluster/redis_7000/redis.conf' }
-    - { src: 'redis.service', dest: '/etc/systemd/system/redis.service' }
-  when: redis_cluster == false
-  notify: restart redis
+- name: Configure Redis cluster port 7001
+  include_tasks: cluster_configuration_service.yml
+  vars:
+    redis_port: 7001
+  when: redis_cluster == true
 
 - name: Configure redis permissions
   file:
@@ -81,38 +56,6 @@
     - redis-check-rdb
     - redis-sentinel
 
-- name: Setup redis cluster services
-  systemd:
-    name: "{{ item }}.service"
-    daemon_reload: yes
-  with_items:
-    - redis_7000
-    - redis_7001
-  when: redis_cluster == true
-
-- name: Setup redis single node service
-  systemd:
-    name: "{{ item }}.service"
-    daemon_reload: yes
-  with_items:
-    - redis
-  when: redis_cluster == false
-
-- name: Start redis cluster services
-  systemd:
-    name: "{{ item }}.service"
-    enabled: yes
-    state: started
-  with_items:
-    - redis_7000
-    - redis_7001
-  when: redis_cluster == true
-
-- name: Start redis single node service
-  systemd:
-    name: "{{ item }}.service"
-    enabled: yes
-    state: started
-  with_items:
-    - redis
+- name: Configure Redis single node
+  include_tasks: single_configuration_service.yml
   when: redis_cluster == false

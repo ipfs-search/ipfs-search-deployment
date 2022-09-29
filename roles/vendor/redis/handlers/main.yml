@@ -1,7 +1,7 @@
 ---
 - name: restart redis cluster
   systemd:
-    name: "{{ item }}.service"
+    name: "redis_{{ redis_port }}"
     daemon_reload: yes
     state: restarted
   with_items:

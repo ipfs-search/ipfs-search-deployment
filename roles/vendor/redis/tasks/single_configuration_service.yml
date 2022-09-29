@@ -1,0 +1,27 @@
+---
+- name: Create redis single node directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0755
+    recurse: yes
+  loop:
+    - /etc/redis
+    - /var/log/redis
+    - /var/lib/redis
+    - /var/run/redis
+- name: Setup redis single node service
+  systemd:
+    name: "{{ item }}.service"
+    daemon_reload: yes
+  with_items:
+    - redis
+- name: Start redis single node service
+  systemd:
+    name: "{{ item }}.service"
+    enabled: yes
+    state: started
+  with_items:
+    - redis
