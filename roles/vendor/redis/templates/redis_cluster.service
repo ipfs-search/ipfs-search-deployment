@@ -9,5 +9,7 @@ User=redis
 Group=redis
 WorkingDirectory=/etc/redis_cluster/redis_{{ redis_port }}
 LimitNOFILE=65535
+Restart=always
+
 [Install]
 WantedBy=multi-user.target
