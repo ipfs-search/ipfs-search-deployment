@@ -10,3 +10,10 @@ network:
       dhcp4: false
       dhcp6: false
       addresses: ["{{ vlan_ip }}" ]
+{% if vlan_routes %}
+      routes:
+{%  for route in vlan_routes %}
+        - to: {{  route.to }}
+          via: {{  route.via }}
+{%  endfor %}
+{% endif %}
