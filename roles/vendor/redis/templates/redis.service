@@ -2,12 +2,12 @@
 Description=Redis key-value database on 7000
 After=network.target
 [Service]
-ExecStart=/usr/local/bin/redis-server redis.conf --supervised systemd
-ExecStop=/usr/local/bin/redis-cli -h 127.0.0.1 -p 7000 shutdown
+ExecStart=/usr/bin/redis-server redis_{{redis_port}}.conf --supervised systemd --daemonize no
+ExecStop=/usr/bin/redis-cli -h 127.0.0.1 -p 7000 shutdown
 Type=notify
 User=redis
 Group=redis
-WorkingDirectory=/etc/redis
+WorkingDirectory=/etc/{{redis_dir}}
 LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target

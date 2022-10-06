@@ -1,8 +1,22 @@
 ---
+- name: Create redis cluster directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0755
+    recurse: yes
+  loop:
+    - /etc/{{redis_dir}}/redis_{{redis_port}}
+    - /var/lib/{{redis_dir}}/redis_{{redis_port}}
+    - /var/log/{{redis_dir}}
+    - /var/run/{{redis_dir}}
+  when: redis_cluster == true
 - name: Redis port {{ redis_port }} configuration file
   template:
     src: redis_cluster.conf
-    dest: /etc/redis_cluster/redis_{{ redis_port }}/redis_{{ redis_port }}.conf
+    dest: /etc/{{redis_dir}}/redis_{{ redis_port }}/redis_{{ redis_port }}.conf
     owner: root
     group: root
     mode: 0644

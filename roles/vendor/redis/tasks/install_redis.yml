@@ -1,21 +1,47 @@
-- name: Download Redis stable
-  get_url:
-    url: https://download.redis.io/releases/redis-{{redis_stable_version}}.tar.gz
-    dest: /tmp/redis.tar.gz
-    mode: '0440'
-    checksum: sha256:{{redis_sha256}}
-  register: download
+- name: "Ansible | Print 'lsb_release -cs'"
+  debug:
+    msg: "{{ ansible_distribution_release }}"
 
-- name: Unarchive redis tarball build
-  unarchive:
-    src: /tmp/redis.tar.gz
-    dest: /opt
-    remote_src: yes
-  when: download.changed
+- name: Setup redis repo apt key
+  apt_key:
+    url: "https://packages.redis.io/gpg"
+    keyring: "/usr/share/keyrings/redis-archive-keyring.gpg"
+    state: present
 
-- name: Compile Redis
-  make:
-    chdir: '{{redis_install_dir}}-{{redis_stable_version}}'
-    target: install
-  when: download.changed
-  notify: restart redis
+- name: "Setup Repo"
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
+    update_cache: yes
+
+- name: Install Redis
+  apt:
+    name: "redis"
+
+- name: Disable default redis service
+  systemd:
+    name: redis-server
+    enabled: no
+    state: stopped
+  ignore_errors: yes
+
+- name: Remove default redis configs
+  file:
+    path: "{{item}}"
+    state: absent
+  loop: 
+    - /etc/redis
+    - /var/lib/redis
+    - /var/log/redis
+    - /var/run/redis
+    - /etc/systemd/system/redis-server.service
+    - /lib/systemd/system/redis-server.service
+    - /etc/init.d/redis-server
+  ignore_errors: yes
+
+- name: Reload services
+  systemd:
+    daemon_reload: yes
+
+- name: Fix missing unit
+  shell: |
+    systemctl reset-failed

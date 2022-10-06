@@ -13,44 +13,34 @@
     create_home: no
     shell: /bin/false
 
-- name: Create redis cluster directories
-  file:
-    path: '{{ item }}'
-    state: directory
-    owner: redis
-    group: redis
-    mode: 0755
-    recurse: yes
-  loop:
-    - /etc/redis_cluster/redis_7000
-    - /etc/redis_cluster/redis_7001
-    - /var/lib/redis_cluster/redis_7000
-    - /var/lib/redis_cluster/redis_7001
-    - /var/log/redis_cluster
-    - /var/run/redis_cluster
-  when: redis_cluster == true
+# - name: Create redis cluster directories
+#   file:
+#     path: '{{ item }}'
+#     state: directory
+#     owner: redis
+#     group: redis
+#     mode: 0755
+#     recurse: yes
+#   loop:
+#     - /etc/redis_cluster/redis_7000
+#     - /etc/redis_cluster/redis_7001
+#     - /var/lib/redis_cluster/redis_7000
+#     - /var/lib/redis_cluster/redis_7001
+#     - /var/log/redis_cluster
+#     - /var/run/redis_cluster
+#   when: redis_cluster == true
 
 - name: Configure Redis cluster port 7000
   include_tasks: cluster_configuration_service.yml
   vars:
     redis_port: 7000
+    redis_dir: redis_cluster
   when: redis_cluster == true
 
-- name: Configure redis permissions
-  file:
-    path: /usr/local/bin/{{ item }}
-    mode: 0755
-    owner: redis
-    group: redis
-  with_items:
-    - redis-cli
-    - redis-server
-    - redis-benchmark
-    - redis-check-aof
-    - redis-check-rdb
-    - redis-sentinel
-
 - name: Configure Redis single node
+  vars:
+    redis_port: 7000
+    redis_dir: redis_singlenode
   include_tasks: single_configuration_service.yml
   when: redis_cluster == false
 
@@ -58,4 +48,5 @@
   include_tasks: cluster_configuration_service.yml
   vars:
     redis_port: 7001
+    redis_dir: redis_cluster
   when: redis_cluster == true

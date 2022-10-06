@@ -1,0 +1,7 @@
+- name: Ansible collector
+  setup:
+    filter: 'ansible_memtotal_mb'
+
+- name: Set mem for redis
+  set_fact:
+    redis_mem: "{{ ((ansible_memtotal_mb*(redis_maxmem/100))*1024*1024)|int }}"

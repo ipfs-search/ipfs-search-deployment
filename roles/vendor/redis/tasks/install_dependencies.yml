@@ -7,13 +7,7 @@
 - name: Install required packages for redis
   apt:
     name:
-      - pkg-config
-      - make
-      - gcc
-      - libc6-dev
-      - tcl
-      - libsystemd-dev
-      - jq
+      - lsb-release
     state: latest
 
 - name: Upgrade all packages

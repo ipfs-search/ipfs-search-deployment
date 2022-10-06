@@ -8,20 +8,35 @@
     mode: 0755
     recurse: yes
   loop:
-    - /etc/redis
-    - /var/log/redis
-    - /var/lib/redis
-    - /var/run/redis
-- name: Setup redis single node service
+    - /etc/{{redis_dir}}
+    - /var/log/{{redis_dir}}
+    - /var/lib/{{redis_dir}}
+    - /var/run/{{redis_dir}}
+- name: Redis port {{ redis_port }} configuration file
+  template:
+    src: redis.conf
+    dest: /etc/{{redis_dir}}/redis_{{redis_port}}.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: configuration
+- name: Redis port {{ redis_port }} service file
+  template:
+    src: redis.service
+    dest: /etc/systemd/system/redis_{{ redis_port }}.service
+    owner: root
+    group: root
+    mode: 0644
+  register: service
+- name: Enable and start service redis_{{ redis_port }}
   systemd:
-    name: "{{ item }}.service"
+    name: "redis_{{ redis_port }}"
     daemon_reload: yes
-  with_items:
-    - redis
-- name: Start redis single node service
-  systemd:
-    name: "{{ item }}.service"
     enabled: yes
     state: started
-  with_items:
-    - redis
+- name: Restart service redis_{{ redis_port }}
+  systemd:
+    name: "redis_{{ redis_port }}"
+    daemon_reload: yes
+    state: restarted
+  when: configuration.changed or service.changed

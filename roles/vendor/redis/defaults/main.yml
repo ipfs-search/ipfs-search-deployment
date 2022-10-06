@@ -1,12 +1,7 @@
 ---
-#Redis version
-redis_stable_version: '7.0.4'
-redis_pass: # No password by default
-# redis sha256 of version
-redis_sha256: f0e65fda74c44a3dd4fa9d512d4d4d833dd0939c934e946a5c622a630d057f2f
-#Redis build source dir
-redis_install_dir: /opt/redis
+redis_pass: test
+# No password by default
 # true/false , false - single node setup
-redis_cluster: true
-# size in bytes for total redis memory
-redis_maxmemory: 1073741824
+redis_cluster: false
+# size % for redis max memory 
+redis_maxmem: 80
