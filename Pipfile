@@ -10,6 +10,7 @@ netaddr = "*"
 jmespath = "*"
 ansible-lint = "*"
 dnspython = "*"
+hcloud = "*"
 
 [dev-packages]
 

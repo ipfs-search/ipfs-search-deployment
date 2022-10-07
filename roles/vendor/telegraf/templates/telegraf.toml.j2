@@ -23,6 +23,7 @@
   # user = "$USER"
 
 
+
 # Configuration for telegraf agent
 [agent]
   ## Default data collection interval for all inputs
@@ -3397,7 +3398,8 @@ metric_exclude = ["federation"]
 
 
 # # Read metrics from one or many redis servers
-# [[inputs.redis]]
+{% if 'redis' in group_names %}
+[[inputs.redis]]
 #   ## specify servers via a url matching:
 #   ##  [protocol://][:password]@address[:port]
 #   ##  e.g.
@@ -3407,7 +3409,7 @@ metric_exclude = ["federation"]
 #   ##
 #   ## If no servers are specified, then localhost is used as the host.
 #   ## If no port is specified, 6379 is used
-#   servers = ["tcp://localhost:6379"]
+servers = ["tcp://localhost:7000", "tcp://localhost:7001"]
 #
 #   ## specify server password
 #   # password = "s#cr@t%"
@@ -3418,7 +3420,7 @@ metric_exclude = ["federation"]
 #   # tls_key = "/etc/telegraf/key.pem"
 #   ## Use TLS but skip chain & host verification
 #   # insecure_skip_verify = true
-
+{% endif %}
 
 # # Read metrics from one or many RethinkDB servers
 # [[inputs.rethinkdb]]

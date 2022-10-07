@@ -1,0 +1,18 @@
+---
+
+- include: install_dependencies.yml
+  tags: 
+    - install_dependencies
+
+# install latest via APT
+- include: install_redis.yml
+  tags:
+    - install_redis_server
+
+- include: set_redis_facts.yml
+  tags: 
+    - set_up_redis_facts
+
+- include: os_configuration.yml
+  tags:
+    - setup_redis

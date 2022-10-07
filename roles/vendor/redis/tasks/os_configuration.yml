@@ -1,0 +1,52 @@
+- name: Set overcommit in sysctl
+  sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+    state: present
+    reload: yes
+    ignoreerrors: yes
+
+- name: Create redis user
+  user:
+    name: redis
+    system: yes
+    create_home: no
+    shell: /bin/false
+
+# - name: Create redis cluster directories
+#   file:
+#     path: '{{ item }}'
+#     state: directory
+#     owner: redis
+#     group: redis
+#     mode: 0755
+#     recurse: yes
+#   loop:
+#     - /etc/redis_cluster/redis_7000
+#     - /etc/redis_cluster/redis_7001
+#     - /var/lib/redis_cluster/redis_7000
+#     - /var/lib/redis_cluster/redis_7001
+#     - /var/log/redis_cluster
+#     - /var/run/redis_cluster
+#   when: redis_cluster == true
+
+- name: Configure Redis cluster port 7000
+  include_tasks: cluster_configuration_service.yml
+  vars:
+    redis_port: 7000
+    redis_dir: redis_cluster
+  when: redis_cluster == true
+
+- name: Configure Redis single node
+  vars:
+    redis_port: 7000
+    redis_dir: redis_singlenode
+  include_tasks: single_configuration_service.yml
+  when: redis_cluster == false
+
+- name: Configure Redis cluster port 7001
+  include_tasks: cluster_configuration_service.yml
+  vars:
+    redis_port: 7001
+    redis_dir: redis_cluster
+  when: redis_cluster == true

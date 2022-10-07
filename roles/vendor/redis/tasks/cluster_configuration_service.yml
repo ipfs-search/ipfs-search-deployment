@@ -1,0 +1,43 @@
+---
+- name: Create redis cluster directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0755
+    recurse: yes
+  loop:
+    - /etc/{{redis_dir}}/redis_{{redis_port}}
+    - /var/lib/{{redis_dir}}/redis_{{redis_port}}
+    - /var/log/{{redis_dir}}
+    - /var/run/{{redis_dir}}
+  when: redis_cluster == true
+- name: Redis port {{ redis_port }} configuration file
+  template:
+    src: redis_cluster.conf
+    dest: /etc/{{redis_dir}}/redis_{{ redis_port }}/redis_{{ redis_port }}.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: configuration
+- name: Redis port {{ redis_port }} service file
+  template:
+    src: redis_cluster.service
+    dest: /etc/systemd/system/redis_{{ redis_port }}.service
+    owner: root
+    group: root
+    mode: 0644
+  register: service
+- name: Enable and start service redis_{{ redis_port }}
+  systemd:
+    name: "redis_{{ redis_port }}"
+    daemon_reload: yes
+    enabled: yes
+    state: started
+- name: Restart service redis_{{ redis_port }}
+  systemd:
+    name: "redis_{{ redis_port }}"
+    daemon_reload: yes
+    state: restarted
+  when: configuration.changed or service.changed

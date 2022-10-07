@@ -2,12 +2,18 @@ ipfs:
   api_url: http://localhost:5001
   gateway_url: http://localhost:8080
   partial_size: 256KB
-elasticsearch:
+opensearch:
   url: http://localhost:9200
   bulk_indexer_workers: 16                            # Workers to use for bulk writes.
   bulk_flush_bytes: 1MB                               # Bytesize treshold for bulk writes.
   bulk_getter_batch_size: 48                          # Item treshold for execution of bulk gets.
   bulk_getter_batch_timeout: 1s                       # Time treshold for bulk gets.
+redis:
+    addresses:
+{% for host in groups['redis'] %}
+      - {{ hostvars[host].ansible_all_ipv4_addresses | ipaddr('private') | ipaddr('address') | first }}:7000
+      - {{ hostvars[host].ansible_all_ipv4_addresses | ipaddr('private') | ipaddr('address') | first }}:7001
+{% endfor %}
 amqp:
   url: "amqp://admin:admin@{{ rabbitmq_host }}:5672/"
   max_reconnect: 100
@@ -55,3 +61,5 @@ workers:
   hash_workers: {{ crawler_hash_workers }}
   file_workers: {{ crawler_file_workers }}
   directory_workers: {{ crawler_directory_workers }}
+  ipfs_max_connections: 1000
+  extractor_max_connections: 100
