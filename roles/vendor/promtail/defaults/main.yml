@@ -2,3 +2,4 @@
 promtail_download_sha256: 570d1d69c2610f2283f9f758fb028a9d830dc39f75e2134ffa4a125cb7329b9c
 promtail_version: v2.4.2
 es_logs_to_loki: false
+os_logs_to_loki: false
