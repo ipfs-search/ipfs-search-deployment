@@ -72,6 +72,29 @@
   notify:
     - restart promtail
 
+- name: Add OpenSearch log files
+  blockinfile:
+    dest: /etc/promtail/config.yml
+    block: |
+      - job_name: opensearch_logs
+        static_configs:
+        - labels:
+            hostname: ${HOSTNAME}
+            job: opensearch_logs
+            __path__: /var/log/opensearch/*.json
+
+      - job_name: opensearch_gc
+        static_configs:
+        - labels:
+            hostname: ${HOSTNAME}
+            job: opensearch_gc
+            __path__: /var/log/opensearch/gc.log
+    backup: yes
+    mode: 0600
+  when: os_logs_to_loki
+  notify:
+    - restart promtail
+
 - name: Systemd service enabled
   systemd:
     daemon_reload: yes
