@@ -1,6 +1,5 @@
 ---
-redis_pass: test
-# No password by default
+redis_pass: # No password by default
 # true/false , false - single node setup
 redis_cluster: false
 # size % for redis max memory 
