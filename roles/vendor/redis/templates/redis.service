@@ -1,13 +1,19 @@
 [Unit]
-Description=Redis key-value database on 7000
+Description=Redis key-value database on {{ redis_port }}
 After=network.target
 [Service]
-ExecStart=/usr/bin/redis-server redis_{{redis_port}}.conf --supervised systemd --daemonize no
-ExecStop=/usr/bin/redis-cli -h 127.0.0.1 -p 7000 shutdown
+ExecStart=/usr/bin/redis-server redis_{{ redis_port }}.conf --supervised systemd --daemonize no
+ExecStop=/usr/bin/redis-cli -h 127.0.0.1 -p {{ redis_port }} shutdown
 Type=notify
 User=redis
 Group=redis
-WorkingDirectory=/etc/{{redis_dir}}
+{% if redis_cluster == false %}
+WorkingDirectory=/etc/{{ redis_dir }}
+{% else %}
+WorkingDirectory=/etc/{{ redis_dir }}/redis_{{ redis_port }}
+{% endif %}
 LimitNOFILE=65535
+Restart=always
+
 [Install]
 WantedBy=multi-user.target

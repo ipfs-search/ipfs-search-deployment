@@ -15,7 +15,7 @@
   when: redis_cluster == true
 - name: Redis port {{ redis_port }} configuration file
   template:
-    src: redis_cluster.conf
+    src: redis.conf
     dest: /etc/{{redis_dir}}/redis_{{ redis_port }}/redis_{{ redis_port }}.conf
     owner: root
     group: root
@@ -23,7 +23,7 @@
   register: configuration
 - name: Redis port {{ redis_port }} service file
   template:
-    src: redis_cluster.service
+    src: redis.service
     dest: /etc/systemd/system/redis_{{ redis_port }}.service
     owner: root
     group: root
