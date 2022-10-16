@@ -1,6 +1,6 @@
 ---
 redis_pass: # No password by default
 # true/false , false - single node setup
-redis_cluster: false
+redis_cluster: true
 # size % for redis max memory 
 redis_maxmem: 80
