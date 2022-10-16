@@ -1,10 +1,4 @@
 ---
-
-- include: install_dependencies.yml
-  tags: 
-    - install_dependencies
-
-# install latest via APT
 - include: install_redis.yml
   tags:
     - install_redis_server

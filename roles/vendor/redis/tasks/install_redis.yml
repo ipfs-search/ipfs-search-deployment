@@ -1,7 +1,3 @@
-- name: "Ansible | Print 'lsb_release -cs'"
-  debug:
-    msg: "{{ ansible_distribution_release }}"
-
 - name: Setup redis repo apt key
   apt_key:
     url: "https://packages.redis.io/gpg"
@@ -10,7 +6,7 @@
 
 - name: "Setup Repo"
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
+    repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_lsb.codename }} main"
     update_cache: yes
 
 - name: Install Redis
