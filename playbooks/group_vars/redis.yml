@@ -1,3 +1,0 @@
-# 2 x 3 GB=6 GB memory for Redis per node.
-# TODO: Automatically tune based on available memory.
-redis_maxmemory: "1gb"
