@@ -1,6 +1,9 @@
 ---
 redis_pass: # No password by default
 # true/false , false - single node setup
-redis_cluster: false
-# size % for redis max memory 
-redis_maxmem: 80
+redis_cluster: true
+redis_memfraction: 0.7 # Fraction of total system memory to be used by Redis.
+
+# Maxmimum memory to be used by Redis.
+# Defaults to redis_memfraction of total system memory, or half that fraction if we're in a cluster.
+redis_maxmem: "{{ (ansible_memtotal_mb * redis_memfraction / (2 if redis_cluster else 1)) | int }}mb"
