@@ -32,3 +32,5 @@ nyats_port: 9614
 nyats_version: thumbnail_server_fixups
 ipfs_search_api_port: 9615
 ipfs_search_api_version: master
+pinservice_version: 44d104ea76bd644860af94a726acac4ceff7809c
+pinservice_port: 7070

@@ -1,11 +1,4 @@
 ---
-- name: Gather facts for backend nodes
-  gather_facts: false
-  hosts: backend
-  tags: gather_facts
-  tasks:
-    - setup:
-      name: Gather facts
 - name: Setup frontend and direct dependencies.
   hosts: frontend
   become: true
