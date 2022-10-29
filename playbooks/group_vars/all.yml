@@ -26,7 +26,7 @@ influxdb_backup_bucket: "telegraf"
 storagebox_mountpoint_group: "{{ lookup('env', 'USER') }}"
 domain_name: "dwebsearch.org"
 nsfw_server_port: 3432
-nsfw_server_version: f5334dddc9dc31ef950e4d994bfc1280b93a1586
+nsfw_server_version: e903037676d4b721e67f6d2273b8a193a0a21bd7
 node_branch: node_16.x
 nyats_port: 9614
 nyats_version: thumbnail_server_fixups
