@@ -5,3 +5,5 @@
   import_playbook: api_nsfw_server.yml
 - name: Configure nyats (thumbnailer)
   import_playbook: api_nyats.yml
+- name: Configure pin service
+  import_playbook: api_pinservice.yml

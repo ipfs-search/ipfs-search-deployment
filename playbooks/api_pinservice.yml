@@ -1,0 +1,39 @@
+---
+- name: Gather facts for ipfs nodes
+  gather_facts: true
+  hosts: ipfs
+  tags: node-server
+- name: pinservice
+  hosts: pinservice
+  become: true
+  serial:
+    - 1
+    - "100%"
+  strategy: free
+  pre_tasks:
+    - name: Set delegates
+      set_fact:
+        delegates: |
+          [{% for host in groups['ipfs'] if 'ipfs_peer_id' in hostvars[host] and 'ansible_default_ipv4' in hostvars[host] %}
+            "/ip4/{{ hostvars[host].ansible_default_ipv4.address }}/udp/4001/quic/p2p/{{ hostvars[host]['ipfs_peer_id'] }}"{% if not loop.last %},{% endif %}
+          {% endfor %}]
+        cacheable: true
+      tags: node-server
+  roles:
+    - role: vendor/ipfs
+      tags: ipfs
+    - role: vendor/ipfs-gc
+      tags: ipfs-gc
+    - name: pinservice
+      tags: node-server
+      role: services/node-server
+      vars:
+        node_server_name: pinservice
+        node_server_repo: "https://github.com/ipfs-search/ipfs-search-queue-pinservice.git"
+        node_server_environment: "PINSERVICE_PORT={{ pinservice_port }} AMQP_URL=amqp://admin:admin@{{ rabbitmq_host }}:5672/ PINSERVICE_DELEGATES='{{ (delegates | shuffle(seed=inventory_hostname))[:20] | to_json }}'" # Idempotent random order of delegates and limit to 20.
+        node_server_version: "{{ pinservice_version }}"
+        node_server_requires: ipfs.service
+        node_server_port: "{{ pinservice_port }}"
+        node_server_proxy_location: "/v1/queue-pinservice/"
+        node_server_proxy_root: "/"
+        node_server_build: true

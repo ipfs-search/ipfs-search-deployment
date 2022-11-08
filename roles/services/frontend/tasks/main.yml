@@ -1,4 +1,11 @@
 ---
+- name: Gather facts from backend nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  loop: "{{ groups['backend'] }}"
+  ignore_unreachable: true
 - name: Install nginx configuration
   template:
     src: nginx-frontend.conf
