@@ -11,6 +11,9 @@ jmespath = "*"
 ansible-lint = "*"
 dnspython = "*"
 hcloud = "*"
+wheel = "*"
+yamllint = "*"
+flake8 = "*"
 
 [dev-packages]
 

@@ -1,9 +1,7 @@
 ---
 skip_list:
-  - name[casing]
-  - fqcn-builtins
-warn_list:
-  - name[play]
+  - fqcn[action-core]
+  - fqcn[action]
   - no-handler
-  - no-changed-when
-  - package-latest
+warn_list:
+  - no-handler

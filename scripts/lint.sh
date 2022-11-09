@@ -1,3 +1,5 @@
-#!/bin/sh
+#!/bin/sh -xe
 
-pipenv run env ANSIBLE_CONFIG=ansible-lint.cfg ansible-lint
+pipenv run yamllint .
+pipenv run ansible-lint --project-dir .
+pipenv run flake8 .
