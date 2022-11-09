@@ -3,7 +3,6 @@
   apt:
     name: unzip
     state: present
-
 - name: Download binary
   get_url:
     url: https://github.com/grafana/loki/releases/download/{{ promtail_version }}/promtail-linux-amd64.zip
@@ -11,90 +10,37 @@
     checksum: sha256:{{ promtail_download_sha256 }}
     mode: 0644
   register: promtail_download
-
-- name: Unarchive promtail
+- name: Unarchive promtail # noqa no-handler
   unarchive:
     copy: no
     src: "{{ promtail_download.dest }}"
     dest: /usr/local/bin/
     exclude: "!promtail-linux-amd64"
   when: promtail_download.changed
-  notify: restart promtail
-
+  notify: Restart promtail
 - name: Create conf directory
   file:
     state: directory
     path: /etc/promtail
     mode: 0755
-
 - name: Create data directory
   file:
     state: directory
     path: /var/lib/promtail
     mode: 0755
-
-- name: systemd unit
+- name: Systemd unit
   template:
-    src: promtail.service
+    src: promtail.service.j2
     dest: /etc/systemd/system/promtail.service
     mode: 0644
-  notify: restart promtail
-
-- name: promtail config
+  notify: Restart promtail
+- name: Promtail config
   template:
-    src: config.yml
+    src: config.yml.j2
     dest: /etc/promtail/config.yml
     mode: 0644
   notify:
-    - restart promtail
-
-# TODO: Split out ES-specific stuff or use template for config.
-- name: Add elasticsearch log files
-  blockinfile:
-    dest: /etc/promtail/config.yml
-    block: |
-      - job_name: elasticsearch_logs
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: elasticsearch_logs
-            __path__: /var/log/elasticsearch/*.json
-
-      - job_name: elasticsearch_gc
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: elasticsearch_gc
-            __path__: /var/log/elasticsearch/gc.log
-    backup: yes
-    mode: 0600
-  when: es_logs_to_loki
-  notify:
-    - restart promtail
-
-- name: Add OpenSearch log files
-  blockinfile:
-    dest: /etc/promtail/config.yml
-    block: |
-      - job_name: opensearch_logs
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: opensearch_logs
-            __path__: /var/log/opensearch/*.json
-
-      - job_name: opensearch_gc
-        static_configs:
-        - labels:
-            hostname: ${HOSTNAME}
-            job: opensearch_gc
-            __path__: /var/log/opensearch/gc.log
-    backup: yes
-    mode: 0600
-  when: os_logs_to_loki
-  notify:
-    - restart promtail
-
+    - Restart promtail
 - name: Systemd service enabled
   systemd:
     daemon_reload: yes

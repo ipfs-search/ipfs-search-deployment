@@ -1,5 +1,6 @@
 ---
 - name: Generate hostnames
+  delegate_to: localhost
   block:
   - name: Get available hostnames in randomized order
     set_fact:
@@ -28,4 +29,3 @@
     when: hrobot_server_name != picked_hostname
   - name: Refresh inventory to ensure new hostnames exist in inventory
     meta: refresh_inventory
-  delegate_to: localhost

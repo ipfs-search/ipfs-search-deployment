@@ -31,6 +31,4 @@ path.logs: {{ os_log_dir }}
 {{ os_config | to_nice_yaml(indent=2) }}
 {% endif %}
 
-{% if not os_enable_security %}
 plugins.security.disabled: true
-{% endif %}

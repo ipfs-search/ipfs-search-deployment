@@ -1,4 +1,6 @@
 ---
-- name: "Check for netplan"
+- name: Check for netplan
   command: netplan --help
-- import_tasks: netplan.yml
+  changed_when: false
+- name: Setup netplan
+  import_tasks: netplan.yml

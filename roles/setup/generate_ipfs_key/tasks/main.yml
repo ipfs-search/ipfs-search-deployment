@@ -1,5 +1,6 @@
 ---
 - name: Generate IPFS keypair
+  delegate_to: localhost
   block:
   - name: Create temporary directory
     tempfile:
@@ -25,14 +26,16 @@
       generated_ipfs_key: true
       ipfs_peer_id: "{{ ipfs_config['Identity']['PeerID'] }}"
       ipfs_peer_key: "{{ ipfs_config['Identity']['PrivKey'] }}"
+- name: Add generated keypair to host vars
   delegate_to: localhost
-- name: Add keypair to host vars
+  when: generated_ipfs_key is defined and generated_ipfs_key
   block:
   - name: Encrypt ipfs_peer_key
     command: ansible-vault encrypt_string --vault-password-file=../vault/decrypt_passphrase.sh
     args:
       stdin: "{{ ipfs_peer_key }}"
     register: ipfs_peer_encrypted
+    changed_when: true
   - name: Print ipfs_peer_id
     debug:
       var: ipfs_peer_id
@@ -50,5 +53,3 @@
       regexp: '^ipfs_peer_key'
       line: "ipfs_peer_key: {{ ipfs_peer_encrypted.stdout }}"
       mode: 0644
-  delegate_to: localhost
-  when: generated_ipfs_key is defined and generated_ipfs_key

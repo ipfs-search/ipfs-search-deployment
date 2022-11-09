@@ -2,6 +2,6 @@
 skip_list:
   - fqcn[action-core]
   - fqcn[action]
-  - no-handler
 warn_list:
   - no-handler
+  - role-name[path]

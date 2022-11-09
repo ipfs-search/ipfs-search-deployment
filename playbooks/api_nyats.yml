@@ -1,20 +1,19 @@
 ---
-- name: nyats (thumbnailer)
+- name: NYATS (thumbnailer)
   hosts: nyats
   tags: nyats
   become: true
   serial:
     - 1
     - "100%"
-  strategy: free
   roles:
     - role: vendor/ipfs
       tags: ipfs
     - role: vendor/ipfs-gc
       tags: ipfs-gc
-    - name: nyats
-      role: services/node-server
-      tags: node-server
+    - name: NYATS server
+      role: services/node_server
+      tags: node_server
       vars:
         node_server_name: nyats
         node_server_repo: "https://github.com/ipfs-search/nyats.git"

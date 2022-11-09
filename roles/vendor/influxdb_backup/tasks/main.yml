@@ -1,11 +1,11 @@
 ---
-- name: destination directory
+- name: Destination directory
   file:
     path: "{{ influxdb_backup_destination }}"
     state: directory
     mode: "0755"
     owner: "{{ influxdb_backup_user }}"
-- name: cronjob
+- name: Cronjob
   cron:
     name: "influxdb backup"
     cron_file: /etc/crontab

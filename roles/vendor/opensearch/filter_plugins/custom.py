@@ -42,8 +42,8 @@ def remove_reserved(user_roles={}):
     not_reserved = []
     for user_role, details in list(user_roles.items()):
         if (
-            not "metadata" in details
-            or not "_reserved" in details["metadata"]
+            "metadata" not in details
+            or "_reserved" not in details["metadata"]
             or not details["metadata"]["_reserved"]
         ):
             not_reserved.append(user_role)

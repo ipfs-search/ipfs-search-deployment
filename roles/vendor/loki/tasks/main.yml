@@ -28,7 +28,7 @@
     mode: 0644
   register: loki_download
 
-- name: Unarchive
+- name: Unarchive # noqa no-handler
   unarchive:
     src: /tmp/loki-linux-amd64.zip
     dest: /usr/local/bin
@@ -38,23 +38,23 @@
     group: root
     mode: 0755
   when: loki_download.changed
-  notify: restart loki
+  notify: Restart loki
 
-- name: systemd unit
+- name: Systemd unit
   template:
-    src: loki.service
+    src: loki.service.j2
     dest: /etc/systemd/system/loki.service
     mode: 0644
-  notify: restart loki
+  notify: Restart loki
 
-- name: config file
+- name: Config file
   template:
-    src: config.yaml
+    src: config.yaml.j2
     dest: /etc/loki/config.yaml
     mode: 0600
-  notify: restart loki
+  notify: Restart loki
 
-- name: service enabled
+- name: Service enabled
   systemd:
     daemon_reload: yes
     name: loki

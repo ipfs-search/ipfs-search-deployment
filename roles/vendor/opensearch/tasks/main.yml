@@ -1,27 +1,15 @@
 ---
-
-- hostname:
-    name: "{{ inventory_hostname }}"
-  when: os_set_hostname
-
 # Disabling for Amazon Linux 2 as selinux is disabled by default.
 - name: Disable the selinux
   selinux:
     state: disabled
   when: (ansible_distribution != "Ubuntu") and (ansible_distribution != "Amazon")
 
-- name: Populate the nodes to /etc/hosts
-  import_tasks: etchosts.yml
-
 - name: Tune the system settings
   import_tasks: tune.yml
 
-- name: include opensearch installation
-  include: opensearch.yml
-
-- name: include security plugin for opensearch
-  include_tasks: security.yml
-  when: os_enable_security
+- name: Include opensearch installation
+  import_tasks: opensearch.yml
 
 - name: Create an empty keystore #(prevents unable to create temporary keystore)
   command: "{{ os_keystore_bin_path }} create"
@@ -41,6 +29,7 @@
 - name: Get all the installed ES plugins
   command: "{{ os_plugin_bin_path }} list"
   register: list_plugins
+  changed_when: false
 
 - name: Install plugins
   command: "{{ os_plugin_bin_path }} install --batch {{ item }}"
@@ -62,18 +51,26 @@
   meta: flush_handlers
 
 - name: Wait for opensearch to startup
-  wait_for: host={{ os_api_host }} port={{os_api_port}} delay=5 connect_timeout=1
+  wait_for:
+    host: "{{ os_api_host }}"
+    port: "{{ os_api_port }}"
+    delay: 5
+    connect_timeout: 1
 
-- name: Check the opensearch status
-  command: curl http{% if os_enable_security %}s{% endif %}://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+- name: Check the opensearch status # noqa command-instead-of-module
+  # TODO curl used in place of get_url or uri module
+  command: curl http://{{ os_api_host }}:{{ os_api_port }}/_cluster/health?pretty {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_status
+  changed_when: false
 
 - name: Show the opensearch status
   debug:
     msg: "{{ os_status.stdout }}"
   failed_when: "'number_of_nodes' not in os_status.stdout"
 
-- name: Verify the roles of opensearch cluster nodes
-  command: curl http{% if os_enable_security %}s{% endif %}://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
+- name: Verify the roles of opensearch cluster nodes # noqa command-instead-of-module
+  # TODO curl used in place of get_url or uri module
+  command: curl http://{{ os_api_host }}:{{ os_api_port }}/_cat/nodes?v {% if os_enable_security %}-u 'admin:{{ admin_password }}'{% endif %} -k
   register: os_roles
+  changed_when: false
   run_once: true

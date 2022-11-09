@@ -1,5 +1,7 @@
 ---
 - name: Set PTR records
+  when: inventory_hostname in groups['hetzner']
+  delegate_to: localhost
   block:
   - name: Get existing records
     set_fact:
@@ -24,5 +26,3 @@
     when: fqdn != ptr6_record
     retries: 3
     delay: 3
-  when: inventory_hostname in groups['hetzner']
-  delegate_to: localhost

@@ -3,6 +3,7 @@
     path: "{{ badger_binary }}"
   register: badger_stat
 - name: Install badger CLI
+  when: not badger_stat.stat.exists
   block:
   - name: Ensure golang's available for building
     include_role:
@@ -10,6 +11,7 @@
       public: yes
     when: golang_install_dir is not defined
   - name: Unprivileged build
+    become: false
     block:
     - name: Create build dir
       file:
@@ -24,14 +26,12 @@
         GOBIN: "{{ badger_build_dir }}"
         PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
         GO111MODULE: "on"
-    become: false
   - name: Globally install badger
     copy:
       src: "{{ badger_build_dir }}/badger"
       dest: "{{ badger_binary }}"
       remote_src: True
       mode: 0755
-  when: not badger_stat.stat.exists
 - name: Install IPFS gc script
   template:
     src: ipfs_gc.sh

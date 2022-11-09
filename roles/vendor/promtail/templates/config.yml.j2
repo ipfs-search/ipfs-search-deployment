@@ -1,0 +1,39 @@
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: http://{{ monitoring_host_internal_addr }}:3100/loki/api/v1/push
+ 
+scrape_configs:
+- job_name: journal
+  journal:
+    json: false
+    max_age: 12h
+    path: /var/log/journal
+    labels:
+      #<custom label>
+      job: systemd-journal
+  relabel_configs:
+    - source_labels: ['__journal__systemd_unit']
+      target_label: 'unit'
+    - source_labels: ['__journal__hostname']
+      target_label: 'hostname'
+{% if os_logs_to_loki %}
+- job_name: opensearch_logs
+  static_configs:
+  - labels:
+      hostname: ${HOSTNAME}
+      job: opensearch_logs
+      __path__: /var/log/opensearch/*.json
+
+- job_name: opensearch_gc
+  static_configs:
+  - labels:
+      hostname: ${HOSTNAME}
+      job: opensearch_gc
+      __path__: /var/log/opensearch/gc.log
+{% endif %}

@@ -13,23 +13,19 @@
     create_home: no
     shell: /bin/false
 
-- name: Configure Redis cluster port 7000
+- name: Configure Redis cluster
+  when: redis_cluster
   include_tasks: cluster_configuration_service.yml
   vars:
-    redis_port: 7000
+    redis_port: "{{ item }}"
     redis_dir: redis_cluster
-  when: redis_cluster == true
+  loop:
+    - 7000
+    - 7001
 
 - name: Configure Redis single node
   vars:
     redis_port: 7000
     redis_dir: redis_singlenode
   include_tasks: single_configuration_service.yml
-  when: redis_cluster == false
-
-- name: Configure Redis cluster port 7001
-  include_tasks: cluster_configuration_service.yml
-  vars:
-    redis_port: 7001
-    redis_dir: redis_cluster
-  when: redis_cluster == true
+  when: not redis_cluster

@@ -1,12 +1,12 @@
 ---
-- name: build requirements
+- name: Build requirements
   apt:
     pkg:
       - build-essential
       - libssl-dev
       - pkg-config
     state: present
-- name: clone ipfs-search
+- name: Clone ipfs-search
   git:
     dest: "{{ crawler_build }}"
     repo: https://github.com/ipfs-search/ipfs-search.git
@@ -14,7 +14,8 @@
     force: true
   register: source
   become: false
-- name: Build crawler
+- name: Build crawler # noqa no-handler
+  when: source.changed
   block:
   - name: Ensure golang's available for building
     include_role:
@@ -22,15 +23,20 @@
       public: yes
     when: golang_install_dir is not defined or ansible_local.golang.general.version != golang_version
   - name: Build and install
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
     block:
     - name: Get
       command:
         cmd: go get ./...
         chdir: "{{ crawler_build }}"
+      changed_when: true
     - name: Build
       command:
         cmd: go build -o ipfs-crawler
         chdir: "{{ crawler_build }}"
+      changed_when: true
     - name: Install ipfs-crawler
       copy:
         src: "{{ crawler_build }}/ipfs-crawler"
@@ -38,7 +44,7 @@
         remote_src: True
         mode: 0755
       become: true
-      notify: restart ipfs-crawler
+      notify: Restart ipfs-crawler
     - name: Annotate
       include_role:
         name: annotate
@@ -46,10 +52,6 @@
         role: crawler
         version: "{{ source.after }}"
         action: upgrade
-    environment:
-      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
-    become: false
-  when: source.changed
 - name: Configure group
   group:
     name: ipfs-crawler
@@ -70,7 +72,7 @@
     src: ipfs-crawler.service
     dest: /etc/systemd/system/ipfs-crawler.service
     mode: 0644
-  notify: restart ipfs-crawler
+  notify: Restart ipfs-crawler
 - name: Ensures ipfs-search dir exists
   file:
     path: /etc/ipfs-crawler
@@ -78,11 +80,11 @@
     mode: 0755
 - name: Install configuration file
   template:
-    src: config.yml
+    src: config.yml.j2
     dest: /etc/ipfs-crawler/config.yml
     mode: 0644
   notify:
-    - restart ipfs-crawler
+    - Restart ipfs-crawler
 - name: Start service
   systemd:
     name: ipfs-crawler

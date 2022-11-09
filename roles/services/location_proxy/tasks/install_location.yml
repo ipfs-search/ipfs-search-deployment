@@ -1,0 +1,22 @@
+---
+- name: "Create location proxy directories"
+  file:
+    name: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/nginx/locations-available/
+    - /etc/nginx/locations-enabled/
+- name: Install location {{ location_name }}
+  template:
+    src: "{{ location_template }}"
+    dest: "/etc/nginx/locations-available/{{ location_name }}.conf"
+    mode: 0644
+  notify: Reload nginx
+- name: Enable location {{ location_name }}
+  file:
+    path: "/etc/nginx/locations-enabled/{{ location_name }}.conf"
+    src: "/etc/nginx/locations-available/{{ location_name }}.conf"
+    state: link
+    mode: 0644
+  notify: Reload nginx

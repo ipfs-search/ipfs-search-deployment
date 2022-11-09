@@ -1,7 +1,8 @@
-- import_tasks: ensure_health.yml
+- name: Ensure cluster health
+  import_tasks: ensure_health.yml
   vars:
     required_cluster_health: ["green"]
-- name: Check whether {{ es_data_dir }} exists
+- name: Check whether ES data dir exists
   stat:
     path: "{{ es_data_dir }}"
   register: es_data_dir_stat

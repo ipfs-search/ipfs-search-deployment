@@ -1,8 +1,11 @@
 ---
-- name: Install apt-transport-https
-  apt: name=apt-transport-https state=present
-- name: Install ca-certificates
-  apt: name=ca-certificates state=latest
+- name: Ensure presence of required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - apt-transport-https
+    - ca-certificates
 - name: Install InfluxDB repository key
   apt_key:
     url: https://repos.influxdata.com/influxdb.key
@@ -14,11 +17,12 @@
     state: present
 - name: Install packages
   apt:
-    pkg: telegraf
-    state: latest
+    pkg: telegraf=1.24.2
+    state: present
     update_cache: true
-  notify: restart telegraf
+  notify: Restart telegraf
 - name: Install lm-sensors and modules
+  when: has_sensors is defined
   block:
     - name: Install lm-sensors package
       apt:
@@ -41,7 +45,6 @@
         service: lm-sensors
         enabled: yes
         state: started
-  when: has_sensors is defined
 - name: Telegraf configuration
   template:
     src: telegraf.toml.j2
@@ -49,7 +52,7 @@
     mode: 0640
     owner: root
     group: telegraf
-  notify: restart telegraf
+  notify: Restart telegraf
   register: telegraf_config
 - name: Telegraf test run
   command: telegraf --test
@@ -64,4 +67,7 @@
     msg: "{{ telegraf_test.stderr }}"
   when: telegraf_test.failed
 - name: Enable telegraf service
-  service: name=telegraf enabled=yes state=started
+  service:
+    name: telegraf
+    enabled: yes
+    state: started

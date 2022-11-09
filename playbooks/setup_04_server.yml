@@ -9,7 +9,7 @@
       tags: ['hostname']
     - role: setup/unattended_upgrades
       tags: ['unattended_upgrades']
-- name: cgconfig and firewall
+- name: Setup cgconfig and firewall
   hosts: all:!hcloud
   become: true
   roles:
@@ -17,9 +17,11 @@
       tags: ['cgconfig']
     - role: setup/firewall
       tags: ['firewall']
-- hosts: dmz:!hcloud
+- name: Setup VLAN
+  hosts: dmz:!hcloud
   become: true
   roles:
     - role: setup/vlan
       tags: ['vlan']
-- import_playbook: monitoring.yml
+- name: Setup monitoring
+  import_playbook: monitoring.yml

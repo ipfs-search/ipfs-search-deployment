@@ -14,16 +14,16 @@
     group: root
     checksum: sha256:{{ tika_extractor_sha256 }}
     mode: 0644
-  notify: restart tika-extractor
+  notify: Restart tika-extractor
   register: download
-- name: Annotate
-  include_role:
-    name: annotate
-  vars:
-    role: tika
-    version: "{{ tika_extractor_jar }}"
-    action: upgrade
-  when: download.changed
+# - name: Annotate
+#   include_role:
+#     name: annotate
+#   vars:
+#     role: tika
+#     version: "{{ tika_extractor_jar }}"
+#     action: upgrade
+#   when: download.changed
 - name: Setup group
   group:
     name: tika-extractor
@@ -41,12 +41,16 @@
     shell: /usr/sbin/nologin
 - name: Install systemd service
   template:
-    src: tika-extractor.service
+    src: tika-extractor.service.j2
     dest: /etc/systemd/system/tika-extractor.service
     mode: 0644
-  notify: restart tika-extractor
+  notify: Restart tika-extractor
 - name: Enable service
-  systemd: name=tika-extractor daemon_reload=yes state=started enabled=yes
+  systemd:
+    name: tika-extractor
+    daemon_reload: yes
+    state: started
+    enabled: yes
 - name: Enable tika-extractor stale temp removal
   cron:
     name: Delete stale temp files

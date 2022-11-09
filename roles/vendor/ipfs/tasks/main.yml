@@ -12,14 +12,15 @@
     state: directory
     mode: 0755
     owner: "{{ lookup('env', 'USER') }}"
-- name: clone go-ipfs
+- name: Clone go-ipfs
   git:
     dest: "{{ ipfs_build }}"
     repo: https://github.com/ipfs/go-ipfs.git
     version: "{{ ipfs_version }}"
   register: source
   become: false
-- name: Build and install
+- name: Build and install # noqa no-handler
+  when: source.changed
   block:
   - name: Ensure golang's available for building
     include_role:
@@ -27,20 +28,20 @@
       public: true
     when: golang_install_dir is not defined or ansible_local.golang.general.version != golang_version
   - name: Clean and build
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
     block:
-    - name: clean go-ipfs
+    - name: Clean go-ipfs
       make:
         chdir: "{{ ipfs_build }}"
         target: clean
-    - name: make go-ipfs
+    - name: Make go-ipfs
       make:
         chdir: "{{ ipfs_build }}"
         params:
           GOTAGS=openssl
         target: build
-    environment:
-      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
-    become: false
   - name: Install ipfs binary
     copy:
       src: "{{ ipfs_build }}/cmd/ipfs/ipfs"
@@ -48,7 +49,7 @@
       remote_src: true
       mode: 0755
     become: true
-    notify: restart ipfs
+    notify: Restart ipfs
   - name: Annotate
     include_role:
       name: annotate
@@ -56,7 +57,6 @@
       role: ipfs
       version: "{{ source.after }}"
       action: upgrade
-  when: source.changed
 - name: Setup group
   group:
     name: "{{ ipfs_group }}"
@@ -72,7 +72,7 @@
     home: "{{ ipfs_path }}"
     shell: /usr/sbin/nologin
 # - file: path="{{ ipfs_path }}" owner=ipfs group=ipfs mode=750 state=directory
-- name: initialize IPFS repository
+- name: Initialize IPFS repository
   command: "{{ ipfs_binary }} init --profile=badgerds"
   args:
     creates: "{{ ipfs_path }}/version"
@@ -85,13 +85,13 @@
     name: net.core.rmem_max
     value: "2500000"
     state: present
-  notify: restart ipfs
+  notify: Restart ipfs
 - name: Configure IPFS service
   template:
     src: ipfs.service
     dest: /etc/systemd/system/ipfs.service
     mode: 0644
-  notify: restart ipfs
+  notify: Restart ipfs
 - name: Ensure sniffer service started
   systemd:
     name: ipfs-sniffer
@@ -108,6 +108,7 @@
   with_items: "{{ groups['sniffer'] }}"
   when: sniffer_heads is not defined
   run_once: true
+  changed_when: false
 - name: Gather facts from other IPFS nodes
   setup:
   delegate_to: "{{ item }}"
@@ -127,10 +128,14 @@
     mode: 0600
     owner: "{{ ipfs_user }}"
     group: "{{ ipfs_group }}"
-  notify: restart ipfs
+  notify: Restart ipfs
 - name: Enable IPFS service
-  systemd: name=ipfs daemon_reload=true state=started enabled=true
-- name: ipfs convenience alias
+  systemd:
+    name: ipfs
+    daemon_reload: true
+    state: started
+    enabled: true
+- name: CLI convenience alias ipfs
   lineinfile:
     path: "{{ ansible_env.PWD }}/.bashrc" # Workaround https://github.com/ansible/ansible/issues/15901
     regexp: "^alias ipfs="

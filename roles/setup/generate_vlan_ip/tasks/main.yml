@@ -1,5 +1,6 @@
 ---
 - name: Generate VLAN IP's
+  delegate_to: localhost
   block:
   - name: Get last VLAN IP
     set_fact:
@@ -25,4 +26,3 @@
     when: generated_vlan_ip is defined
   - name: Refresh inventory to ensure new hostnames exist in inventory
     meta: refresh_inventory
-  delegate_to: localhost

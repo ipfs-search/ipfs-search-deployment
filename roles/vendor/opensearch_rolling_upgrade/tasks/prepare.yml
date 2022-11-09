@@ -1,5 +1,6 @@
 ---
-- import_tasks: ensure_health.yml
+- name: Ensure health of cluster
+  import_tasks: ensure_health.yml
   vars:
     required_cluster_health: ["green"]
 - name: Ensure required node count {{ required_nodes }}

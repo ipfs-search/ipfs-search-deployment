@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: vendor/nginx
-    tag: nginx
