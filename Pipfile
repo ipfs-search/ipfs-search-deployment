@@ -4,15 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-ansible = "<4"
+ansible = "~=6.6.0"
 six = "*"
 netaddr = "*"
 jmespath = "*"
 ansible-lint = "*"
 dnspython = "*"
 hcloud = "*"
+wheel = "*"
+yamllint = "*"
+flake8 = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.10"

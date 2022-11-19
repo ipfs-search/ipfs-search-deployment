@@ -1,6 +1,0 @@
----
-# vars file for grafana
-install_packages:
-  - gnupg2
-  - curl
-  - software-properties-common

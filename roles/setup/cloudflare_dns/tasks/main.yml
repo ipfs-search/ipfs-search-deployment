@@ -1,5 +1,6 @@
 ---
 - name: Set A and AAAA records
+  delegate_to: localhost
   block:
   - name: Get existing records
     set_fact:
@@ -25,4 +26,3 @@
     when: ipv6_address != aaaa_record
     retries: 3
     delay: 3
-  delegate_to: localhost

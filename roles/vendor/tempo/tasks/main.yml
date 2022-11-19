@@ -28,7 +28,7 @@
     mode: 0644
   register: tempo_download
 
-- name: Unarchive
+- name: Unarchive # noqa no-handler
   unarchive:
     src: /tmp/tempo_linux_amd64.tar.gz
     dest: /usr/local/bin
@@ -38,21 +38,21 @@
     group: root
     mode: 0755
   when: tempo_download.changed
-  notify: restart tempo
+  notify: Restart tempo
 
 - name: Setup systemd unit
   template:
-    src: tempo.service
+    src: tempo.service.j2
     dest: /etc/systemd/system/tempo.service
     mode: 0644
-  notify: restart tempo
+  notify: Restart tempo
 
 - name: Setup config file
   template:
-    src: config.yaml
+    src: config.yaml.j2
     dest: /etc/tempo/config.yaml
     mode: 0600
-  notify: restart tempo
+  notify: Restart tempo
 
 - name: Enable service
   systemd:

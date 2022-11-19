@@ -1,14 +1,8 @@
 ---
 roles:
-  - name: wireguard
-    src: adamruzicka.wireguard
-    version: 42d5d43c8d70295c723c81024e17e6c9f2de085a
   - name: golang
     src: gantsign.golang
     version: 2.10.2
-  - name: elasticsearch
-    src: elastic.elasticsearch
-    version: v7.12.0
 collections:
   - name: ansible.netcommon
     version: 2.4.0

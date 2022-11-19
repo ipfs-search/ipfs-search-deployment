@@ -1,9 +1,10 @@
 # Ansible deployment
 
 ## Requirements
-* Ubuntu 20.02 machine for deployment
+* Ubuntu 22.02 machine for deployment
 * [Python 3.8](https://www.python.org/downloads/)
 * [Ansible 3](https://docs.ansible.com/ansible/2.8/installation_guide/intro_installation.html) on controlling machine
+* [Kubo](https://docs.ipfs.tech/install/command-line/) (IPFS CLI)
 
 ## Installing Ansible
 In order to ensure that the correct version of Ansible and it's dependencies is installed, we suggest you use [pipenv](https://pipenv.pypa.io/en/latest/) to install it in a [virtual environment](https://virtualenv.pypa.io/en/latest/):

@@ -1,5 +1,5 @@
 ---
-- name: OpenSearch Install | Create opensearch user
+- name: Create opensearch user
   user:
     name: "{{ os_user }}"
     state: present
@@ -12,25 +12,32 @@
     url: "{{ os_ipfs_download_url }}"
     dest: "{{ os_download_path }}"
     checksum: "sha256:{{ os_sha256 }}"
+    mode: 0644
   register: ipfs_download
   when: os_ipfs_download_url is defined
   ignore_errors: true
 
-- name: OpenSearch Install | Download opensearch {{ os_version }}
+- name: Download opensearch {{ os_version }}
   get_url:
     url: "{{ os_download_url }}/{{ os_version }}/opensearch-{{ os_version }}-linux-x64.tar.gz"
     dest: "{{ os_download_path }}"
     checksum: "sha256:{{ os_sha256 }}"
+    mode: 0644
   register: download
   when: ipfs_download.failed
 
-- block:
+- name: Install opensearch # noqa: no-handler
+  when: ipfs_download.changed or download.changed
+  notify:
+    - Restart opensearch
+
+  block:
   - name: Clear home directory
     file:
       path: "{{ os_home }}"
       state: absent
 
-  - name: OpenSearch Install | Create Home Directory
+  - name: Create Home Directory
     file:
       state: directory
       path: "{{ os_home }}"
@@ -38,7 +45,7 @@
       group: root
       mode: 0755
 
-  - name: OpenSearch Install | Unarchive
+  - name: Unarchive
     unarchive:
       src: "{{ os_download_path }}"
       dest: "{{ os_home }}"
@@ -57,11 +64,8 @@
       group: "{{ os_user }}"
       mode: "u=rwX,g=rwX"
       remote_src: true
-  when: ipfs_download.changed or download.changed
-  notify:
-    - restart opensearch
 
-- name: OpenSearch Install | Copy Configuration File
+- name: Copy Configuration File
   blockinfile:
     block: "{{ lookup('template', 'templates/opensearch.yml.j2') }}"
     dest: "{{ os_conf_dir }}/opensearch.yml"
@@ -73,20 +77,20 @@
     group: "{{ os_user }}"
     mode: 0640
   notify:
-    - restart opensearch
+    - Restart opensearch
 
-- name: OpenSearch Install | Copy jvm.options File for Instance
+- name: Copy jvm.options File for Instance
   template:
-    src: jvm.options
-    dest: "{{os_conf_dir}}/jvm.options"
+    src: jvm.options.j2
+    dest: "{{ os_conf_dir }}/jvm.options"
     owner: "root"
     group: "{{ os_user }}"
     mode: 0640
     force: yes
   notify:
-    - restart opensearch
+    - Restart opensearch
 
-- name: OpenSearch Install | Correct permissions on Configuration Directory
+- name: Correct permissions on Configuration Directory
   file:
     path: "{{ os_conf_dir }}"
     state: directory
@@ -94,7 +98,7 @@
     group: "{{ os_user }}"
     mode: "2750"
 
-- name: OpenSearch Install | Create PID Directory
+- name: Create PID Directory
   file:
     path: "{{ os_pid_dir }}"
     state: directory
@@ -102,7 +106,7 @@
     group: "{{ os_user }}"
     mode: "755"
 
-- name: OpenSearch Install | Create Others Directories
+- name: Create Others Directories
   file:
     path: "{{ item }}"
     state: directory
@@ -113,12 +117,11 @@
     - "{{ os_log_dir }}"
     - "{{ os_data_dirs }}"
 
-- name: OpenSearch Install | create systemd service
+- name: Setup systemd service
   template:
-    src: opensearch.service
+    src: opensearch.service.j2
     dest: "{{ systemctl_path }}/opensearch.service"
     mode: 0644
   notify:
-    - reload systemd configuration
-    - restart opensearch
-
+    - Reload systemd configuration
+    - Restart opensearch

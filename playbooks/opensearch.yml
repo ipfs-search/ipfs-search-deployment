@@ -1,6 +1,6 @@
 ---
 
-- name: opensearch installation & configuration
+- name: OpenSearch installation & configuration
   hosts: opensearch
   tags: opensearch
   become: true
@@ -17,4 +17,28 @@
 #   become: true
 #   gather_facts: true
 #   roles:
-#     - { role: vendor/opensearch-dashboards }
+#     - { role: vendor/opensearch_dashboards }
+
+- name: Enable promtail for Opensearch
+  hosts: opensearch
+  become: true
+  serial: 1
+  any_errors_fatal: true
+
+  # NOTE: Comment out for clean installs!
+  pre_tasks:
+    - name: Ensure OS cluster health is green
+      uri:
+        url: http://localhost:9200/_cluster/health
+        method: GET
+      register: response
+      until: "response.json.status == 'green'"
+      retries: 1000
+      delay: 2
+
+  roles:
+    - name: push logs files to loki using promtail
+      role: vendor/promtail
+      tags: promtail
+      vars:
+        os_logs_to_loki: true

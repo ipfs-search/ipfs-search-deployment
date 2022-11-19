@@ -1,5 +1,5 @@
 ---
-- name: ipfs-gateway
+- name: IPFS gateway
   hosts: ipfs-gateway
   become: true
   roles:

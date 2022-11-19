@@ -1,15 +1,13 @@
 ---
-#Setup Grafana
 - name: Update apt repo and cache on all Ubuntu box
   apt:
     update_cache: yes
     force_apt_get: yes
     cache_valid_time: 3600
 
-# Can't we assume these are installed?
 - name: Install required packages
   apt:
-    name: "{{ install_packages }}"
+    name: "{{ grafana_requirements }}"
     state: present
   become: true
   tags:
@@ -32,6 +30,7 @@
     update_cache: true
   tags:
     - installed_grafana
+  notify: Restart grafana
 
 - name: Systemd setup
   systemd:
@@ -46,18 +45,11 @@
 # TODO: Make conditional
 - name: Change default password for grafana admin
   command: grafana-cli admin reset-admin-password {{ grafana_password }}
-
-# Bad idea.
-# - name: print vaulted grafana password
-#   vars:
-#     msg: |
-#          Grafana vaulted password is:
-#          >> {{ grafana_password }} <<
-#   debug:
-#     msg: "{{ msg.split('\n') }}"
+  notify: Restart grafana
+  changed_when: true
 
 # TODO: Use template for config
-- name: make grafana listening on DMZ
+- name: Make grafana listen on DMZ
   lineinfile:
     path: /etc/grafana/grafana.ini
     regexp: '^(.*)http_addr =(.*)$'
@@ -73,17 +65,13 @@
     # should filter by 4000 vlanID or filter if it's in vlan CIDR
     # let's hope that var 'vlan_ip' exists for every host in hosts_var
     mode: 0644
+  notify: Restart grafana
 
-- name: enable search feature for Tempo on grafana web UI
+- name: Enable search feature for Tempo on grafana web UI
   ini_file:
     path: /etc/grafana/grafana.ini
     section: feature_toggles
     option: "enable = tempoSearch tempoBackendSearch"
     allow_no_value: true
     mode: 0644
-
-- name: Systemd service restart
-  systemd:
-    name: grafana-server
-    enabled: true
-    state: restarted
+  notify: Restart grafana

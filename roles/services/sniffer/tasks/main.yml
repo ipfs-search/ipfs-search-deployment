@@ -19,25 +19,28 @@
     version: "{{ sniffer_version }}"
   register: source
   become: false
-- name: Build and install
+- name: Build and install # noqa no-handler
+  when: source.changed
   block:
   - name: Ensure golang's available for building
     include_role:
       name: golang
       public: yes
   - name: Get and build
+    environment:
+      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
+    become: false
     block:
-    - name: Get dependencies
+    - name: Go get
       command:
         cmd: go get -tags=openssl
         chdir: "{{ sniffer_build }}"
+      changed_when: true
     - name: Build
       command:
         cmd: go build -tags=openssl -o ipfs-sniffer
         chdir: "{{ sniffer_build }}"
-    environment:
-      PATH: "{{ golang_install_dir }}/bin:{{ ansible_env.PATH }}"
-    become: false
+      changed_when: true
   - name: Install ipfs-sniffer
     copy:
       src: "{{ sniffer_build }}/ipfs-sniffer"
@@ -45,7 +48,7 @@
       remote_src: True
       mode: 0775
     become: true
-    notify: restart sniffer
+    notify: Restart sniffer
   - name: Annotate
     include_role:
       name: annotate
@@ -53,7 +56,6 @@
       role: sniffer
       version: "{{ source.after }}"
       action: upgrade
-  when: source.changed
 - name: Setup group
   group:
     name: ipfs-sniffer
@@ -80,7 +82,7 @@
     src: ipfs-sniffer.service
     dest: /etc/systemd/system/ipfs-sniffer.service
     mode: 0644
-  notify: restart sniffer
+  notify: Restart sniffer
 - name: Enable service
   systemd:
     name: ipfs-sniffer

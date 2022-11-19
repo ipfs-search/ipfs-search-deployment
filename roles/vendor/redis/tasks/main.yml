@@ -1,8 +1,9 @@
 ---
-- include: install_redis.yml
+- name: Install redis
+  include_tasks: install_redis.yml
   tags:
     - install_redis_server
-
-- include: os_configuration.yml
+- name: OS configuration for redis
+  include_tasks: os_configuration.yml
   tags:
     - setup_redis

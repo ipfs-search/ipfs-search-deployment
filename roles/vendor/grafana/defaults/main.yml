@@ -1,0 +1,5 @@
+---
+grafana_requirements:
+  - gnupg2
+  - curl
+  - software-properties-common

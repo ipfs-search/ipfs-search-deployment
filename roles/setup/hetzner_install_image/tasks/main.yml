@@ -6,6 +6,7 @@
   environment:
     TERM: xterm # Somehow, at least on one host, this is is necessary.
   register: installimage
+  changed_when: true
 - name: Reboot
   reboot:
     reboot_timeout: 7200

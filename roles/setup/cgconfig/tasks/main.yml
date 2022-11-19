@@ -1,11 +1,22 @@
 ---
 - name: Install cgroup tools
-  apt: name=cgroup-tools state=present
+  apt:
+    name: cgroup-tools
+    state: present
 - name: Install cgconfig file
-  copy: src=cgconfig.conf dest=/etc/cgconfig.conf mode=644
-  notify: restart cgconfig
+  copy:
+    src: cgconfig.conf
+    dest: /etc/cgconfig.conf
+    mode: 0644
+  notify: Restart cgconfig
 - name: Install cgconfig service
-  copy: src=cgconfig.service dest=/etc/systemd/system/cgconfig.service mode=644
-  notify: restart cgconfig
+  copy:
+    src: cgconfig.service
+    dest: /etc/systemd/system/cgconfig.service
+    mode: 0644
+  notify: Restart cgconfig
 - name: Enable cgconfig service
-  service: name=cgconfig enabled=yes state=started
+  service:
+    name: cgconfig
+    enabled: yes
+    state: started

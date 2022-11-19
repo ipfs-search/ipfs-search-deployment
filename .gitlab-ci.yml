@@ -1,25 +1,32 @@
-image: python:3.8-slim
+image: python:3.10-slim
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
+  ANSIBLE_CONFIG: "ansible_test.cfg"
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+  paths:
+    - .cache
 
 before_script:
-  - pip install --no-cache-dir pipenv
+  - pip3 install pipenv --ignore-installed distlib
+  - python3 --version
+  - pipenv --version
 
-stages:
-  - requirements
-  - lint
-
-requirements-install:
-  stage: requirements
+lint:
+  stage: test
   script:
+    - pipenv verify
     - pipenv sync
-    - pipenv run ansible-galaxy install -r requirements.txt
-
-requirements-check:
-  stage: requirements
-  script:
-    - pipenv check --ignore 42923
-      # Ignore: https://bugzilla.redhat.com/show_bug.cgi?id=1956464
-
-ansible-lint:
-  stage: lint
-  script:
+    - pipenv requirements
+    - pipenv check --ignore 42923  # Ignore: https://bugzilla.redhat.com/show_bug.cgi?id=1956464
+    - pipenv run ansible-galaxy install -r requirements.yml
     - scripts/lint.sh

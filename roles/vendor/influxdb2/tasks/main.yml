@@ -1,6 +1,8 @@
 ---
 - name: Install Influxdata repository key
-  apt_key: url=https://repos.influxdata.com/influxdb.key state=present
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
 - name: Add Influxdata repository
   apt_repository:
     repo: "deb https://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_lsb.codename }} stable"
@@ -11,9 +13,9 @@
     pkg:
       - influxdb2
       - influxdb2-cli
-    state: latest
+    state: present
     update_cache: yes
-  notify: restart influxdb
+  notify: Restart influxdb
 - name: Install InfluxDB configuration
   template:
     src: config.toml
@@ -21,7 +23,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart influxdb
+  notify: Restart influxdb
 - name: Directory for drop-in service override
   file:
     path: /etc/systemd/system/influxd.service.d
@@ -36,6 +38,10 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart influxdb
+  notify: Restart influxdb
 - name: Enable service
-  systemd: name=influxdb daemon_reload=yes state=started enabled=yes
+  systemd:
+    name: influxdb
+    daemon_reload: yes
+    state: started
+    enabled: yes

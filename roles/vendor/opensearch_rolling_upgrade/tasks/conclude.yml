@@ -6,7 +6,8 @@
   until: "response.json.number_of_nodes >= required_nodes"
   retries: 15
   delay: 1
-- import_tasks: ensure_health.yml
+- name: Ensure cluster health
+  import_tasks: ensure_health.yml
   vars:
     required_cluster_health: ["green", "yellow"]
 - name: Re-enable shard allocation

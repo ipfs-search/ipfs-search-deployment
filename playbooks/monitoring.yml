@@ -2,7 +2,6 @@
 - name: Common configuration for all hosts.
   hosts: all,!poppycorn
   become: true
-  strategy: free
   roles:
     - role: vendor/telegraf
       tags: telegraf

@@ -1,11 +1,16 @@
 ---
 # This includes all playbooks for all hosts.
-- import_playbook: aux.yml
-- import_playbook: monitoring.yml
-- import_playbook: observability.yml
-- import_playbook: elasticsearch.yml
-- import_playbook: api.yml
-- import_playbook: api_nyats.yml
-- import_playbook: api_nsfw_server.yml
-- import_playbook: frontend.yml
-- import_playbook: index.yml
+- name: Setup auxillary services
+  import_playbook: aux.yml
+- name: Setup monitoring
+  import_playbook: monitoring.yml
+- name: Setup observability
+  import_playbook: observability.yml
+- name: Setup OpenSearch
+  import_playbook: opensearch.yml
+- name: Setup API servers
+  import_playbook: api.yml
+- name: Setup frontend
+  import_playbook: frontend.yml
+- name: Setup index nodes
+  import_playbook: index.yml

@@ -1,6 +1,0 @@
----
-dependencies:
-  - role: vendor/nodejs
-    tag: nodejs
-  - role: services/location-proxy
-    tag: location-proxy

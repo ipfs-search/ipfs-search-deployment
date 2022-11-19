@@ -1,29 +1,40 @@
 ---
 - name: Install RabbitMQ repository key
-  apt_key: url=https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey state=present id=F6609E60DC62814E
+  apt_key:
+    url: https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+    state: present
+    id: F6609E60DC62814E
 - name: Add RabbitMQ repository
   apt_repository:
     repo: "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ {{ ansible_lsb.codename }} main"
     state: present
     update_cache: yes
 - name: Install Erlang repository key
-  apt_key: url=https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc state=present id=D208507CA14F4FCA
+  apt_key:
+    url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+    state: present
+    id: D208507CA14F4FCA
 - name: Add Erlang repository
   apt_repository:
     repo: "deb https://packages.erlang-solutions.com/ubuntu {{ ansible_lsb.codename }} contrib"
     state: present
     update_cache: yes
 - name: Install required packages
-  apt: pkg=rabbitmq-server state=present
-  notify: restart rabbitmq
+  apt:
+    pkg: rabbitmq-server
+    state: present
+  notify: Restart rabbitmq
 - name: Configuration file
   template:
-    src: rabbitmq.conf
+    src: rabbitmq.conf.j2
     dest: /etc/rabbitmq/rabbitmq.conf
     mode: 0644
-  notify: restart rabbitmq
+  notify: Restart rabbitmq
 - name: Enable required services
-  service: name=rabbitmq-server enabled=yes state=started
+  service:
+    name: rabbitmq-server
+    enabled: yes
+    state: started
 - name: Setup rabbitmq admin user
   rabbitmq_user:
     user: admin
@@ -33,7 +44,7 @@
     write_priv: .*
     state: present
     tags: administrator
-  notify: restart rabbitmq
+  notify: Restart rabbitmq
 - name: Configure rabbitmq guest user
   rabbitmq_user:
     user: guest
@@ -42,7 +53,9 @@
     read_priv: .*
     write_priv: .*
     state: present
-  notify: restart rabbitmq
-- name: Enable rabbitmq plugins
-  rabbitmq_plugin: names=rabbitmq_management,rabbitmq_shovel,rabbitmq_shovel_management state=enabled
-  notify: restart rabbitmq
+  notify: Restart rabbitmq
+- name: Enable Rabbitmq plugins
+  rabbitmq_plugin:
+    names: rabbitmq_management,rabbitmq_shovel,rabbitmq_shovel_management
+    state: enabled
+  notify: Restart rabbitmq

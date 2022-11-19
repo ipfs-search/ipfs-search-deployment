@@ -1,17 +1,17 @@
 ---
-- name: "User '{{ account.key }}' present"
+- name: Presence of user {{ account.key }}
   user:
     name: "{{ account.key }}"
     shell: /bin/bash
     state: present
 
-- name: "SSH public key(s) for '{{ account.key }}'"
+- name: SSH public key(s) for {{ account.key }}
   authorized_key:
     user: "{{ account.key }}"
     key: "{{ account.value | join('\n') }}"
     exclusive: True
 
-- name: "'{{ account.key }}' in sudoers"
+- name: "User in sudoers {{ account.key }}"
   lineinfile:
     dest: /etc/sudoers
     regexp: "^{{ account.key }}"

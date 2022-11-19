@@ -6,11 +6,10 @@
   serial:
     - 1
     - "100%"
-  strategy: free
   roles:
-    - name: ipfs-search-api
-      tags: node-server
-      role: services/node-server
+    - name: Search API
+      tags: node_server
+      role: services/node_server
       vars:
         node_server_name: ipfs-search
         node_server_install_path: "/usr/local/libexec/ipfs-search/api"

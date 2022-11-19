@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Mathijs de Bruin
+  description: Generic nginx location proxy for locally running services.
+  company: ipfs-search.com
+  license: MIT
+  min_ansible_version: "2.13"
+  platforms:
+  - name: Ubuntu
+    versions:
+    - focal
+  galaxy_tags: []
+
+dependencies:
+  - role: vendor/nginx
+    tag: nginx

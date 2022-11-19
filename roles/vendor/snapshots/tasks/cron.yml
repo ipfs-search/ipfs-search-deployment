@@ -1,4 +1,4 @@
-- name: "opensearch {{ snapshot_repo_name }} daily snapshot cronjob on cron host"
+- name: "Add OpenSearch daily snapshot cronjob on cron host"
   cron:
     name: "opensearch {{ snapshot_repo_name }} snapshot"
     cron_file: "{{ snapshot_repo_name }}"
@@ -9,7 +9,7 @@
     job: "/usr/local/bin/ipfs-search-snapshot-{{ snapshot_repo_name }}.sh"
   delegate_to: "{{ snapshot_cron_host }}"
   run_once: True
-- name: "Remove opensearch {{ snapshot_repo_name }} daily snapshot cronjob on other hosts"
+- name: "Remove OpenSearch daily snapshot cronjob on non-cron hosts"
   cron:
     cron_file: "{{ snapshot_repo_name }}"
     name: "opensearch {{ snapshot_repo_name }} snapshot"

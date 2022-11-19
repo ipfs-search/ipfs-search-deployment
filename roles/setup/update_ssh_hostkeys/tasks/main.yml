@@ -14,7 +14,7 @@
     - "{{ ssh_hostname }}"
     - "{{ ansible_default_ipv4.address }}"
     - "{{ ansible_default_ipv6.address }}"
-- name: "Add known_hosts for {{ ssh_hostname }}"
+- name: Add known_hosts for {{ ssh_hostname }}
   known_hosts:
     name: "{{ ssh_hostname }}"
     key: "{{ item }}"

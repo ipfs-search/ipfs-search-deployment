@@ -1,3 +1,6 @@
 ---
-- name: restart ipfs
-  systemd: name=ipfs daemon_reload=yes state=restarted
+- name: Restart ipfs
+  systemd:
+    name: ipfs
+    daemon_reload: yes
+    state: restarted
