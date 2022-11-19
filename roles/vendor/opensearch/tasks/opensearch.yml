@@ -32,12 +32,7 @@
     - Restart opensearch
 
   block:
-  - name: Clear home directory
-    file:
-      path: "{{ os_home }}"
-      state: absent
-
-  - name: Create Home Directory
+  - name: Create home Directory
     file:
       state: directory
       path: "{{ os_home }}"

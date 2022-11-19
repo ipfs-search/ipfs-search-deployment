@@ -1,11 +1,4 @@
 ---
-- name: Update apt cache
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
-- name: Install apt upgrades
-  apt:
-    upgrade: dist
 - name: Set timezone to Europe/Lisbon
   timezone:
     name: Europe/Lisbon

@@ -78,6 +78,13 @@
     path: /etc/ipfs-crawler
     state: directory
     mode: 0755
+- name: Gather facts from Redis nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  loop: "{{ groups['redis'] }}"
+  ignore_unreachable: true
 - name: Install configuration file
   template:
     src: config.yml.j2

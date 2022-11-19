@@ -3,18 +3,10 @@
   set_fact:
     ssh_hostname: "{{ ansible_host | default(inventory_hostname) }}"
 - name: Get new SSH host key
-  command: "ssh-keyscan {{ ssh_hostname }}"
+  command: "ssh-keyscan -t ecdsa-sha2-nistp256 {{ ssh_hostname }}"
   register: "host_keys"
   changed_when: false
-- name: "Remove keys from known hosts file"
-  known_hosts:
-    name: "{{ item }}"
-    state: absent
-  with_list:
-    - "{{ ssh_hostname }}"
-    - "{{ ansible_default_ipv4.address }}"
-    - "{{ ansible_default_ipv6.address }}"
-- name: Add known_hosts for {{ ssh_hostname }}
+- name: Add known_hosts for {{ inventory_hostname }}
   known_hosts:
     name: "{{ ssh_hostname }}"
     key: "{{ item }}"

@@ -14,6 +14,8 @@
   hosts: all # TODO: Filter by machines in rescue mode
   remote_user: root
   ignore_unreachable: true
-  tags: install_image
   roles:
-    - setup/hetzner_install_image
+    - role: setup/hetzner_install_image
+      tags: install_image
+    - role: setup/update_ssh_hostkeys
+      tags: update_ssh_hostkeys

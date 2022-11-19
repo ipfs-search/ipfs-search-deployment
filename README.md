@@ -67,12 +67,16 @@ ansible-playbook playbooks/setup/01_inventory.yml
 In order to (re)install a machine, first make sure the machine is running in the [rescue system](https://docs.hetzner.com/robot/dedicated-server/troubleshooting/hetzner-rescue-system/). Then, run:
 
 ```sh
-ansible-playbook playbooks/setup_01_inventory.yml -u root -l $HOSTNAME
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/setup_02_hetzner.yml -l $HOSTNAME
-ansible-playbook playbooks/setup_03_bootstrap.yml -l $HOSTNAME
-ansible-playbook playbooks/setup_04_server.yml -l $HOSTNAME
-ansible-playbook playbooks/site.yml -l $HOSTNAME
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/setup_01_inventory.yml -u root -l $HOSTNAMES
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/setup_02_hetzner.yml -l $HOSTNAMES
+ansible-playbook playbooks/setup_03_bootstrap.yml -u root -l $HOSTNAMES
+ansible-playbook playbooks/setup_04_server.yml -l $HOSTNAMES
+ansible-playbook playbooks/site.yml -l $HOSTNAMES
 ```
+
+## Linting
+
+We're using [ansible-lint](https://ansible-lint.readthedocs.io/en/latest/) and yamllint to keep our deployment up to standard. Run linter locally as we do on CI through [scripts/lint.sh](scripts/lint.sh).
 
 ## License
 ansible-ipfs is dual-licensed under Apache 2.0 and MIT terms:
