@@ -116,14 +116,11 @@ iac_enable: false
 ### ipfs-search.com
 os_enable_security: false
 
-snapshot_repo_name: filebase
+snapshot_repo_name: s3
 snapshot_repo_settings:
-  client: filebase
-  region: us-east-1
-  bucket: ipfs-search-snapshots-v8
-  endpoint: s3.filebase.com
+  client: s3
+  region: eu-central-1
+  storage_class: standard_ia
+  bucket: ipfs-search-snapshots-v9
   chunk_size: 524288000B
   compress: true
-  read_timeout: "5m"
-  max_retries: 10
-  max_snapshot_bytes_per_sec: "60mb"
