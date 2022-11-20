@@ -6,12 +6,11 @@
     - admin_users
   roles:
     - setup/add_admin_users
-
 - name: Secure SSH and upgrade packages
   hosts: all
   become: true
   roles:
     - role: setup/secure_ssh
-      tag: secure_ssh
+      tags: secure_ssh
     - role: setup/upgrade_packages
-      tag: upgrade_packages
+      tags: upgrade_packages

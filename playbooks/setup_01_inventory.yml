@@ -4,7 +4,7 @@
   gather_facts: false
   vars_files:
     # `JSON.stringify(Array.from(document.querySelectorAll("#mw-content-text > div.mw-parser-output > table > tbody > tr > td:nth-child(2)")).map(e => e.innerText.split(",", 1)[0].toLowerCase() + '.ipfs-search.com'));`
-    - ../../group_vars/new_hostnames.json
+    - group_vars/new_hostnames.json
   roles:
     - role: setup/generate_hostnames
       tags: 'generate_hostnames'

@@ -41,11 +41,6 @@ os_version: "2.3.0"
 # 2.x Latest Version
 os_dashboards_version: "2.3.0"
 
-# Configure hostnames for opensearch nodes
-# It is required to configure SSL
-# Example es1.example.com, es2.example.com
-domain_name: example.com
-
 os_set_hostname: false
 
 # Cluster type whether its single-node or multi-node

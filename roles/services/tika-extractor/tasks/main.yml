@@ -51,6 +51,14 @@
     daemon_reload: yes
     state: started
     enabled: yes
+- name: Remove old-style cron
+  lineinfile:
+    path: /etc/crontab
+    search_string: "{{ item }}"
+    state: absent
+  loop:
+    - "#Ansible: Delete stale temp files"
+    - "23 * * * * tika-extractor find /tmp -maxdepth 1 -user tika-extractor -cmin +23 -delete"
 - name: Enable tika-extractor stale temp removal
   cron:
     name: Delete stale temp files
@@ -58,5 +66,5 @@
     hour: "*"
     job: "find /tmp -maxdepth 1 -user tika-extractor -cmin +23 -delete"
     state: present
-    cron_file: /etc/crontab
+    cron_file: tika-extractor
     user: tika-extractor

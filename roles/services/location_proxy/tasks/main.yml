@@ -14,7 +14,7 @@
   notify: Reload nginx
 - name: Enable server status # noqa role-name[path]
   include_role:
-    name: services/location-proxy
+    name: services/location_proxy
     tasks_from: 'install_location.yml'
   vars:
     location_name: server-status
