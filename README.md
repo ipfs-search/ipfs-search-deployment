@@ -2,8 +2,8 @@
 
 ## Requirements
 * Ubuntu 22.02 machine for deployment
-* [Python 3.8](https://www.python.org/downloads/)
-* [Ansible 3](https://docs.ansible.com/ansible/2.8/installation_guide/intro_installation.html) on controlling machine
+* [Python 3.10](https://www.python.org/downloads/)
+* [Ansible 6.6](https://docs.ansible.com/ansible/latest/installation_guide/index.html) on controlling machine
 * [Kubo](https://docs.ipfs.tech/install/command-line/) (IPFS CLI)
 
 ## Installing Ansible
