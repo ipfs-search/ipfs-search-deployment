@@ -49,8 +49,3 @@
     url: "http://127.0.0.1:9200/_snapshot/{{ snapshot_repo_name }}/_verify"
     method: POST
   run_once: true
-- name: "Install snapshot script {{ snapshot_repo_name }}"
-  template:
-    src: ipfs-search-snapshot.sh
-    dest: "/usr/local/bin/ipfs-search-snapshot-{{ snapshot_repo_name }}.sh"
-    mode: 0755

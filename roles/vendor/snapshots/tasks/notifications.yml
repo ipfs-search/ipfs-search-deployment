@@ -1,0 +1,37 @@
+- name: Configure notifications
+  run_once: true
+  block:
+  - name: Get channel
+    uri:
+      url: http://127.0.0.1:9200/_plugins/_notifications/configs/{{ os_notifications_channel_id }}
+      method: GET
+      status_code: 200, 404
+    register: channel_get
+    changed_when: false
+  - name: Remove non idempotent fields from channel
+    set_fact:
+      current_config: "{{ channel_get.json.config_list[0].config }}"
+    when: channel_get.status == 200
+  - name: Create channel
+    uri:
+      url: "http://127.0.0.1:9200/_plugins/_notifications/configs/"
+      method: POST
+      status_code: 200
+      body_format: json
+      body:
+        config_id: "{{ os_notifications_channel_id }}"
+        config: "{{ os_notifications_channel_config }}"
+    changed_when: true
+    when: channel_get.status == 404
+  - name: Update channel
+    uri:
+      url: "http://127.0.0.1:9200/_plugins/_notifications/configs/{{ os_notifications_channel_id }}"
+      method: PUT
+      status_code: 200
+      body_format: json
+      body:
+        config_id: "{{ os_notifications_channel_id }}"
+        config: "{{ os_notifications_channel_config }}"
+    register: os_notifications_channel_config_post
+    changed_when: true
+    when: channel_get.status == 200 and current_config != os_notifications_channel_config
