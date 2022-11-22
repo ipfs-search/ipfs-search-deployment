@@ -7,7 +7,11 @@
   import_tasks: s3.yml
   tags:
     - snapshots-s3
-- name: Configuring snapshot cron job
-  import_tasks: cron.yml
+- name: Configuring OS notifications
+  import_tasks: notifications.yml
   tags:
-    - snapshots-cron
+    - snapshots-notifications
+- name: Configuring snapshot management
+  import_tasks: management.yml
+  tags:
+    - snapshots-management

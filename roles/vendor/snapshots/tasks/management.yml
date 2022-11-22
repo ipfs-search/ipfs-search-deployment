@@ -1,0 +1,33 @@
+- name: Configure snapshot management
+  run_once: true
+  block:
+  - name: Get snapshot management policy
+    uri:
+      url: http://127.0.0.1:9200/_plugins/_sm/policies/{{ snapshot_management_policy_name }}
+      method: GET
+      status_code: 200, 404
+    register: snapshot_management_policy_get
+    changed_when: false
+  - name: Remove non idempotent fields from policy
+    set_fact:
+      current_policy: "{{ snapshot_management_policy_get.json.sm_policy | combine({'schedule': omit, 'enabled_time': omit, 'last_updated_time': omit, 'name': omit}) }}"
+    when: snapshot_management_policy_get.status == 200
+  - name: Create snapshot management policy
+    uri:
+      url: "http://127.0.0.1:9200/_plugins/_sm/policies/{{ snapshot_management_policy_name }}"
+      method: POST
+      status_code: 201
+      body_format: json
+      body: "{{ snapshot_management_policy }}"
+    changed_when: true
+    when: snapshot_management_policy_get.status == 404
+  - name: Update snapshot management policy
+    uri:
+      url: "http://127.0.0.1:9200/_plugins/_sm/policies/{{ snapshot_management_policy_name }}?if_seq_no={{ snapshot_management_policy_get.json._seq_no }}&if_primary_term={{ snapshot_management_policy_get.json._primary_term }}"
+      method: PUT
+      status_code: 200
+      body_format: json
+      body: "{{ snapshot_management_policy }}"
+    register: snapshot_management_policy_post
+    changed_when: true
+    when: snapshot_management_policy_get.status == 200 and current_policy != snapshot_management_policy

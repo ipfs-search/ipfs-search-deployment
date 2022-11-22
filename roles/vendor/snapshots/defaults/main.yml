@@ -2,4 +2,49 @@
 os_home: /usr/share/opensearch
 os_conf_dir: /usr/share/opensearch/config
 os_keystore_bin_path: "{{ os_home }}/bin/opensearch-keystore"
-snapshot_hour: "2"
+snapshot_hour: 0
+snapshot_delete_hour: 12
+os_notifications_channel_id: matrix
+os_notifications_slack_url: "{{ slack_url }}"
+os_notifications_channel_config:
+  name: "{{ os_notifications_channel_id }}"
+  description: "Slack notification channel."
+  config_type: slack
+  is_enabled: true
+  slack:
+    url: "{{ os_notifications_slack_url }}"
+snapshot_management_policy_name: ipfs-daily
+snapshot_management_policy:
+  enabled: true
+  schema_version: 16
+  creation:
+    schedule:
+      cron:
+        expression: "16 {{ snapshot_hour }} * * *"
+        timezone: Europe/Lisbon
+    time_limit: 11h
+  deletion:
+    schedule:
+      cron:
+        expression: "16 {{ snapshot_delete_hour }} * * *"
+        timezone: Europe/Lisbon
+    condition:
+      max_age: 30d
+      min_count: 7
+    time_limit: 11h
+  snapshot_config:
+    date_format: yyMMdd_HHmm # 221121_1454
+    date_format_timezone: Europe/Lisbon
+    indices: "ipfs_*"
+    repository: "{{ snapshot_repo_name }}"
+    include_global_state: true
+  #  ignore_unavailable: true
+  #  partial: true
+  notification:
+    channel:
+      id: "{{ os_notifications_channel_id }}"
+    conditions:
+      creation: true
+      deletion: true
+      failure: true
+      time_limit_exceeded: true
