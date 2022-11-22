@@ -1,4 +1,8 @@
 ---
+- name: Import handlers and vars from opensearch rolling upgrade
+  import_role:
+    name: "vendor/opensearch_rolling_upgrade"
+    tasks_from: "init.yml"
 - name: Configuring S3 snapshot repo
   import_tasks: s3.yml
   tags:

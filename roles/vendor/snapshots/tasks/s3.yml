@@ -54,3 +54,5 @@
     src: ipfs-search-snapshot.sh
     dest: "/usr/local/bin/ipfs-search-snapshot-{{ snapshot_repo_name }}.sh"
     mode: 0755
+  delegate_to: "{{ snapshot_cron_host }}"
+  run_once: True
