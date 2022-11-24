@@ -8,7 +8,7 @@
   ignore_unreachable: true
 - name: Install nginx configuration
   template:
-    src: nginx-frontend.conf
+    src: nginx-frontend.conf.j2
     dest: /etc/nginx/sites-available/frontend.conf
     mode: 0644
   notify: reload nginx

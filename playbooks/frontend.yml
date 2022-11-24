@@ -8,6 +8,7 @@
     # ansible-playbook -e certbot_test=false frontend.yml
     # - certbot_test: true
     nginx_anonymize_logs: true
+    certbot_domains: api.websearch.org # test!
   roles:
     - role: vendor/nginx
       tags: ['nginx']

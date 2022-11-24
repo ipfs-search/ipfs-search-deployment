@@ -1,0 +1,6 @@
+---
+- name: Prepare Cloudflare credentials .ini file
+  template:
+    src: cloudflare.ini.j2
+    dest: ~/cloudflare.ini
+    mode: 0600
