@@ -20,7 +20,7 @@ server {
     listen 80 default_server;
     listen [::]:80 default_server;
 
-    server_name api.ipfs-search.com;
+    server_name {{ api_server_name }};
 
     location /server_status {
         # Enable Nginx stats
@@ -32,7 +32,7 @@ server {
     }
 
     location / {
-        return 301 https://api.ipfs-search.com$request_uri;
+        return 301 https://{{ api_server_name }}$request_uri;
     }
 }
 
@@ -40,8 +40,8 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name api.ipfs-search.com;
-    return 301 https://api.ipfs-search.com$request_uri;
+    server_name {{ api_server_name }};
+    return 301 https://{{ api_server_name }}$request_uri;
 }
 
 upstream search {
@@ -89,7 +89,7 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name api.ipfs-search.com;
+    server_name {{ api_server_name }};
 
     limit_req zone=search_reqs burst=300;
     limit_conn search_conns 200; # Concurrent requests per client IP.
@@ -224,6 +224,6 @@ server {
 
     include {{ options_ssl_nginx }};
 
-    ssl_certificate /etc/letsencrypt/live/api.ipfs-search.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/api.ipfs-search.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ api_server_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ api_server_name }}/privkey.pem;
 }

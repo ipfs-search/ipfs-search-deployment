@@ -1,21 +1,25 @@
 ---
-- name: Install installation deps
+- name: Update apt repo and cache
+  apt: update_cache=yes cache_valid_time=3600
+- name: Install snapd
   apt:
-    name: software-properties-common
-    state: present
-- name: Certbot ppa added
-  apt_repository:
-    repo: 'ppa:certbot/certbot'
-- name: Certbot installed
-  apt:
+    name: snapd
+- name: Install certbot using snap
+  snap:
     name: certbot
-    state: present
-- name: Python-certbot-nginx installed
-  apt:
-    name: python-certbot-nginx
-    state: present
+    classic: true
+- name: Confirm plugin containment level 
+  shell: snap set certbot trust-plugin-with-root=ok
+- name: Install certbot cloudflare DNS plugin
+  snap:
+    name: certbot-dns-cloudflare
+- name: Prepare Cloudflare credentials .ini file
+  template:
+    src: cloudflare.ini.j2
+    dest: ~/cloudflare.ini
+    mode: 0600
 - name: Setup certificates
-  command: certbot certonly --nginx {% if certbot_test %}--test-cert {% endif %}-m '{{ certbot_email }}' --agree-tos -n -d '{{ certbot_domains }}'
+  command: certbot certonly -a dns-cloudflare --dns-cloudflare-credentials ~/cloudflare.ini -i nginx {% if certbot_test %}--test-cert {% endif %}-m '{{ certbot_email }}' --agree-tos -n -d '{{ certbot_domains }}'
   changed_when: true
 - name: Generate Diffie-Hellman params
   command: openssl dhparam -out {{ dh_params }} 4096
