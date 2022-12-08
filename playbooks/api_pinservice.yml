@@ -19,10 +19,6 @@
         cacheable: true
       tags: node_server
   roles:
-    - role: vendor/ipfs
-      tags: ipfs
-    - role: vendor/ipfs-gc
-      tags: ipfs-gc
     - name: Pinservice server
       tags: node_server
       role: services/node_server

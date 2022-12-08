@@ -2,7 +2,7 @@
 roles:
   - name: golang
     src: gantsign.golang
-    version: 2.10.2
+    version: 3.0.4
 collections:
   - name: ansible.netcommon
     version: 2.4.0
