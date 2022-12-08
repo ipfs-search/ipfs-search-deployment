@@ -10,3 +10,6 @@ collections:
     version: 1.5.2
   - name: hetzner.hcloud
     version: 1.8.2
+  - name: https://github.com/ipfs-search/ansible-ipfs.git
+    type: git
+    version: main
