@@ -39,7 +39,7 @@ server {
 }
 
 upstream search {
-    ip_hash;
+    # ip_hash;
     keepalive {{ groups['search_api'] | length * 2 }}; # 2 connections per backend server.
 
     {% for host in groups['search_api'] %}
