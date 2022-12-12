@@ -12,4 +12,4 @@ collections:
     version: 1.8.2
   - name: https://github.com/ipfs-search/ansible-ipfs.git
     type: git
-    version: main
+    version: 68b8efff8d5f215503a53c218eee75695311f677
