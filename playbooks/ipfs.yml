@@ -16,8 +16,6 @@
           url: http://127.0.0.1:7779/heads
           return_content: true
         register: sniffer_heads_resp
-      - debug:
-          var: sniffer_heads_resp
       - name: Set sniffer_heads fact
         set_fact:
           sniffer_heads: "{{ sniffer_heads_resp.content.splitlines() | map('from_json') }}"
