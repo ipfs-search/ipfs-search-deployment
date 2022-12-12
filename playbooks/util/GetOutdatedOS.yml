@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: true
+  gather_facts: yes
+  tasks:
+    - name: Assert Ubuntu 20.04
+      assert:
+        that: ansible_facts['lsb']['release'] == "20.04"
+        msg: "Running {{ ansible_facts['lsb']['release'] }}"
