@@ -6,6 +6,8 @@
   import_playbook: monitoring.yml
 - name: Setup observability
   import_playbook: observability.yml
+- name: Setup ipfs nodes and peering
+  import_playbook: ipfs.yml
 - name: Setup OpenSearch
   import_playbook: opensearch.yml
 - name: Setup API servers

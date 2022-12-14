@@ -1,0 +1,121 @@
+---
+- name: Get sniffer heads
+  hosts: sniffer
+  tags:
+    - get_sniffer_heads
+  tasks:
+    - name: Ensure sniffer heads available
+      when: sniffer_heads is not defined
+      block:
+      - name: Ensure sniffer service started
+        systemd:
+          name: ipfs-sniffer
+          state: started
+      - name: Get sniffer heads for peering
+        uri:
+          url: http://127.0.0.1:7779/heads
+          return_content: true
+        register: sniffer_heads_resp
+      - name: Set sniffer_heads fact
+        set_fact:
+          sniffer_heads: "{{ sniffer_heads_resp.content.splitlines() | map('from_json') }}"
+          cacheable: yes
+- name: Configure IPFS node and peerings
+  hosts: ipfs
+  become: true
+  serial:
+    - 1
+    - "100%"
+  roles:
+    - role: ipfs_search.ipfs.ipfs
+      tags: ['ipfs']
+      vars:
+        ipfs_openssl: true
+        ipfs_profile: badgerds
+        ipfs_config:
+          Addresses.Announce:
+              - "/ip4/{{ ansible_default_ipv4.address }}/tcp/4001"
+              - "/ip6/{{ ansible_default_ipv6.address }}/tcp/4001"
+              - "/ip4/{{ ansible_default_ipv4.address }}/udp/4001/quic"
+              - "/ip6/{{ ansible_default_ipv6.address }}/udp/4001/quic"
+          Addresses.NoAnnounce:
+              # Additions to satisfy hosting provider
+              - /ip4/192.0.0.0/ipcidr/29
+              - /ip4/192.0.0.8/ipcidr/32
+              - /ip4/192.0.0.170/ipcidr/32
+              - /ip4/192.0.0.171/ipcidr/32
+              # Default in 0.17.0
+              - /ip4/10.0.0.0/ipcidr/8
+              - /ip4/100.64.0.0/ipcidr/10
+              - /ip4/169.254.0.0/ipcidr/16
+              - /ip4/172.16.0.0/ipcidr/12
+              - /ip4/192.0.0.0/ipcidr/24
+              - /ip4/192.0.2.0/ipcidr/24
+              - /ip4/192.168.0.0/ipcidr/16
+              - /ip4/198.18.0.0/ipcidr/15
+              - /ip4/198.51.100.0/ipcidr/24
+              - /ip4/203.0.113.0/ipcidr/24
+              - /ip4/240.0.0.0/ipcidr/4
+              - /ip6/100::/ipcidr/64
+              - /ip6/2001:2::/ipcidr/48
+              - /ip6/2001:db8::/ipcidr/32
+              - /ip6/fc00::/ipcidr/7
+              - /ip6/fe80::/ipcidr/10
+          Datastore.BloomFilterSize: 0
+          Datastore.GCPeriod: 1h
+          Gateway:
+            HTTPHeaders:
+              Access-Control-Allow-Headers:
+                - X-Requested-With
+                - Range
+                - User-Agent
+              Access-Control-Allow-Methods:
+                - GET
+              Access-Control-Allow-Origin:
+                - "*"
+            PublicGateways:
+              localhost:
+                UseSubdomains: false
+                Paths:
+                  - /ipfs
+                  - /ipns
+                  - /api
+          Experimental:
+            AcceleratedDHTClient: true
+          Swarm:
+            AddrFilters:
+              # Additions to satisfy hosting provider
+              - /ip4/192.0.0.0/ipcidr/29
+              - /ip4/192.0.0.8/ipcidr/32
+              - /ip4/192.0.0.170/ipcidr/32
+              - /ip4/192.0.0.171/ipcidr/32
+              # Defaults as of 0.17.0
+              - /ip4/10.0.0.0/ipcidr/8
+              - /ip4/100.64.0.0/ipcidr/10
+              - /ip4/169.254.0.0/ipcidr/16
+              - /ip4/172.16.0.0/ipcidr/12
+              - /ip4/192.0.0.0/ipcidr/24
+              - /ip4/192.0.2.0/ipcidr/24
+              - /ip4/192.168.0.0/ipcidr/16
+              - /ip4/198.18.0.0/ipcidr/15
+              - /ip4/198.51.100.0/ipcidr/24
+              - /ip4/203.0.113.0/ipcidr/24
+              - /ip4/240.0.0.0/ipcidr/4
+              - /ip6/100::/ipcidr/64
+              - /ip6/2001:2::/ipcidr/48
+              - /ip6/2001:db8::/ipcidr/32
+              - /ip6/fc00::/ipcidr/7
+              - /ip6/fe80::/ipcidr/10
+            DisableBandwidthMetrics: true
+            DisableNatPortMap: true
+            ConnMgr:
+              GracePeriod: 30s
+              HighWater: 3200
+              LowWater: 600
+              Type: basic
+    - role: ipfs_search.ipfs.ipfs_peering
+      tags: ['ipfs_peering']
+      vars:
+        ipfs_extra_peers: "{{ hostvars[groups['sniffer'][0]].sniffer_heads[:1] }}"
+    - role: vendor/ipfs-gc
+      tags: ipfs-gc

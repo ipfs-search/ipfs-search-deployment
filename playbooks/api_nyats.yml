@@ -7,10 +7,6 @@
     - 1
     - "100%"
   roles:
-    - role: vendor/ipfs
-      tags: ipfs
-    - role: vendor/ipfs-gc
-      tags: ipfs-gc
     - name: NYATS server
       role: services/node_server
       tags: node_server

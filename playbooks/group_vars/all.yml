@@ -6,12 +6,9 @@ crawler_directory_workers: 4
 crawler_version: fbd0b56
 amqp_message_ttl: 4h
 golang_version: 1.18.2
-ipfs_version: v0.13.0
-ipfs_path: "/var/lib/ipfs"
-ipfs_binary: "/usr/local/bin/ipfs"
-ipfs_user: "ipfs"
-ipfs_group: "ipfs"
+ipfs_version: 0.17.0
 ipfs_memlimit: 12G
+ipfs_hard_disable_swapping: true
 sniffer_head_count: 12
 sniffer_memlimit: 24G
 sniffer_lastseen_prunelen: 10485760

@@ -12,9 +12,5 @@
       tags: ['tika-extractor']
     - role: vendor/nodejs
       tags: ['nodejs']
-    - role: vendor/ipfs
-      tags: ['ipfs']
-    - role: vendor/ipfs-gc
-      tags: ['ipfs-gc']
     - role: services/crawler
       tags: ['crawler']
