@@ -22,33 +22,17 @@
   tags: generate_vlan_ip
   roles:
     - role: setup/generate_vlan_ip
-- name: Create group of hosts without IPFS peer id
-  hosts: ipfs
-  gather_facts: false
-  tags: generate_ipfs_key
-  tasks:
-  - name: Create group for VLAN-less hosts
-    group_by:
-      key: "{% if ipfs_peer_id is defined %}hasipfspeerid{% else %}noipfspeerid{% endif %}"
-- name: Generate IPFS keys
-  hosts: noipfspeerid
-  gather_facts: false
-  tags: generate_ipfs_key
-  roles:
-    - role: setup/generate_ipfs_key
-- name: Explicitly gather facts
-  hosts: all
-  gather_facts: false
-  tags:
-    - dns
-    - reverse_dns
-  tasks:
-    - name: Gather facts
-      gather_facts:
 - name: Configure DNS
   hosts: all
+  tags: dns
+  gather_facts: true
   roles:
     - role: setup/cloudflare_dns
       tags: dns
-    - role: setup/hetzner_reverse_dns
-      tags: reverse_dns
+- name: Configure Hetzner robot reverse DNS
+  hosts: hetzner
+  tags: reverse_dns
+  gather_facts: true
+  roles:
+    - role: setup/hetzner_robot_reverse_dns
+# TODO: Hcloud reverse DNS

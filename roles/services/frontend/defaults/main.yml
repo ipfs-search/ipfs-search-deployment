@@ -1,2 +1,3 @@
 ---
 frontend_install_path: /usr/local/libexec/ipfs-search/frontend
+frontend_cache_path: /etc/nginx/cache

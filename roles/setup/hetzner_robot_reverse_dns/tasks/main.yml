@@ -1,6 +1,5 @@
 ---
 - name: Set PTR records
-  when: inventory_hostname in groups['hetzner']
   delegate_to: localhost
   block:
   - name: Get existing records
@@ -14,7 +13,7 @@
       value: "{{ fqdn }}"
       hetzner_user: "{{ hetzner_user }}"
       hetzner_password: "{{ hetzner_password }}"
-    when: fqdn != ptr4_record
+    when: ipv4_address and fqdn != ptr4_record
     retries: 3
     delay: 3
   - name: IPv6 reverse DNS
@@ -23,6 +22,6 @@
       value: "{{ fqdn }}"
       hetzner_user: "{{ hetzner_user }}"
       hetzner_password: "{{ hetzner_password }}"
-    when: fqdn != ptr6_record
+    when: ipv6_address and fqdn != ptr6_record
     retries: 3
     delay: 3

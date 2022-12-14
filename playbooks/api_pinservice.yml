@@ -1,7 +1,7 @@
 ---
-- name: Gather facts for ipfs nodes
+- name: Gather facts from ipfs and frontend nodes
   gather_facts: true
-  hosts: ipfs
+  hosts: ipfs:frontend
   tags: node_server
 - name: Pin service
   hosts: pinservice

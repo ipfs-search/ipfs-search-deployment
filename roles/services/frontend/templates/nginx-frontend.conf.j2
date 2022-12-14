@@ -1,13 +1,13 @@
-proxy_cache_path /etc/nginx/cache/search levels=1:2 keys_zone=search_cache:64m max_size=5g
+proxy_cache_path {{ frontend_cache_path }}/search levels=1:2 keys_zone=search_cache:64m max_size=5g
              inactive=8h use_temp_path=off;
 
-proxy_cache_path /etc/nginx/cache/metadata levels=1:2 keys_zone=metadata_cache:128m max_size=10g
+proxy_cache_path {{ frontend_cache_path }}/metadata levels=1:2 keys_zone=metadata_cache:128m max_size=10g
              inactive=1y use_temp_path=off;
 
-proxy_cache_path /etc/nginx/cache/nsfw levels=1:2 keys_zone=nsfw_cache:32m max_size=1g
+proxy_cache_path {{ frontend_cache_path }}/nsfw levels=1:2 keys_zone=nsfw_cache:32m max_size=1g
              inactive=1y use_temp_path=off;
 
-proxy_cache_path /etc/nginx/cache/thumbnail levels=1:2 keys_zone=thumbnail_cache:64m max_size=1g
+proxy_cache_path {{ frontend_cache_path }}/thumbnail levels=1:2 keys_zone=thumbnail_cache:64m max_size=1g
              inactive=1y use_temp_path=off;
 
 # Allow hole-punching in proxy with `?nocache=true`.
@@ -36,52 +36,44 @@ server {
     }
 }
 
-server {
-    listen 80;
-    listen [::]:80;
-
-    server_name {{ api_server_name }};
-    return 301 https://{{ api_server_name }}$request_uri;
-}
-
 upstream search {
     ip_hash;
     keepalive 32;
 
-    {% for host in groups['search_api'] if 'ansible_default_ipv4' in hostvars[host] %}
-        server {{ hostvars[host]['ansible_default_ipv4']['address'] }} max_fails=3 fail_timeout=10s;
+    {% for host in groups['search_api'] %}
+        server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10s;
     {% endfor %}
 }
 
 upstream metadata {
     keepalive 32;
 
-    {% for host in groups['search_api'] if 'ansible_default_ipv4' in hostvars[host] %}
-        server {{ hostvars[host]['ansible_default_ipv4']['address'] }} max_fails=3 fail_timeout=10s;
+    {% for host in groups['search_api'] %}
+        server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10s;
     {% endfor %}
 }
 
 upstream nsfw {
     keepalive 32;
 
-    {% for host in groups['nsfw_server'] if 'ansible_default_ipv4' in hostvars[host] %}
-        server {{ hostvars[host]['ansible_default_ipv4']['address'] }} max_fails=3 fail_timeout=10;
+    {% for host in groups['nsfw_server'] %}
+        server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
     {% endfor %}
 }
 
 upstream pinservice {
     keepalive 32;
 
-    {% for host in groups['pinservice'] if 'ansible_default_ipv4' in hostvars[host] %}
-        server {{ hostvars[host]['ansible_default_ipv4']['address'] }} max_fails=3 fail_timeout=10;
+    {% for host in groups['pinservice'] %}
+        server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
     {% endfor %}
 }
 
 upstream nyats {
     keepalive 32;
 
-    {% for host in groups['nyats'] if 'ansible_default_ipv4' in hostvars[host] %}
-        server {{ hostvars[host]['ansible_default_ipv4']['address'] }} max_fails=0 fail_timeout=120s; # Only one server, never disable server.
+    {% for host in groups['nyats'] %}
+        server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=0 fail_timeout=120s;
     {% endfor %}
 }
 
@@ -224,6 +216,6 @@ server {
 
     include {{ options_ssl_nginx }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ api_server_name }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ api_server_name }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ certbot_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ certbot_name }}/privkey.pem;
 }

@@ -1,7 +1,11 @@
 ---
+- name: Gather facts from frontend nodes
+  gather_facts: true
+  hosts: frontend
+  tags: search_api
 - name: Search API
   hosts: search_api
-  tags: ipfs-search-api
+  tags: search_api
   become: true
   serial:
     - 1

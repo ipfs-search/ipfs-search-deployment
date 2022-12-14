@@ -1,11 +1,4 @@
 ---
-- name: Gather facts from backend nodes
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: true
-  when: hostvars[item]['ansible_default_ipv4'] is not defined
-  loop: "{{ groups['backend'] }}"
-  ignore_unreachable: true
 - name: Install nginx configuration
   template:
     src: nginx-frontend.conf.j2
@@ -18,3 +11,22 @@
     src: /etc/nginx/sites-available/frontend.conf
     state: link
   notify: Reload nginx
+- name: Create cache directory
+  file:
+    path: "{{ frontend_cache_path }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0755
+- name: Flush handlers
+  meta: flush_handlers
+- name: Ensure HTTP and HTTPS are listening
+  wait_for:
+    port: "{{ item }}"
+  loop:
+    - 80
+    - 443
+  timeout: 30
+- name: Test API call
+  uri:
+    url: "https://{{ api_server_name }}/v1/search?q=test"
