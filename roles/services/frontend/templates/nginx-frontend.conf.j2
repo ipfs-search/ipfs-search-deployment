@@ -38,7 +38,7 @@ server {
 
 upstream search {
     ip_hash;
-    keepalive 32;
+    keepalive {{ groups['search_api'] | length * 2 }}; # 2 connections per backend server.
 
     {% for host in groups['search_api'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10s;
@@ -46,7 +46,7 @@ upstream search {
 }
 
 upstream metadata {
-    keepalive 32;
+    keepalive {{ groups['search_api'] | length * 2 }};
 
     {% for host in groups['search_api'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10s;
@@ -54,7 +54,7 @@ upstream metadata {
 }
 
 upstream nsfw {
-    keepalive 32;
+    keepalive {{ groups['search_api'] | length * 2 }};
 
     {% for host in groups['nsfw_server'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
@@ -62,7 +62,7 @@ upstream nsfw {
 }
 
 upstream pinservice {
-    keepalive 32;
+    keepalive {{ groups['search_api'] | length * 2 }};
 
     {% for host in groups['pinservice'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
@@ -70,7 +70,7 @@ upstream pinservice {
 }
 
 upstream nyats {
-    keepalive 32;
+    keepalive {{ groups['search_api'] | length * 2 }};
 
     {% for host in groups['nyats'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=0 fail_timeout=120s;
@@ -90,15 +90,18 @@ server {
         return 301 https://app.swaggerhub.com/apis-docs/ipfs-search/ipfs-search;
     }
 
+    # Required for backend keepalive
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+
+    # Pass on remote address
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    proxy_hide_header Access-Control-Allow-Origin;
+    add_header Access-Control-Allow-Origin '*' always;
+
     location /v1/search {
         proxy_pass http://search/v1/search;
-
-        # Required for backend keepalive
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-
-        # Pass on remote address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
         proxy_cache search_cache;
         proxy_cache_use_stale updating;
@@ -112,36 +115,16 @@ server {
         expires 15m;
 
         add_header X-Cache-Status $upstream_cache_status always;
-
-        proxy_hide_header Access-Control-Allow-Origin;
-        add_header Access-Control-Allow-Origin '*' always;
     }
 
     location /v1/queue-pinservice {
         proxy_pass http://pinservice/v1/queue-pinservice;
 
-        # Required for backend keepalive
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-
-        # Pass on remote address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-        proxy_read_timeout 5s;
-
-        proxy_hide_header Access-Control-Allow-Origin;
-        add_header Access-Control-Allow-Origin '*' always;
+        proxy_read_timeout 1s;
     }
 
     location /v1/metadata {
         proxy_pass http://metadata/v1/metadata;
-
-        # Required for backend keepalive
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-
-        # Pass on remote address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
         proxy_cache metadata_cache;
         proxy_cache_use_stale updating;
@@ -155,20 +138,10 @@ server {
         expires 1y;
 
         add_header X-Cache-Status $upstream_cache_status always;
-
-        proxy_hide_header Access-Control-Allow-Origin;
-        add_header Access-Control-Allow-Origin '*' always;
     }
 
     location /v1/nsfw {
         proxy_pass http://nsfw/v1/nsfw;
-
-        # Required for backend keepalive
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-
-        # Pass on remote address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
         proxy_cache nsfw_cache;
         proxy_cache_use_stale updating;
@@ -182,20 +155,10 @@ server {
         expires 1y;
 
         add_header X-Cache-Status $upstream_cache_status always;
-
-        proxy_hide_header Access-Control-Allow-Origin;
-        add_header Access-Control-Allow-Origin '*' always;
     }
 
     location /v1/thumbnail {
         proxy_pass http://nyats/v1/thumbnail;
-
-        # Required for backend keepalive
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-
-        # Pass on remote address
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
         proxy_cache thumbnail_cache;
         proxy_cache_use_stale updating;
@@ -209,13 +172,11 @@ server {
         expires 1y;
 
         add_header X-Cache-Status $upstream_cache_status always;
-
-        proxy_hide_header Access-Control-Allow-Origin;
-        add_header Access-Control-Allow-Origin '*' always;
     }
 
     include {{ options_ssl_nginx }};
 
     ssl_certificate /etc/letsencrypt/live/{{ certbot_name }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ certbot_name }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ certbot_name }}/chain.pem;
 }
