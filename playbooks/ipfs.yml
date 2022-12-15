@@ -1,11 +1,15 @@
 ---
-- name: Get sniffer heads
-  hosts: sniffer
-  tags:
-    - get_sniffer_heads
-  tasks:
-    - name: Ensure sniffer heads available
+- name: Configure IPFS node and peerings
+  hosts: ipfs
+  become: true
+  serial:
+    - 1
+    - "100%"
+  pre_tasks:
+    - name: Ensure sniffer heads are defined
       when: sniffer_heads is not defined
+      delegate_to: "{{ groups['sniffer'][0] }}"
+      run_once: true
       block:
       - name: Ensure sniffer service started
         systemd:
@@ -20,12 +24,6 @@
         set_fact:
           sniffer_heads: "{{ sniffer_heads_resp.content.splitlines() | map('from_json') }}"
           cacheable: yes
-- name: Configure IPFS node and peerings
-  hosts: ipfs
-  become: true
-  serial:
-    - 1
-    - "100%"
   roles:
     - role: ipfs_search.ipfs.ipfs
       tags: ['ipfs']
@@ -116,6 +114,6 @@
     - role: ipfs_search.ipfs.ipfs_peering
       tags: ['ipfs_peering']
       vars:
-        ipfs_extra_peers: "{{ hostvars[groups['sniffer'][0]].sniffer_heads[:1] }}"
+        ipfs_extra_peers: "{{ sniffer_heads[:1] }}"
     - role: vendor/ipfs-gc
       tags: ipfs-gc
