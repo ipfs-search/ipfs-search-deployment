@@ -16,14 +16,6 @@ https://support.yubico.com/hc/en-us/articles/360013790259-Using-Your-YubiKey-wit
 
 Make sure to execute below commands *in order*:
 
-#### Enforce touch policy for keys
-This requires you to touch the key every 15s, preventing hostile takeover of a computer with the key in it.
-```
-ykman openpgp keys set-touch enc cached-fixed
-ykman openpgp keys set-touch aut cached-fixed
-ykman openpgp keys set-touch att cached-fixed
-```
-
 #### 1. Start editing card
 ```
 % gpg --card-edit --expert
@@ -86,15 +78,6 @@ Q - quit
 
 Your selection? 3
 PIN changed.
-
-1 - change PIN
-2 - unblock PIN
-3 - change Admin PIN
-4 - set the Reset Code
-Q - quit
-
-Your selection? 4
-Reset Code set.
 
 1 - change PIN
 2 - unblock PIN
@@ -210,7 +193,6 @@ ykman openpgp certificates export ATT signer.pem
 ```
 
 Export attestation certificates:
-> **_NOTE:_** This will require touching the key!
 
 ```sh
 ykman openpgp keys attest AUT attestation_aut.pem
@@ -222,9 +204,9 @@ ykman openpgp keys attest ENC attestation_enc.pem
 Requires [yk-attest-verify](https://github.com/joemiller/yk-attest-verify).
 
 ```sh
-yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated" --allowed-touch-policies="enabled-permanent-cached" --ssh-pub-key=<ssh_public_key>
-yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated" --allowed-touch-policies="enabled-permanent-cached"
-yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated" --allowed-touch-policies="enabled-permanent-cached"
+yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated" --ssh-pub-key=<ssh_public_key_file>
+yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated"
+yk-attest-verify pgp attestation_aut.pem signer.pem --allowed-keysources="generated"
 ```
 
 ## Enabling SSH logins through GPG
