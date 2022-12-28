@@ -1,10 +1,17 @@
 server {
+    # TODO: Listen only in private interface once switched to frontend cluster.
     listen 80 default_server;
     listen [::]:80 default_server;
 
     include /etc/nginx/locations-enabled/*.conf;
 
     allow 127.0.0.1;
+
+    # Remove once switched to frontend cluster.
     allow {{ frontend_ip }};
+
+    {% for host in groups['frontend'] if 'ansible_all_ipv4_addresses' in hostvars[host] %}
+    allow {{ hostvars[host].ansible_all_ipv4_addresses | ipaddr('private') | ipaddr('address') | first }};
+    {% endfor %}
     deny all;
 }

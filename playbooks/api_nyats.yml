@@ -1,4 +1,8 @@
 ---
+- name: Gather facts from frontend nodes
+  hosts: frontend
+  gather_facts: true
+  tags: nyats
 - name: NYATS (thumbnailer)
   hosts: nyats
   tags: nyats

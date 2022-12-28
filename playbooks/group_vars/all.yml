@@ -3,7 +3,7 @@ crawler_memlimit: 4G
 crawler_hash_workers: 64
 crawler_file_workers: 12
 crawler_directory_workers: 4
-crawler_version: fbd0b56
+crawler_version: 7b86a97f5f5672d20e1575bb674e578a29b39969
 amqp_message_ttl: 4h
 golang_version: 1.18.2
 ipfs_version: 0.17.0
@@ -21,7 +21,6 @@ influxdb_backup_destination: "{{ storagebox_mountpoint }}/influxdb"
 influxdb_backup_user: "{{ lookup('env', 'USER') }}"
 influxdb_backup_bucket: "telegraf"
 storagebox_mountpoint_group: "{{ lookup('env', 'USER') }}"
-domain_name: "dwebsearch.org"
 nsfw_server_port: 3432
 nsfw_server_version: e903037676d4b721e67f6d2273b8a193a0a21bd7
 node_branch: node_16.x

@@ -1,4 +1,8 @@
 ---
+- name: Gather facts from frontend nodes
+  hosts: frontend
+  gather_facts: true
+  tags: nsfw_server
 - name: NSFW server
   hosts: nsfw_server
   become: true

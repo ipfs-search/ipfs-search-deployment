@@ -1,0 +1,17 @@
+# Because we are using logrotate for greater flexibility, disable the
+# internal certbot logrotation.
+max-log-backups = 0
+
+# Adjust interactive output regarding automated renewal
+preconfigured-renewal = True
+
+email = {{ certbot_email }}
+
+authenticator = dns-cloudflare
+dns-cloudflare-credentials = /etc/letsencrypt/cloudflare.ini
+
+installer = nginx
+
+agree-tos = true
+
+{% if certbot_test %}test-cert = true{% endif %}

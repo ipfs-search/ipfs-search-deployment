@@ -13,7 +13,7 @@
       type: A
       value: "{{ ipv4_address }}"
       api_token: "{{ cloudflare_token }}"
-    when: ipv4_address != a_record
+    when: ipv4_address and ipv4_address != a_record
     retries: 3
     delay: 3
   - name: AAAA record for host
@@ -23,6 +23,6 @@
       type: AAAA
       value: "{{ ipv6_address }}"
       api_token: "{{ cloudflare_token }}"
-    when: ipv6_address != aaaa_record
+    when: ipv6_address and ipv6_address != aaaa_record
     retries: 3
     delay: 3
