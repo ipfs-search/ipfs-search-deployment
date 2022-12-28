@@ -5,3 +5,4 @@ skip_list:
   - role-name[path]
 warn_list:
   - no-handler
+  - experimental

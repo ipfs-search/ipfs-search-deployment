@@ -1,6 +1,8 @@
 ---
 - name: Update apt repo and cache
-  apt: update_cache=yes cache_valid_time=3600
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
 - name: Install snapd
   apt:
     name: snapd
