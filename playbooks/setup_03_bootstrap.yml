@@ -1,7 +1,6 @@
 ---
 - name: Add admin users
   hosts: all
-  remote_user: root
   tags:
     - admin_users
   roles:
