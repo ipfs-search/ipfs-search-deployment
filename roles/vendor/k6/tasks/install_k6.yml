@@ -1,0 +1,13 @@
+---
+- name: Install repository key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+- name: Add repository
+  apt_repository:
+    repo: "deb https://dl.k6.io/deb stable main"
+- name: Install package
+  apt:
+    name: k6
+    cache_valid_time: 3600
+    update_cache: true

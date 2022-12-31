@@ -1,0 +1,13 @@
+---
+k6_user: k6
+k6_group: k6
+k6_test_repo: "https://github.com/ipfs-search/ipfs-search-benchmark.git"
+k6_test_install_path: "/usr/local/libexec/ipfs-search-benchmark"
+k6_test_version: main
+k6_test_minute: 45
+k6_test_hour: 3
+k6_test_influxdb_url: "{{ influxdb_url }}"
+k6_test_influxdb_username: k6
+k6_test_influxdb_password:
+k6_test_install_user: "{{ lookup('pipe', 'whoami') }}"
+k6_test_visits: "visits.json"

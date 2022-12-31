@@ -1,0 +1,7 @@
+---
+- name: Install k6
+  include_tasks: install_k6.yml
+- name: Install tests
+  include_tasks: install_tests.yml
+- name: Setup cron for tests
+  include_tasks: setup_cron.yml
