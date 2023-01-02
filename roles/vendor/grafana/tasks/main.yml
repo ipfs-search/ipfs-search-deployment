@@ -15,12 +15,12 @@
 
 - name: Install repository key
   apt_key:
-    url: https://packages.grafana.com/gpg.key
+    url: https://apt.grafana.com/gpg.key
     state: present
 
 - name: Add repository
   apt_repository:
-    repo: "deb https://repos.influxdata.com/{{ ansible_distribution | lower }} {{ ansible_lsb.codename }} stable"
+    repo: "deb https://apt.grafana.com stable main"
     state: present
 
 - name: Install the grafana package
