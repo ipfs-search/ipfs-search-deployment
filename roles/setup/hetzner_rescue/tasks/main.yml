@@ -1,0 +1,26 @@
+---
+- name: Get SSH keys
+  community.hrobot.ssh_key_info:
+    hetzner_user: "{{ hetzner_user }}"
+    hetzner_password: "{{ hetzner_password }}"
+  register: ssh_keys
+- name: Set boot configuration
+  community.hrobot.boot:
+    hetzner_user: "{{ hetzner_user }}"
+    hetzner_password: "{{ hetzner_password }}"
+    server_number: "{{ hrobot_server_number }}"
+    rescue:
+      arch: 64
+      authorized_keys: "{{ ssh_keys | map(attribute='fingerprint') }}"
+      os: linux
+- name: Request hardware reset
+  community.hrobot.reset:
+    hetzner_user: "{{ hetzner_user }}"
+    hetzner_password: "{{ hetzner_password }}"
+    server_number: "{{ hrobot_server_number }}"
+    reset_type: hardware
+- name: Wait until SSH is available
+  wait_for:
+    port: 22
+    host: "{{ hrobot_server_ip }}"
+
