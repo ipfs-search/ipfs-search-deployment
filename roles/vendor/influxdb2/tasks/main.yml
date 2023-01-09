@@ -11,8 +11,8 @@
 - name: Install InfluxDB
   apt:
     pkg:
-      - influxdb2
-      - influxdb2-cli
+      - influxdb2=2.6.1*
+      - influxdb2-cli=2.6.1
     state: present
     update_cache: yes
   notify: Restart influxdb

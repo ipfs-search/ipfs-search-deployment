@@ -25,7 +25,7 @@
 
 - name: Install the grafana package
   apt:
-    name: grafana
+    name: grafana=9.3.2
     state: present
     update_cache: true
   tags:
