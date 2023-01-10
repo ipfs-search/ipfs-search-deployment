@@ -39,7 +39,7 @@
   when: ansible_default_ipv6
 - name: Set hostname
   hostname:
-    name: "{{ hostname }}"
+    name: "{{ fqdn }}"
   notify:
     - Restart systemd-logind
 - name: Re-gather facts

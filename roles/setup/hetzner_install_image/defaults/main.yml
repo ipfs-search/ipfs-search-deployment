@@ -2,3 +2,6 @@
 install_image_raid_level: 1
 install_image_partitions: swap:swap:4G,/boot:ext3:1G,/:ext4:all
 install_image_filename: Ubuntu-2004-focal-64-minimal.tar.gz
+hostname: "{{ inventory_hostname_short }}"
+domain_name: "{{ inventory_hostname.split('.').1 }}"
+install_image_hostname: "{{ hostname }}.{{ domain_name }}"

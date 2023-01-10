@@ -13,11 +13,10 @@
   roles:
     - role: setup/hetzner_rescue
       tags: rescue
-    - role: setup/update_ssh_hostkeys
-      tags: update_ssh_hostkeys
 - name: Install OS image
   hosts: hetzner
   remote_user: root
+  gather_facts: false
   ignore_unreachable: true
   roles:
     - role: setup/hetzner_install_image

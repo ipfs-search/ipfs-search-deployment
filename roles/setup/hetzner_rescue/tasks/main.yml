@@ -2,7 +2,7 @@
 - name: Restart host in rescue mode
   delegate_to: localhost
   block:
-  - name: Get SSH keys
+  - name: Get configured SSH public keys
     community.hrobot.ssh_key_info:
       hetzner_user: "{{ hetzner_user }}"
       hetzner_password: "{{ hetzner_password }}"
@@ -11,6 +11,10 @@
     retries: 3
     delay: 3
     until: ssh_key_info is not failed
+    run_once: true
+  - debug:
+      msg: "Enabling keys with fingerprints: {{ ssh_key_info.ssh_keys | map(attribute='fingerprint') }}"
+    run_once: true
   - name: Set boot configuration
     community.hrobot.boot:
       hetzner_user: "{{ hetzner_user }}"
@@ -25,6 +29,9 @@
     delay: 3
     register: set_boot_config
     until: set_boot_config is not failed
+  - name: Wait to process boot configuration
+    pause:
+      seconds: 5
   - name: Request hardware reset
     community.hrobot.reset:
       hetzner_user: "{{ hetzner_user }}"
@@ -36,6 +43,9 @@
     delay: 3
     register: hardware_reset
     until: hardware_reset is not failed
+  - name: Wait reset to execute
+    pause:
+      seconds: 5
   - name: Wait until SSH is available
     wait_for:
       port: 22
