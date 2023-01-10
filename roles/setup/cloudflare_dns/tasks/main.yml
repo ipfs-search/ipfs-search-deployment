@@ -14,8 +14,12 @@
       value: "{{ ipv4_address }}"
       api_token: "{{ cloudflare_token }}"
     when: ipv4_address and ipv4_address != a_record
+    throttle: 2
+    timeout: 120
     retries: 3
-    delay: 3
+    delay: 5
+    register: a_record
+    until: a_record is not failed
   - name: AAAA record for host
     cloudflare_dns:
       zone: "{{ domain_name }}"
@@ -24,5 +28,9 @@
       value: "{{ ipv6_address }}"
       api_token: "{{ cloudflare_token }}"
     when: ipv6_address and ipv6_address != aaaa_record
+    throttle: 2
+    timeout: 120
     retries: 3
-    delay: 3
+    delay: 5
+    register: aaaa_record
+    until: aaaa_record is not failed

@@ -24,15 +24,14 @@
     - role: setup/generate_vlan_ip
 - name: Configure DNS
   hosts: all
-  tags: dns
-  gather_facts: true
+  gather_facts: false
   roles:
     - role: setup/cloudflare_dns
       tags: dns
 - name: Configure Hetzner robot reverse DNS
   hosts: hetzner
-  tags: reverse_dns
-  gather_facts: true
+  gather_facts: false
   roles:
     - role: setup/hetzner_robot_reverse_dns
+      tags: reverse_dns
 # TODO: Hcloud reverse DNS
