@@ -1,26 +1,42 @@
 ---
-- name: Get SSH keys
-  community.hrobot.ssh_key_info:
-    hetzner_user: "{{ hetzner_user }}"
-    hetzner_password: "{{ hetzner_password }}"
-  register: ssh_keys
-- name: Set boot configuration
-  community.hrobot.boot:
-    hetzner_user: "{{ hetzner_user }}"
-    hetzner_password: "{{ hetzner_password }}"
-    server_number: "{{ hrobot_server_number }}"
-    rescue:
-      arch: 64
-      authorized_keys: "{{ ssh_keys | map(attribute='fingerprint') }}"
-      os: linux
-- name: Request hardware reset
-  community.hrobot.reset:
-    hetzner_user: "{{ hetzner_user }}"
-    hetzner_password: "{{ hetzner_password }}"
-    server_number: "{{ hrobot_server_number }}"
-    reset_type: hardware
-- name: Wait until SSH is available
-  wait_for:
-    port: 22
-    host: "{{ hrobot_server_ip }}"
-
+- name: Restart host in rescue mode
+  delegate_to: localhost
+  block:
+  - name: Get SSH keys
+    community.hrobot.ssh_key_info:
+      hetzner_user: "{{ hetzner_user }}"
+      hetzner_password: "{{ hetzner_password }}"
+    register: ssh_key_info
+    throttle: 4
+    retries: 3
+    delay: 3
+    until: ssh_key_info is not failed
+  - name: Set boot configuration
+    community.hrobot.boot:
+      hetzner_user: "{{ hetzner_user }}"
+      hetzner_password: "{{ hetzner_password }}"
+      server_number: "{{ hrobot_server_number }}"
+      rescue:
+        arch: 64
+        authorized_keys: "{{ ssh_key_info.ssh_keys | map(attribute='fingerprint') }}"
+        os: linux
+    throttle: 4
+    retries: 3
+    delay: 3
+    register: set_boot_config
+    until: set_boot_config is not failed
+  - name: Request hardware reset
+    community.hrobot.reset:
+      hetzner_user: "{{ hetzner_user }}"
+      hetzner_password: "{{ hetzner_password }}"
+      server_number: "{{ hrobot_server_number }}"
+      reset_type: hardware
+    throttle: 4
+    retries: 3
+    delay: 3
+    register: hardware_reset
+    until: hardware_reset is not failed
+  - name: Wait until SSH is available
+    wait_for:
+      port: 22
+      host: "{{ hrobot_server_ip }}"
