@@ -14,8 +14,11 @@
       hetzner_user: "{{ hetzner_user }}"
       hetzner_password: "{{ hetzner_password }}"
     when: ipv4_address and fqdn != ptr4_record
+    throttle: 4
     retries: 3
     delay: 3
+    register: v4_reverse
+    until: v4_reverse is not failed
   - name: IPv6 reverse DNS
     community.hrobot.reverse_dns:
       ip: "{{ ipv6_address }}"
@@ -23,5 +26,8 @@
       hetzner_user: "{{ hetzner_user }}"
       hetzner_password: "{{ hetzner_password }}"
     when: ipv6_address and fqdn != ptr6_record
+    throttle: 4
     retries: 3
     delay: 3
+    register: v6_reverse
+    until: v6_reverse is not failed
