@@ -1,6 +1,7 @@
 ---
 # WIP
 - name: Check which servers are to be added
+  when: hrobot_server_name != picked_hostname
   uri:
     url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id }}"
     url_username: "{{ hetzner_user }}"
@@ -21,8 +22,6 @@
   #   }
         'server[]': "{{ hrobot_server_number }}"
         # Add all servers to be added here
-  when: hrobot_server_name != picked_hostname
-
 - name: Add server to switch
   uri:
     url: "https://robot-ws.your-server.de/vswitch/{{ vswitch_id }}/server"

@@ -12,8 +12,9 @@
     delay: 3
     until: ssh_key_info is not failed
     run_once: true
-  - debug:
-      msg: "Enabling keys with fingerprints: {{ ssh_key_info.ssh_keys | map(attribute='fingerprint') }}"
+  - name: Show SSH pubkey fingerprints
+    debug:
+      msg: "Fingerprints: {{ ssh_key_info.ssh_keys | map(attribute='fingerprint') }}"
     run_once: true
   - name: Set boot configuration
     community.hrobot.boot:
