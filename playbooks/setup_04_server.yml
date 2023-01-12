@@ -23,5 +23,3 @@
   roles:
     - role: setup/vlan
       tags: ['vlan']
-- name: Setup monitoring
-  import_playbook: monitoring.yml
