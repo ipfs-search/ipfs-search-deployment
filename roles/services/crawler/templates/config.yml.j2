@@ -6,8 +6,8 @@ opensearch:
   url: http://localhost:9200
   bulk_indexer_workers: 12                            # Workers to use for bulk writes.
   bulk_flush_bytes: 15MB                              # Bytesize treshold for bulk writes.
-  bulk_flush_timeout: 2m                              # 1m timeout on batch flushes.
-  bulk_getter_batch_size: 96                         # Item treshold for execution of bulk gets.
+  bulk_flush_timeout: 2m                              # Timeout on batch flushes.
+  bulk_getter_batch_size: 96                          # Item treshold for execution of bulk gets.
   bulk_getter_batch_timeout: 400ms                    # Time treshold for bulk gets.
 redis:
     addresses:
