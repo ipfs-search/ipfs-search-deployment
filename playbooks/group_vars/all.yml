@@ -27,6 +27,6 @@ node_branch: node_16.x
 nyats_port: 9614
 nyats_version: thumbnail_server_fixups
 ipfs_search_api_port: 9615
-ipfs_search_api_version: 44fef50d95bec78f74218f86f397f884eb72039a
+ipfs_search_api_version: b2df3e3a3d79fcbdad43043514d58bc30f7d4d69
 pinservice_version: e91ffc12d90653c8285b655d6b69d6da0429b198
 pinservice_port: 7070
