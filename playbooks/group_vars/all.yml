@@ -3,7 +3,7 @@ crawler_memlimit: 4G
 crawler_hash_workers: 64
 crawler_file_workers: 12
 crawler_directory_workers: 4
-crawler_version: 15a8a60da6c7c42d9b8bb512559b984715db831f
+crawler_version: 24f0be0bcf7092f3d63ac0d3240cf32206fd5cd7
 amqp_message_ttl: 4h
 golang_version: 1.18.2
 ipfs_version: 0.17.0
