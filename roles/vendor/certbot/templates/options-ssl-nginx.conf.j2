@@ -4,8 +4,8 @@
 # the up-to-date file that you will need to refer to when manually updating
 # this file.
 
-ssl_session_cache shared:le_nginx_SSL:10m;  # about 40000 sessions
-ssl_session_timeout 1d;
+ssl_session_cache shared:le_nginx_SSL:50m;  # about 80000 sessions
+ssl_session_timeout 4h;
 ssl_session_tickets off;
 
 # intermediate configuration
