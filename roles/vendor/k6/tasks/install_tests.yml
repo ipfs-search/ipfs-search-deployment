@@ -1,0 +1,50 @@
+---
+- name: Create install path
+  file:
+    state: directory
+    path: "{{ k6_test_install_path }}"
+    owner: "{{ k6_test_install_user }}"
+    mode: 0755
+- name: Ensure install requirements are installed
+  apt:
+    name:
+      - bzip2
+      - git
+- name: Install tests
+  become: false
+  block:
+  - name: Clone repo
+    git:
+      dest: "{{ k6_test_install_path }}"
+      repo: "{{ k6_test_repo }}"
+      version: "{{ k6_test_version }}"
+      force: true
+    register: source
+  - name: Check for uncompressed visits
+    stat:
+      path: "{{ k6_test_install_path }}/{{ k6_test_visits }}"
+      get_attributes: false
+      get_checksum: false
+      get_mime: false
+    register: visits
+  - name: Delete uncompressed visits
+    file:
+      path: "{{ k6_test_install_path }}/{{ k6_test_visits }}"
+      state: absent
+    when: source.changed and visits.stat.exists
+  - name: Uncompress visits
+    when: source.changed or not visits.stat.exists
+    command:
+      argv:
+        - bunzip2
+        - --keep
+        - "{{ k6_test_install_path }}/{{ k6_test_visits }}.bz2"
+  - name: Check for uncompressed visits
+    stat:
+      path: "{{ k6_test_install_path }}/{{ k6_test_visits }}"
+      get_attributes: false
+      get_checksum: false
+      get_mime: false
+    register: visits
+    failed_when: not visits.stat.exists
+# https://k6.io/docs/testing-guides/running-large-tests/

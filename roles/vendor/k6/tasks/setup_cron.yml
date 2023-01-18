@@ -1,0 +1,27 @@
+---
+- name: Setup group
+  group:
+    name: "{{ k6_group }}"
+    system: true
+- name: Setup user
+  user:
+    name: "{{ k6_user }}"
+    group: "{{ k6_group }}"
+    home: "/nonexistent"
+    shell: "/usr/sbin/nologin"
+    create_home: false
+    system: true
+- name: Install test script
+  template:
+    src: ipfs-search-benchmark.sh.j2
+    dest: /usr/local/bin/ipfs-search-benchmark
+    mode: 0750
+    group: "{{ k6_group }}"
+- name: Configure cron job for tests
+  cron:
+    name: Delete stale temp files
+    minute: "{{ k6_test_minute }}"
+    hour: "{{ k6_test_hour }}"
+    cron_file: k6
+    user: "{{ k6_user }}"
+    job: "k6 {{ k6_test_install_path }}/k6loadtest.js"

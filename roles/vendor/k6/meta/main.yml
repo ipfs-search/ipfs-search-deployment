@@ -1,7 +1,7 @@
 galaxy_info:
   author: Mathijs de Bruin
-  description: Restart Hetzner bare metal server into rescue mode.
-  company: ipfs-search
+  description: k6 benchmark setup for ipfs-search.com
+  company: ipfs-search.com
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -26,13 +26,12 @@ galaxy_info:
   # If you don't wish to enumerate all versions for a particular platform, use 'all'.
   # To view available platforms and versions (or releases), visit:
   # https://galaxy.ansible.com/api/v1/platforms/
-  #
   platforms:
     - name: Ubuntu
       versions:
         - focal
 
-  galaxy_tags: ['hetzner', 'hrobot', 'rescue']
+  galaxy_tags: ['k6']
     # List tags for your role here, one per line. A tag is a keyword that describes
     # and categorizes the role. Users find roles by searching for tags. Be sure to
     # remove the '[]' above, if you add tags to this list.

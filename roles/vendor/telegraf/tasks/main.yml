@@ -17,7 +17,7 @@
     state: present
 - name: Install packages
   apt:
-    pkg: telegraf=1.24*
+    pkg: telegraf=1.25*
     state: present
     update_cache: true
   notify: Restart telegraf

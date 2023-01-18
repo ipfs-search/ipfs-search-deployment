@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export K6_INFLUXDB_USERNAME={{ k6_test_influxdb_username }}
+export K6_INFLUXDB_PASSWORD={{ k6_test_influxdb_password }}
+export K6_INFLUXDB_TAGS_AS_FIELDS="vu:int,iter:int,url:string,event_time:int"
+
+k6 run {{ k6_test_install_path }}/k6loadtest.js --out influxdb={{ k6_test_influxdb_url }} $@

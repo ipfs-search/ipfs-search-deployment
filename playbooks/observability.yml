@@ -3,7 +3,7 @@
   hosts: stats
   become: true
   vars:
-    influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address')}}:8086"
+    influxdb2_http_bind_address: "{{ vlan_ip | ipaddr('address') }}:8086"
   roles:
     - role: vendor/influxdb2
       tags: influxdb
@@ -15,3 +15,5 @@
       tags: loki
     - role: vendor/tempo
       tags: tempo
+    - role: vendor/k6
+      tags: k6
