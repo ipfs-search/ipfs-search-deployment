@@ -3,7 +3,7 @@ crawler_memlimit: 4G
 crawler_hash_workers: 64
 crawler_file_workers: 12
 crawler_directory_workers: 4
-crawler_version: 24f0be0bcf7092f3d63ac0d3240cf32206fd5cd7
+crawler_version: 213d9509ff7ab7ba8061d5228ad4092c50253fa4
 amqp_message_ttl: 4h
 golang_version: 1.18.2
 ipfs_version: 0.17.0
@@ -27,6 +27,6 @@ node_branch: node_16.x
 nyats_port: 9614
 nyats_version: thumbnail_server_fixups
 ipfs_search_api_port: 9615
-ipfs_search_api_version: 14f231356aa115e8bc62be933ae7006497b469ba
+ipfs_search_api_version: 44fef50d95bec78f74218f86f397f884eb72039a
 pinservice_version: e91ffc12d90653c8285b655d6b69d6da0429b198
 pinservice_port: 7070
