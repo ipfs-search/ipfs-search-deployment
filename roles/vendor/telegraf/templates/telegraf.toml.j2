@@ -2750,6 +2750,8 @@ indices_include = ["_all"]
 #   #   "/proc/fs/lustre/mdt/*/job_stats",
 #   # ]
 
+# Get kernel statistics from /proc/mdstat
+[[inputs.mdstat]]
 
 # # Gathers metrics from the /3.0/reports MailChimp API
 # [[inputs.mailchimp]]
@@ -3277,7 +3279,7 @@ indices_include = ["_all"]
     systemd_unit = "ipfs.service"
 
 [[inputs.procstat]]
-    systemd_unit = "elasticsearch.service"
+    systemd_unit = "opensearch.service"
 
 [[inputs.procstat]]
     systemd_unit = "tika-extractor.service"
@@ -3302,6 +3304,18 @@ indices_include = ["_all"]
 
 [[inputs.procstat]]
     systemd_unit = "ipfs-sniffer.service"
+
+[[inputs.procstat]]
+    systemd_unit = "nsfw_server.service"
+
+[[inputs.procstat]]
+    systemd_unit = "nyats.service"
+
+[[inputs.procstat]]
+    systemd_unit = "pinservice.service"
+
+[[inputs.procstat]]
+    systemd_unit = "promtail.service"
 
 #   ## PID file to monitor process
 #   pid_file = "/var/run/nginx.pid"
