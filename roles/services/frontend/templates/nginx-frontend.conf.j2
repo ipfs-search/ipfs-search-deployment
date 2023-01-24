@@ -40,6 +40,7 @@ server {
 
 upstream search {
     # ip_hash;
+    least_conn;
     keepalive {{ groups['search_api'] | length * 2 }}; # 2 connections per backend server.
 
     {% for host in groups['search_api'] %}
@@ -49,6 +50,7 @@ upstream search {
 
 upstream metadata {
     keepalive {{ groups['search_api'] | length * 2 }};
+    least_conn;
 
     {% for host in groups['search_api'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10s;
@@ -57,6 +59,7 @@ upstream metadata {
 
 upstream nsfw {
     keepalive {{ groups['search_api'] | length * 2 }};
+    least_conn;
 
     {% for host in groups['nsfw_server'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
@@ -65,6 +68,7 @@ upstream nsfw {
 
 upstream pinservice {
     keepalive {{ groups['search_api'] | length * 2 }};
+    least_conn;
 
     {% for host in groups['pinservice'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=3 fail_timeout=10;
@@ -73,6 +77,7 @@ upstream pinservice {
 
 upstream nyats {
     keepalive {{ groups['search_api'] | length * 2 }};
+    least_conn;
 
     {% for host in groups['nyats'] %}
         server {{ hostvars[host]['vlan_ip'] | ipaddr('address') }} max_fails=0 fail_timeout=120s;
