@@ -3231,12 +3231,17 @@ indices_include = ["_all"]
 
 
 # # Ping given url(s) and return statistics
+{% if 'stats' in group_names %}
 [[inputs.ping]]
-   ## List of urls to ping
-   urls = ["ipfs-search.com"]
-#
-#   ## Number of pings to send per collection (ping -c <COUNT>)
-#   # count = 1
+   # Ping all hosts in DMZ
+   urls = {{ groups['dmz'] |
+        map('extract', hostvars) |
+        selectattr('vlan_ip', 'defined') |
+        map(attribute='vlan_ip') |
+        ipaddr('ip') |
+        to_json }}
+   ## Number of pings to send per collection (ping -c <COUNT>)
+   count = 10
 #
 #   ## Interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
 #   ## Not available in Windows.
@@ -3258,7 +3263,7 @@ indices_include = ["_all"]
 #   ## Arguments for ping command
 #   ## when arguments is not empty, other options (ping_interval, timeout, etc) will be ignored
 #   # arguments = ["-c", "3"]
-
+{% endif %}
 
 # # Measure postfix queue statistics
 # [[inputs.postfix]]
@@ -3292,9 +3297,6 @@ indices_include = ["_all"]
 
 [[inputs.procstat]]
     systemd_unit = "ipfs-search.service"
-
-[[inputs.procstat]]
-    systemd_unit = "ipfs-metadata.service"
 
 [[inputs.procstat]]
     systemd_unit = "nginx.service"
@@ -5274,3 +5276,42 @@ servers = ["tcp://localhost:7000", "tcp://localhost:7001"]
 #   # path = "/api/v1/spans" # URL path for span data
 #   # port = 9411            # Port on which Telegraf listens
 
+# Returns ethtool statistics for given interfaces
+[[inputs.ethtool]]
+  ## List of interfaces to pull metrics for
+  interface_include = {{ ansible_interfaces | reject('contains', '.') | reject('contains', 'lo') | to_json }}
+
+  ## List of interfaces to ignore when pulling metrics.
+  # interface_exclude = ["eth1"]
+
+  ## Plugin behavior for downed interfaces
+  ## Available choices:
+  ##   - expose: collect & report metrics for down interfaces
+  ##   - skip: ignore interfaces that are marked down
+  # down_interfaces = "expose"
+
+  ## Reading statistics from interfaces in additional namespaces is also
+  ## supported, so long as the namespaces are named (have a symlink in
+  ## /var/run/netns). The telegraf process will also need the CAP_SYS_ADMIN
+  ## permission.
+  ## By default, only the current namespace will be used. For additional
+  ## namespace support, at least one of `namespace_include` and
+  ## `namespace_exclude` must be provided.
+  ## To include all namespaces, set `namespace_include` to `["*"]`.
+  ## The initial namespace (if anonymous) can be specified with the empty
+  ## string ("").
+
+  ## List of namespaces to pull metrics for
+  # namespace_include = []
+
+  ## List of namespace to ignore when pulling metrics.
+  # namespace_exclude = []
+
+  ## Some drivers declare statistics with extra whitespace, different spacing,
+  ## and mix cases. This list, when enabled, can be used to clean the keys.
+  ## Here are the current possible normalizations:
+  ##  * snakecase: converts fooBarBaz to foo_bar_baz
+  ##  * trim: removes leading and trailing whitespace
+  ##  * lower: changes all capitalized letters to lowercase
+  ##  * underscore: replaces spaces with underscores
+  # normalize_keys = ["snakecase", "trim", "lower", "underscore"]
