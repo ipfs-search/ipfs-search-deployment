@@ -1,0 +1,11 @@
+---
+- name: Stop crawler
+  hosts: index
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Stop services
+      include_role:
+        name: services/crawler
+        tasks_from: "stop.yml"
+      with_sequence: count=200

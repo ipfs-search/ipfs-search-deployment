@@ -1,0 +1,16 @@
+---
+- name: Stop crawler service
+  systemd:
+    name: ipfs-crawler
+    state: stopped
+  ignore_errors: true
+  ignore_unreachable: true
+- name: Stop tika-extractor service
+  systemd:
+    name: tika-extractor
+    state: stopped
+  ignore_errors: true
+  ignore_unreachable: true
+- name: Wait a minute
+  pause:
+    seconds: 60
