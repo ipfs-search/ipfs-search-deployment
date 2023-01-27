@@ -8,7 +8,7 @@
     - ca-certificates
 - name: Install InfluxDB repository key
   apt_key:
-    url: https://repos.influxdata.com/influxdb.key
+    url: https://repos.influxdata.com/influxdata-archive_compat.key
     state: present
 - name: Add Influxdata repository
   apt_repository:
