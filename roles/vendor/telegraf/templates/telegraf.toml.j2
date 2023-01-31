@@ -3241,11 +3241,11 @@ indices_include = ["_all"]
         ipaddr('ip') |
         to_json }}
    ## Number of pings to send per collection (ping -c <COUNT>)
-   count = 10
+   count = 60
 #
 #   ## Interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
 #   ## Not available in Windows.
-#   # ping_interval = 1.0
+   ping_interval = 1.0
 #
 #   ## Per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
 #   # timeout = 1.0
