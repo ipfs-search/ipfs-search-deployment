@@ -15,6 +15,7 @@
       - traceroute
       - man
       - smartmontools
+      - nvme-cli
       - psmisc
       - acl
     state: present
