@@ -9,9 +9,11 @@
 - name: Migrate ES
   import_tasks: migrate_es.yml
   tags: migrate
+  when: migrate_es
 - name: Conclude migration
   import_tasks: conclude.yml
   tags: conclude
 - name: Cleanup ES
   import_tasks: cleanup_es.yml
   tags: cleanup
+  when: migrate_es

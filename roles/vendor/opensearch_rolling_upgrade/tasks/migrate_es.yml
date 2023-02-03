@@ -13,12 +13,10 @@
       service:
         name: opensearch
         state: stopped
-    ### <ES>
     - name: Stop elasticsearch
       service:
         name: elasticsearch
         state: stopped
-    ### </ES>
     - name: Stat {{ data_dir }}
       stat:
         path: "{{ data_dir }}"

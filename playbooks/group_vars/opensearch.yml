@@ -35,11 +35,11 @@ os_dashboards_sha256: 2cb533d1ebf6bed2ee3b06f6458318b2fd8f36317ef35e10f092b4a9cb
 
 # opensearch version
 # 2.x Latest Version
-os_version: "2.3.0"
+os_version: "2.5.0"
 
 # opensearch dashboards version
 # 2.x Latest Version
-os_dashboards_version: "2.3.0"
+os_dashboards_version: "2.5.0"
 
 os_set_hostname: false
 

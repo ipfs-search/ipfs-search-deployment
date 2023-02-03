@@ -1,0 +1,29 @@
+---
+argument_specs:
+  main:
+    short_description: Install packages from repo.
+    options:
+      install_requirements:
+        default:
+          - apt-transport-https
+          - ca-certificates
+        type: list
+        elements: str
+      install_repo_key_url:
+        required: true
+        type: str
+      install_repo_line:
+        required: true
+        type: str
+      install_repo_name:
+        required: false
+        type: str
+      install_repo_filename:
+        required: false
+        type: str
+      install_repo_package:
+        required: false
+        type: raw
+      install_repo_notify:
+        required: false
+        type: raw
