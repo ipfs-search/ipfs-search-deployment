@@ -8,8 +8,8 @@
 - name: Tune the system settings
   import_tasks: tune.yml
 
-- name: Include opensearch installation
-  import_tasks: opensearch.yml
+- name: Install OpenSearch
+  import_tasks: install.yml
 
 - name: Create an empty keystore #(prevents unable to create temporary keystore)
   command: "{{ os_keystore_bin_path }} create"

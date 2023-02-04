@@ -60,6 +60,3 @@
   notify:
     - Reload systemd configuration
     - Restart opensearch
-
-- name: Flush handlers
-  meta: flush_handlers

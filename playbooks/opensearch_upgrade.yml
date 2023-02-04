@@ -3,13 +3,13 @@
   hosts: index
   become: true
   gather_facts: false
-  any_errors_fatal: true
   tags: shutdown
   tasks:
     - name: Stop crawler
       service:
         name: ipfs-crawler
         state: stopped
+      ignore_errors: true
 - name: Perform rolling upgrade on index (data) nodes
   hosts: opensearch:!master
   become: true

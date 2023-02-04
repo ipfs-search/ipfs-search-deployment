@@ -1,19 +1,25 @@
 ---
-- name: Prepare OS upgrade
-  import_tasks: prepare.yml
-  tags: prepare
-- name: Install OpenSearch # noqa role-name[path]
-  include_role:
-    name: vendor/opensearch
-  tags: install
-- name: Migrate ES
-  import_tasks: migrate_es.yml
-  tags: migrate
-  when: migrate_es
-- name: Conclude migration
-  import_tasks: conclude.yml
-  tags: conclude
-- name: Cleanup ES
-  import_tasks: cleanup_es.yml
-  tags: cleanup
-  when: migrate_es
+- name: Gather package facts
+  package_facts:
+  when: not ansible_facts.packages is defined
+- name: Conditionally reinstall
+  when: "'opensearch' not in ansible_facts.packages or ansible_facts.packages['opensearch'][0].version != os_version"
+  block:
+  - name: Prepare OS upgrade
+    import_tasks: prepare.yml
+    tags: prepare
+  - name: Install OpenSearch # noqa role-name[path]
+    include_role:
+      name: vendor/opensearch
+    tags: install
+  - name: Migrate ES
+    import_tasks: migrate_es.yml
+    tags: migrate
+    when: migrate_es
+  - name: Conclude migration
+    import_tasks: conclude.yml
+    tags: conclude
+  - name: Cleanup ES
+    import_tasks: cleanup_es.yml
+    tags: cleanup
+    when: migrate_es

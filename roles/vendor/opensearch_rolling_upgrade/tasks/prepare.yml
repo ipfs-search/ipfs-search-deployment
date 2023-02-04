@@ -39,8 +39,14 @@
     name: opensearch
     state: stopped
   when: not migrate_es
-- name: Remove opensearch
-  file:
-    path: /usr/share/opensearch
+- name: Uninstall package
+  apt:
+    pkg: opensearch
     state: absent
-    recurse: true
+- name: Remove remaining opensearch configuration and binaries
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /usr/share/opensearch
+    - /etc/opensearch
