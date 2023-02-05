@@ -1,7 +1,10 @@
 ---
 - name: Gather package facts
   package_facts:
-  when: not ansible_facts.packages is defined
+- name: Show installed package
+  debug:
+    msg: "Installed OpenSearch: {{ ansible_facts.packages['opensearch'] }}"
+  when: "'opensearch' in ansible_facts.packages"
 - name: Conditionally reinstall
   when: "'opensearch' not in ansible_facts.packages or ansible_facts.packages['opensearch'][0].version != os_version"
   block:
