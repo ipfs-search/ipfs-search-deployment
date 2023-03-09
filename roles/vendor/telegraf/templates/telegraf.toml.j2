@@ -5277,9 +5277,10 @@ servers = ["tcp://localhost:7000", "tcp://localhost:7001"]
 #   # port = 9411            # Port on which Telegraf listens
 
 # Returns ethtool statistics for given interfaces
-[[inputs.ethtool]]
+# Note: disabled due to https://github.com/influxdata/telegraf/issues/12813
+# [[inputs.ethtool]]
   ## List of interfaces to pull metrics for
-  interface_include = {{ ansible_interfaces | reject('contains', '.') | reject('contains', 'lo') | to_json }}
+  # interface_include = {{ ansible_interfaces | reject('contains', '.') | reject('contains', 'lo') | reject('contains', 'wg') | to_json }}
 
   ## List of interfaces to ignore when pulling metrics.
   # interface_exclude = ["eth1"]
