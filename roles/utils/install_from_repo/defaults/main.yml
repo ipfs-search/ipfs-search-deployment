@@ -1,0 +1,7 @@
+---
+install_requirements:
+  - apt-transport-https
+  - ca-certificates
+install_repo_filename: "{{ install_repo_name }}"
+install_repo_package: "{{ install_repo_name }}={{ install_repo_version }}"
+install_repo_notify: "Restart {{ install_repo_name }}"

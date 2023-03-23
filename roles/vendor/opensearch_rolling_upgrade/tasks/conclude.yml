@@ -3,7 +3,7 @@
   uri:
     url: "{{ base_url }}/_cluster/health"
   register: response
-  until: "response.json.number_of_nodes >= required_nodes"
+  until: "response.json.number_of_nodes >= required_nodes | int"
   retries: 15
   delay: 1
 - name: Ensure cluster health

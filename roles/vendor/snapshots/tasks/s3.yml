@@ -23,6 +23,13 @@
       stdin: "{{ snapshot_secret }}"
     when: "'s3.client.' + snapshot_repo_name + '.secret_key' not in keystore.stdout"
     notify: Reload secure settings
+  - name: Set permissions on keystore
+    file:
+      state: file
+      path: "{{ os_conf_dir }}/opensearch.keystore"
+      owner: root
+      group: "{{ os_user }}"
+      mode: 0640
 - name: Flush handlers
   meta: flush_handlers
 - name: Check snapshot repository

@@ -1,0 +1,173 @@
+drbob@simon:~$ ifconfig
+enp41s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 188.40.60.246  netmask 255.255.255.255  broadcast 0.0.0.0
+        inet6 2a01:4f8:221:19a::2  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::d250:99ff:fef9:1dae  prefixlen 64  scopeid 0x20<link>
+        ether d0:50:99:f9:1d:ae  txqueuelen 1000  (Ethernet)
+        RX packets 2030877901  bytes 2518242598299 (2.5 TB)
+        RX errors 0  dropped 0  overruns 1485  frame 0
+        TX packets 648311339  bytes 365507733357 (365.5 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device memory 0xfc200000-fc27ffff
+
+enp41s0.4000: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1400
+        inet 172.16.34.36  netmask 255.255.255.0  broadcast 172.16.34.255
+        inet6 fe80::d250:99ff:fef9:1dae  prefixlen 64  scopeid 0x20<link>
+        ether d0:50:99:f9:1d:ae  txqueuelen 1000  (Ethernet)
+        RX packets 250983432  bytes 2362944265349 (2.3 TB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 202119361  bytes 311851597450 (311.8 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 3911349  bytes 8307554746 (8.3 GB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 3911349  bytes 8307554746 (8.3 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+drbob@simon:~$ ping 172.16.0.5
+PING 172.16.0.5 (172.16.0.5) 56(84) bytes of data.
+64 bytes from 172.16.0.5: icmp_seq=1 ttl=62 time=1.09 ms
+^C
+--- 172.16.0.5 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 1.092/1.092/1.092/0.000 ms
+drbob@simon:~$ mtr -s 1000 -r -c 1000 172.16.0.5
+Start: 2023-01-31T10:56:34+0000
+HOST: simon.dwebsearch.org        Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.16.34.1                0.4%  1000    0.5   0.6   0.3  28.5   2.1
+  2.|-- 172.16.0.5                 0.3%  1000    0.6   0.6   0.5  15.0   0.8
+
+drbob@frontend-1:~$ ifconfig
+ens10: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1450
+        inet 172.16.0.5  netmask 255.255.255.255  broadcast 172.16.0.5
+        inet6 fe80::8400:ff:fe2a:8de5  prefixlen 64  scopeid 0x20<link>
+        ether 86:00:00:2a:8d:e5  txqueuelen 1000  (Ethernet)
+        RX packets 14869222  bytes 7698041507 (7.6 GB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 18333244  bytes 3978280003 (3.9 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 168.119.104.80  netmask 255.255.255.255  broadcast 168.119.104.80
+        inet6 fe80::9400:1ff:feaf:647c  prefixlen 64  scopeid 0x20<link>
+        inet6 2a01:4f8:c010:60ef::1  prefixlen 64  scopeid 0x0<global>
+        ether 96:00:01:af:64:7c  txqueuelen 1000  (Ethernet)
+        RX packets 80279477  bytes 12049866502 (12.0 GB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 61364847  bytes 64211777275 (64.2 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 645006  bytes 64575398 (64.5 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 645006  bytes 64575398 (64.5 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+drbob@frontend-1:~$ mtr -s 1000 -r -c 1000 172.16.34.3
+Start: 2023-01-31T10:21:31+0000
+HOST: frontend-1                  Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.16.0.1                 0.0%  1000    5.4   5.9   2.5  36.5   2.5
+  2.|-- ???                       100.0  1000    0.0   0.0   0.0   0.0   0.0
+  3.|-- 172.16.34.3                0.0%  1000    0.9   0.7   0.5  21.2   0.8
+drbob@frontend-1:~$ mtr -s 1000 -r -c 1000 172.16.34.3
+Start: 2023-01-31T10:55:29+0000
+^C
+drbob@frontend-1:~$ mtr -s 1000 -r -c 1000 172.16.34.36
+Start: 2023-01-31T10:56:40+0000
+HOST: frontend-1                  Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.16.0.1                 0.0%  1000    3.6   5.7   2.2  36.8   2.7
+  2.|-- ???                       100.0  1000    0.0   0.0   0.0   0.0   0.0
+  3.|-- 172.16.34.36               0.2%  1000    0.8   0.6   0.5   7.5   0.7
+
+drbob@simon:~$ ifconfig
+enp41s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 188.40.60.246  netmask 255.255.255.255  broadcast 0.0.0.0
+        inet6 2a01:4f8:221:19a::2  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::d250:99ff:fef9:1dae  prefixlen 64  scopeid 0x20<link>
+        ether d0:50:99:f9:1d:ae  txqueuelen 1000  (Ethernet)
+        RX packets 2041713439  bytes 2525677486316 (2.5 TB)
+        RX errors 0  dropped 0  overruns 1485  frame 0
+        TX packets 659358187  bytes 374390037785 (374.3 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device memory 0xfc200000-fc27ffff
+
+enp41s0.4000: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1400
+        inet 172.16.34.36  netmask 255.255.255.0  broadcast 172.16.34.255
+        inet6 fe80::d250:99ff:fef9:1dae  prefixlen 64  scopeid 0x20<link>
+        ether d0:50:99:f9:1d:ae  txqueuelen 1000  (Ethernet)
+        RX packets 257853398  bytes 2369641253666 (2.3 TB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 208826517  bytes 320092955247 (320.0 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 3966402  bytes 8340506860 (8.3 GB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 3966402  bytes 8340506860 (8.3 GB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+drbob@simon:~$ mtr -s 1000 -r -c 1000 172.16.34.30
+Start: 2023-01-31T11:33:06+0000
+HOST: simon.dwebsearch.org        Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.16.34.30               0.1%  1000    0.7   0.3   0.3   9.6   0.9
+
+drbob@brooks:~$ ifconfig
+enp7s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 5.9.31.6  netmask 255.255.255.255  broadcast 0.0.0.0
+        inet6 fe80::642:1aff:fe1f:31a  prefixlen 64  scopeid 0x20<link>
+        inet6 2a01:4f8:161:130c::2  prefixlen 64  scopeid 0x0<global>
+        ether 04:42:1a:1f:03:1a  txqueuelen 1000  (Ethernet)
+        RX packets 326591076931  bytes 189466741478629 (189.4 TB)
+        RX errors 0  dropped 0  overruns 1217637  frame 0
+        TX packets 345850792748  bytes 167692191890387 (167.6 TB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device memory 0xfc200000-fc27ffff
+
+enp7s0.4000: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1400
+        inet 172.16.34.30  netmask 255.255.255.0  broadcast 172.16.34.255
+        inet6 fe80::642:1aff:fe1f:31a  prefixlen 64  scopeid 0x20<link>
+        ether 04:42:1a:1f:03:1a  txqueuelen 1000  (Ethernet)
+        RX packets 64984423642  bytes 146626256755691 (146.6 TB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 52725289081  bytes 114291762372532 (114.2 TB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 6515775536  bytes 44773350728048 (44.7 TB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 6515775536  bytes 44773350728048 (44.7 TB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+drbob@brooks:~$  mtr -s 1000 -r -c 1000 172.16.34.36
+Start: 2023-01-31T11:33:05+0000
+HOST: brooks                      Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.16.34.36               0.3%  1000    0.4   0.3   0.3   7.4   0.7
+
+drbob@simon:~$ mtr -s 1000 -r -c 1000 brooks.dwebsearch.org
+Start: 2023-01-31T12:41:04+0000
+HOST: simon.dwebsearch.org        Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 2a01:4f8::a:22:a           0.0%  1000    0.4   0.7   0.3  19.2   1.8
+  2.|-- core23.fsn1.hetzner.com    0.2%  1000    0.4   1.7   0.3  58.4   5.0
+  3.|-- ex9k1.dc7.fsn1.hetzner.co  0.1%  1000    0.5   0.6   0.4  19.5   1.4
+  4.|-- brooks.dwebsearch.org      0.1%  1000    0.5   0.3   0.3   6.3   0.8
+
+drbob@brooks:~$ mtr -s 1000 -r -c 1000 simon.dwebsearch.org
+Start: 2023-01-31T12:41:05+0000
+ HOST: brooks                      Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- ex9k1.dc7.fsn1.hetzner.co  0.1%  1000    0.3   0.6   0.3  24.1   1.7
+  2.|-- core23.fsn1.hetzner.com    0.3%  1000   30.9   2.3   0.3  47.0   6.3
+  3.|-- ex9k1.dc13.fsn1.hetzner.c  0.0%  1000    0.4   0.6   0.4  26.5   1.9
+  4.|-- simon.dwebsearch.org       0.1%  1000    0.3   0.3   0.3   8.2   0.8

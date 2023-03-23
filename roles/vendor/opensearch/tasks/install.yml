@@ -1,0 +1,62 @@
+---
+- name: Install package
+  import_role:
+    name: utils/install_from_repo
+  vars:
+    install_repo_key_url: https://artifacts.opensearch.org/publickeys/opensearch.pgp
+    install_repo_line: https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt stable main
+    install_repo_name: opensearch
+    install_repo_version: "{{ os_version }}"
+
+- name: Remove limits for memory lock
+  pam_limits:
+    comment: "allow user '{{ os_user }}' mlockall"
+    domain: "{{ os_user }}"
+    limit_item: memlock
+    limit_type: "{{ item }}"
+    value: unlimited
+  loop:
+    - soft
+    - hard
+
+- name: Copy Configuration File
+  template:
+    src: templates/opensearch.yml.j2
+    dest: "{{ os_conf_dir }}/opensearch.yml"
+    owner: "root"
+    group: "{{ os_user }}"
+    mode: 0640
+  notify:
+    - Restart opensearch
+
+- name: Copy jvm.options File for Instance
+  template:
+    src: jvm.options.j2
+    dest: "{{ os_conf_dir }}/jvm.options"
+    owner: "root"
+    group: "{{ os_user }}"
+    mode: 0640
+    force: yes
+  notify:
+    - Restart opensearch
+
+- name: Set permissions on configuration
+  file:
+    path: /etc/opensearch/
+    mode: u+rwX,g+rX,o=
+    owner: "root"
+    group: "{{ os_user }}"
+    recurse: true
+
+- name: Directory for service overrides
+  file:
+    state: directory
+    path: /etc/systemd/system/opensearch.service.d
+
+- name: Service overrides
+  template:
+    src: service_override.conf.j2
+    dest: /etc/systemd/system/opensearch.service.d/override.conf
+  notify:
+    - Reload systemd configuration
+    - Restart opensearch

@@ -1,0 +1,20 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ install_requirements }}"
+    state: present
+- name: Install repository key
+  apt_key:
+    url: "{{ install_repo_key_url }}"
+    state: present
+- name: Add repository
+  apt_repository:
+    repo: "deb https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt stable main"
+    filename: "opensearch"
+    state: present
+- name: Install package
+  apt:
+    pkg: "{{ install_repo_package }}"
+    state: present
+    update_cache: true
+  notify: "{{ install_repo_notify }}"

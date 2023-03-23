@@ -6,7 +6,7 @@
 - name: Ensure required node count {{ required_nodes }}
   fail:
     msg: "Only {{ response.json.number_of_nodes }} nodes in cluster, less than required {{ required_nodes }}."
-  when: "response.json.number_of_nodes < required_nodes"
+  when: "response.json.number_of_nodes < required_nodes | int"
 - name: Disable shard allocation
   uri:
     url: "{{ base_url }}/_cluster/settings"
@@ -29,9 +29,24 @@
   retries: 3
   delay: 5
   ignore_errors: true
-### <ES>
 - name: Stop elasticsearch
   service:
     name: elasticsearch
     state: stopped
-### </ES>
+  when: migrate_es
+- name: Stop opensearch
+  service:
+    name: opensearch
+    state: stopped
+  when: not migrate_es
+- name: Uninstall package
+  apt:
+    pkg: opensearch
+    state: absent
+- name: Remove remaining opensearch configuration and binaries
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /usr/share/opensearch
+    - /etc/opensearch

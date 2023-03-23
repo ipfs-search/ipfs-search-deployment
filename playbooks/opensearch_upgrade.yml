@@ -3,21 +3,21 @@
   hosts: index
   become: true
   gather_facts: false
-  any_errors_fatal: true
   tags: shutdown
   tasks:
     - name: Stop crawler
       service:
         name: ipfs-crawler
         state: stopped
+      ignore_errors: true
 - name: Perform rolling upgrade on index (data) nodes
   hosts: opensearch:!master
   become: true
   serial: 1
   any_errors_fatal: true
   vars:
-    required_nodes: 30
-    required_version: 2.3.0
+    required_nodes: "{{ groups['opensearch'] | length }}"
+    required_version: "{{ os_version }}" # Note: currently unused.
   roles:
     - role: vendor/opensearch_rolling_upgrade
       tags: rolling-upgrade
@@ -27,8 +27,8 @@
   serial: 1
   any_errors_fatal: true
   vars:
-    required_nodes: 30
-    required_version: 2.3.0
+    required_nodes: "{{ groups['opensearch'] | length }}"
+    required_version: "{{ os_version }}" # Note: currently unused.
   roles:
     - role: vendor/opensearch_rolling_upgrade
       tags: rolling-upgrade

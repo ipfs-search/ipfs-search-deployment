@@ -1,0 +1,6 @@
+---
+- name: Reload secure settings
+  uri:
+    url: "http://127.0.0.1:9200/_nodes/reload_secure_settings"
+    method: POST
+  run_once: true
